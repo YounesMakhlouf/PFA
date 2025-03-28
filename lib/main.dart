@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'games/colors_game.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Force landscape orientation
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
   runApp(const MyApp());
 }
 
@@ -11,13 +18,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Autism Learning App',
+      title: 'تطبيق تعلم التوحد',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        fontFamily: 'Arial',// Simple, clear font for readability
+        fontFamily: 'Arial', // Simple, clear font for readability
       ),
+      // Set text direction to RTL for Arabic
+      locale: const Locale('ar', 'SA'),
       home: const HomePage(),
     );
   }
@@ -30,7 +39,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Learning Games'),
+        title: const Text('ألعاب التعلم'),
         backgroundColor: Colors.lightBlue[100],
       ),
       body: Container(
@@ -40,7 +49,7 @@ class HomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                'Choose a Game',
+                'اختر لعبة',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -62,7 +71,7 @@ class HomePage extends StatelessWidget {
                       const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                   textStyle: const TextStyle(fontSize: 20),
                 ),
-                child: const Text('Colors Game'),
+                child: const Text('لعبة الألوان'),
               ),
 
               // More game buttons can be added here
