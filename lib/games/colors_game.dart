@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ColorsGame extends StatefulWidget {
   const ColorsGame({Key? key}) : super(key: key);
@@ -28,7 +29,18 @@ class _ColorsGameState extends State<ColorsGame> {
   @override
   void initState() {
     super.initState();
+    // Ensure landscape orientation
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
     _setupNewRound();
+  }
+
+  @override
+  void dispose() {
+    // Allow orientation to be controlled by parent when this screen is disposed
+    super.dispose();
   }
 
   // Set up a new round with random colors

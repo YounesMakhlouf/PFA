@@ -4,11 +4,6 @@ import 'games/colors_game.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  // Force landscape orientation
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.landscapeLeft,
-    DeviceOrientation.landscapeRight,
-  ]);
   runApp(const MyApp());
 }
 
@@ -23,9 +18,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        fontFamily: 'Arial', // Simple, clear font for readability
+        fontFamily: 'Arial',
       ),
-      // Set text direction to RTL for Arabic
       locale: const Locale('ar', 'SA'),
       home: const HomePage(),
     );
@@ -37,6 +31,12 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Set portrait orientation for home page
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('ألعاب التعلم'),
@@ -44,39 +44,141 @@ class HomePage extends StatelessWidget {
       ),
       body: Container(
         color: Colors.lightBlue[50],
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: GridView.count(
+            crossAxisCount: 2,
+            mainAxisSpacing: 16.0,
+            crossAxisSpacing: 16.0,
             children: [
-              const Text(
-                'اختر لعبة',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 40),
-
-              // Game selection buttons
-              ElevatedButton(
-                onPressed: () {
+              // Colors and Shapes Game
+              GameCard(
+                title: 'ألوان وأشكال',
+                icon: 'assets/images/colors_icon.png',
+                color: Colors.lightBlue,
+                onTap: () {
+                  // Set landscape orientation for game
+                  SystemChrome.setPreferredOrientations([
+                    DeviceOrientation.landscapeLeft,
+                    DeviceOrientation.landscapeRight,
+                  ]);
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const ColorsGame()),
-                  );
+                  ).then((_) {
+                    // Reset to portrait when returning to home
+                    SystemChrome.setPreferredOrientations([
+                      DeviceOrientation.portraitUp,
+                      DeviceOrientation.portraitDown,
+                    ]);
+                  });
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green[200],
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                  textStyle: const TextStyle(fontSize: 20),
-                ),
-                child: const Text('لعبة الألوان'),
               ),
-
-              // More game buttons can be added here
+              
+              // Animals Game
+              GameCard(
+                title: 'الحيوانات',
+                icon: 'assets/images/animals_icon.png',
+                color: Colors.lightBlue,
+                onTap: () {
+                  // Will implement later
+                },
+              ),
+              
+              // Fruits and Vegetables Game
+              GameCard(
+                title: 'خضر و غلال',
+                icon: 'assets/images/fruits_icon.png',
+                color: Colors.lightBlue,
+                onTap: () {
+                  // Will implement later
+                },
+              ),
+              
+              // Numbers Game
+              GameCard(
+                title: 'الأرقام',
+                icon: 'assets/images/numbers_icon.png',
+                color: Colors.lightBlue,
+                onTap: () {
+                  // Will implement later
+                },
+              ),
+              
+              // Emotions Matching Game
+              GameCard(
+                title: 'تطابق المشاعر',
+                icon: 'assets/images/emotions_icon.png',
+                color: Colors.lightBlue,
+                onTap: () {
+                  // Will implement later
+                },
+              ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class GameCard extends StatelessWidget {
+  final String title;
+  final String icon;
+  final Color color;
+  final VoidCallback onTap;
+
+  const GameCard({
+    Key? key,
+    required this.title,
+    required this.icon,
+    required this.color,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        color: color,
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 3,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset(
+                  icon,
+                  errorBuilder: (context, error, stackTrace) {
+                    // Fallback icon if image not found
+                    return Icon(
+                      Icons.image,
+                      size: 60,
+                      color: Colors.white,
+                    );
+                  },
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
         ),
       ),
     );
