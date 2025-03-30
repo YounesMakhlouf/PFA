@@ -1,0 +1,62 @@
+import 'package:flutter/material.dart';
+import 'package:pfa/models/game.dart';
+
+class GameCardWidget extends StatelessWidget {
+  final GameCategory category;
+  final VoidCallback onTap;
+  final bool isEnabled;
+
+  const GameCardWidget({
+    Key? key,
+    required this.category,
+    required this.onTap,
+    this.isEnabled = true,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: isEnabled ? onTap : null,
+        splashColor: category.themeColor.withOpacity(0.3),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                category.themeColor.withOpacity(0.7),
+                category.themeColor,
+              ],
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                category.icon,
+                size: 48,
+                color: Colors.white,
+              ),
+              const SizedBox(height: 12),
+              Text(
+                category.arabicName,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
