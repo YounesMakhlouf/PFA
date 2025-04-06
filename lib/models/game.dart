@@ -80,10 +80,8 @@ class Game {
     required this.levels,
   });
   
-  // Helper method to get theme color
   Color get themeColor => category.themeColor;
   
-  // Helper method to get icon
   IconData get icon => category.icon;
 }
 
@@ -97,6 +95,5 @@ class Level {
   });
 
   Future<void> fetchNextLevel() async {
-    // Implementation to fetch the next level
   }
 }

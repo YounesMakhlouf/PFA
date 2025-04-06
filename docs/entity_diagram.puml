@@ -1,0 +1,169 @@
+@startuml
+
+' Basic styling for clarity
+skinparam classAttributeIconSize 0
+hide empty members
+skinparam shadowing false
+skinparam defaultFontName Segoe UI
+skinparam class {
+    BackgroundColor PaleTurquoise
+    ArrowColor Navy
+    BorderColor Navy
+}
+skinparam enum {
+    BackgroundColor LightYellow
+    ArrowColor Olive
+    BorderColor Olive
+}
+skinparam abstract {
+    BackgroundColor LightGray
+}
+skinparam note {
+    BackgroundColor LightGrey
+    BorderColor Grey
+}
+
+' --- Enumerations ---
+
+enum SpecialCondition {
+  AUTISM
+  ADHD
+  DYSLEXIA
+  DYSCALCULIA
+  SPEAKING_DIFFICULTIES
+}
+
+enum GameCategory {
+  LOGICAL_THINKING
+  EDUCATION
+  RELAXATION
+  EMOTIONS
+  NUMBERS
+  COLORS_SHAPES
+  ANIMALS
+  FRUITS_VEGETABLES
+}
+
+enum GameType {
+  MULTIPLE_CHOICE
+  MEMORY_MATCH
+  PUZZLE
+  STORY
+  IDENTIFY_INTRUDER
+}
+
+' --- User Hierarchy ---
+
+abstract class User {
+  + userId: UUID
+  # email: String
+  # password: String
+  + createdAt: Timestamp
+}
+
+class Educator extends User {
+  + speciality: String
+}
+
+class Child extends User {
+  ' userId, email, password, createdAt inherited from User
+  + firstName: String
+  + lastName: String
+  + birthdate: Date
+  + avatarUrl: URL
+  + specialConditions: SpecialCondition[]
+}
+
+' --- Game Structure ---
+
+class Game {
+  + gameId: UUID
+  + name: String
+  + pictureUrl: URL
+  + instruction: String
+  + category: GameCategory
+  + type: GameType
+  --
+  + getLevels(): Level[]
+}
+
+class Level {
+  + levelId: UUID
+  + levelNumber: Int
+  --
+  + getScreens(): Screen[]
+}
+
+abstract class Screen {
+  + screenId: UUID
+  + screenNumber: Int
+  --
+  + {abstract} getOptions(): Option[]
+  + {abstract} checkAnswer(selectedOptions: Option[]): Boolean
+}
+
+class MultipleChoiceScreen extends Screen {
+  --
+  + getOptions(): Option[]
+  + checkAnswer(selectedOptions: Option[]): Boolean
+}
+
+class MemoryScreen extends Screen {
+  --
+  + getOptions(): Option[]
+  + checkAnswer(selectedOptions: Option[]): Boolean
+}
+note top of MemoryScreen
+  Presents pairs of options identified by
+  a common `pairId`. Player needs to select
+  two options with the same `pairId`.
+end note
+
+class Option {
+  + optionId: UUID
+  + labelText: String {nullable}
+  + pictureUrl: URL {nullable}
+  + pairId: UUID {nullable} ' Identifier to link pairs in Memory games
+}
+note bottom of Option
+  Represents a clickable choice or item
+  presented on a screen. `pairId` is used for
+  Memory games to identify matching items.
+end note
+
+' --- Progress Tracking ---
+
+class GameSession {
+  + sessionId: UUID
+  + startTime: Timestamp
+  + endTime: Timestamp {nullable}
+  + overallResult: String {nullable}
+}
+
+class ScreenAttempt {
+  + attemptId: UUID
+  + timestamp: Timestamp
+  + isCorrect: Boolean
+  + timeTakenMs: Int
+  + hintsUsed: Int
+}
+
+
+' --- Relationships ---
+Educator "1" -- "0..*" Game : creates
+
+' Game Structure Relationships
+Game "1" *-- "1..*" Level
+Level "1" *-- "1..*" Screen
+Screen "1" o-- "1..*" Option
+
+MultipleChoiceScreen "1" -- "1..*" Option : identifies correct >
+
+' Progress Tracking Relationships
+Child "1" -- "0..*" GameSession : plays >
+Game "1" -- "0..*" GameSession : records sessions for >
+GameSession "1" *-- "1..*" ScreenAttempt : >
+Screen "1" -- "0..*" ScreenAttempt : attempted on >
+Option "1" -- "0..*" ScreenAttempt : selected in >
+
+@enduml

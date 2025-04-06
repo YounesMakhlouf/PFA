@@ -31,15 +31,14 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Set portrait orientation for home page
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    
+
     return Scaffold(
       body: Container(
-        color: const Color(0xFFE6F2F5), // Light blue background like in the image
+        color: const Color(0xFFE6F2F5),
         child: SafeArea(
           child: Column(
             children: [
@@ -74,7 +73,8 @@ class HomePage extends StatelessWidget {
                           ]);
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const ColorsGame()),
+                            MaterialPageRoute(
+                                builder: (context) => const ColorsGame()),
                           ).then((_) {
                             // Reset to portrait when returning to home
                             SystemChrome.setPreferredOrientations([
@@ -84,7 +84,7 @@ class HomePage extends StatelessWidget {
                           });
                         },
                       ),
-                      
+
                       // Animals Game
                       GameCard(
                         title: 'الحيوانات',
@@ -93,7 +93,7 @@ class HomePage extends StatelessWidget {
                           // Will implement later
                         },
                       ),
-                      
+
                       // Fruits and Vegetables Game
                       GameCard(
                         title: 'خضر و غلال',
@@ -102,7 +102,7 @@ class HomePage extends StatelessWidget {
                           // Will implement later
                         },
                       ),
-                      
+
                       // Numbers Game
                       GameCard(
                         title: 'الأرقام',
@@ -111,7 +111,7 @@ class HomePage extends StatelessWidget {
                           // Will implement later
                         },
                       ),
-                      
+
                       // Emotions Matching Game
                       GameCard(
                         title: 'تطابق المشاعر',
@@ -153,7 +153,7 @@ class GameCard extends StatelessWidget {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: const Color(0xFF7FBCD2), // Teal blue like in the image
+                color: const Color(0xFF7FBCD2),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
