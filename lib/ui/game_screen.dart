@@ -23,7 +23,8 @@ class GameScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (currentScreen is MultipleChoiceScreen) {
-      return _buildMultipleChoiceScreen(context, currentScreen as MultipleChoiceScreen);
+      return _buildMultipleChoiceScreen(
+          context, currentScreen as MultipleChoiceScreen);
     } else if (currentScreen is MemoryScreen) {
       return _buildMemoryScreen(context, currentScreen as MemoryScreen);
     } else {
@@ -31,7 +32,8 @@ class GameScreenWidget extends StatelessWidget {
     }
   }
 
-  Widget _buildMultipleChoiceScreen(BuildContext context, MultipleChoiceScreen screen) {
+  Widget _buildMultipleChoiceScreen(
+      BuildContext context, MultipleChoiceScreen screen) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -39,7 +41,7 @@ class GameScreenWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(
-            screen.correctAnswer.label,
+            screen.correctAnswer.labelText ?? '',
             style: const TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.bold,
@@ -57,9 +59,9 @@ class GameScreenWidget extends StatelessWidget {
           runSpacing: 16,
           children: screen.options.map((option) {
             // For colors game, use colored circles
-            if (game.category == GameCategory.COLORS) {
+            if (game.category == GameCategory.COLORS_SHAPES) {
               Color color;
-              switch (option.label) {
+              switch (option.labelText) {
                 case 'أحمر':
                   color = Colors.red;
                   break;
@@ -107,13 +109,14 @@ class GameScreenWidget extends StatelessWidget {
                 onPressed: () => onOptionSelected(option),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: game.themeColor,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
                 child: Text(
-                  option.label,
+                  option.labelText ?? '',
                   style: const TextStyle(fontSize: 18),
                 ),
               );
@@ -129,7 +132,9 @@ class GameScreenWidget extends StatelessWidget {
             duration: const Duration(milliseconds: 300),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: isCorrect! ? Colors.green.withOpacity(0.2) : Colors.red.withOpacity(0.2),
+              color: isCorrect!
+                  ? Colors.green.withOpacity(0.2)
+                  : Colors.red.withOpacity(0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(

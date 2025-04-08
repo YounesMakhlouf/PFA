@@ -18,7 +18,7 @@ class _ColorsGameState extends State<ColorsGame> {
   late MultipleChoiceScreen currentScreen;
   int currentLevelIndex = 0;
   int currentScreenIndex = 0;
-  
+
   // Track if the answer was correct
   bool? isCorrect;
 
@@ -40,13 +40,13 @@ class _ColorsGameState extends State<ColorsGame> {
 
   // Initialize the game with levels and screens
   void _initializeGame() {
-    // Create color options with empty picture paths since we'll use colored circles
-    final redOption = Option(label: 'أحمر', picture: '');
-    final greenOption = Option(label: 'أخضر', picture: '');
-    final yellowOption = Option(label: 'أصفر', picture: '');
-    final blueOption = Option(label: 'أزرق', picture: '');
-    final purpleOption = Option(label: 'بنفسجي', picture: '');
-    
+    // Create color options with empty pictureUrl paths since we'll use colored circles
+    final redOption = Option(labelText: 'أحمر', pictureUrl: '');
+    final greenOption = Option(labelText: 'أخضر', pictureUrl: '');
+    final yellowOption = Option(labelText: 'أصفر', pictureUrl: '');
+    final blueOption = Option(labelText: 'أزرق', pictureUrl: '');
+    final purpleOption = Option(labelText: 'بنفسجي', pictureUrl: '');
+
     // Create screens for level 1
     final screens = [
       MultipleChoiceScreen(
@@ -65,27 +65,28 @@ class _ColorsGameState extends State<ColorsGame> {
         correctAnswer: yellowOption,
       ),
     ];
-    
+
     // Create level
     final level1 = Level(
       levelNumber: 1,
       screens: screens,
     );
-    
+
     // Create game
     game = Game(
       name: 'لعبة الألوان',
-      picture: 'assets/images/colors_game.png',
+      pictureUrl: 'assets/images/colors_game.png',
       instruction: 'اختر اللون الصحيح',
-      category: GameCategory.COLORS,
+      category: GameCategory.COLORS_SHAPES,
       type: GameType.MULTIPLE_CHOICE,
       levels: [level1],
     );
-    
+
     // Set current level and screen
     currentLevel = game.levels[currentLevelIndex];
-    currentScreen = currentLevel.screens[currentScreenIndex] as MultipleChoiceScreen;
-    
+    currentScreen =
+        currentLevel.screens[currentScreenIndex] as MultipleChoiceScreen;
+
     // Reset feedback
     isCorrect = null;
   }
@@ -95,23 +96,26 @@ class _ColorsGameState extends State<ColorsGame> {
     setState(() {
       // Reset feedback
       isCorrect = null;
-      
+
       // Check if there are more screens in the current level
       if (currentScreenIndex < currentLevel.screens.length - 1) {
         currentScreenIndex++;
-        currentScreen = currentLevel.screens[currentScreenIndex] as MultipleChoiceScreen;
+        currentScreen =
+            currentLevel.screens[currentScreenIndex] as MultipleChoiceScreen;
       } else if (currentLevelIndex < game.levels.length - 1) {
         // Move to the next level
         currentLevelIndex++;
         currentScreenIndex = 0;
         currentLevel = game.levels[currentLevelIndex];
-        currentScreen = currentLevel.screens[currentScreenIndex] as MultipleChoiceScreen;
+        currentScreen =
+            currentLevel.screens[currentScreenIndex] as MultipleChoiceScreen;
       } else {
         // Game completed, restart
         currentLevelIndex = 0;
         currentScreenIndex = 0;
         currentLevel = game.levels[currentLevelIndex];
-        currentScreen = currentLevel.screens[currentScreenIndex] as MultipleChoiceScreen;
+        currentScreen =
+            currentLevel.screens[currentScreenIndex] as MultipleChoiceScreen;
       }
     });
   }
@@ -119,8 +123,9 @@ class _ColorsGameState extends State<ColorsGame> {
   // Check if the selected option is correct
   void _checkAnswer(Option selectedOption) {
     setState(() {
-      isCorrect = selectedOption.label == currentScreen.correctAnswer.label;
-      
+      isCorrect =
+          selectedOption.labelText == currentScreen.correctAnswer.labelText;
+
       // If correct, move to the next screen after a delay
       if (isCorrect!) {
         Future.delayed(const Duration(seconds: 1), () {

@@ -1,43 +1,61 @@
-class Screen {
-  final int screenNumber;
-  
-  Screen({
-    required this.screenNumber,
-  });
+import 'package:uuid/uuid.dart';
 
-  bool isCorrectAnswer() {
-    return false; // Base implementation
+class Screen {
+  final String screenId;
+  final int screenNumber;
+
+  Screen({
+    String? screenId,
+    required this.screenNumber,
+  }) : screenId = screenId ?? const Uuid().v4();
+
+  List<Option> getOptions() {
+    return []; // Base implementation, to be overridden
   }
 
-  Future<void> fetchNextScreen() async {
-    // Implementation to fetch the next screen
+  bool checkAnswer(List<Option> selectedOptions) {
+    return false; // Base implementation, to be overridden
   }
 }
 
 class Option {
-  final String label;
-  final String picture;
+  final String optionId;
+  final String? labelText;
+  final String? pictureUrl;
+  final String? pairId; // Used for Memory games to identify matching pairs
 
   Option({
-    required this.label,
-    required this.picture,
-  });
+    String? optionId,
+    this.labelText,
+    this.pictureUrl,
+    this.pairId,
+  }) : optionId = optionId ?? const Uuid().v4();
 }
 
 class MemoryScreen extends Screen {
   final List<Option> options;
-  final List<Option> correctAnswers;
 
   MemoryScreen({
+    String? screenId,
     required super.screenNumber,
     required this.options,
-    required this.correctAnswers,
-  });
+  }) : super(screenId: screenId);
 
   @override
-  bool isCorrectAnswer() {
-    // Implementation for memory game
-    return true;
+  List<Option> getOptions() {
+    return options;
+  }
+
+  @override
+  bool checkAnswer(List<Option> selectedOptions) {
+    if (selectedOptions.length != 2) return false;
+    if (selectedOptions[0].pairId == null ||
+        selectedOptions[1].pairId == null) {
+      return false;
+    }
+
+    // Check if the pairIds match
+    return selectedOptions[0].pairId == selectedOptions[1].pairId;
   }
 }
 
@@ -46,14 +64,20 @@ class MultipleChoiceScreen extends Screen {
   final Option correctAnswer;
 
   MultipleChoiceScreen({
+    String? screenId,
     required super.screenNumber,
     required this.options,
     required this.correctAnswer,
-  });
+  }) : super(screenId: screenId);
 
   @override
-  bool isCorrectAnswer() {
-    // Implementation for multiple choice game
-    return true;
+  List<Option> getOptions() {
+    return options;
+  }
+
+  @override
+  bool checkAnswer(List<Option> selectedOptions) {
+    if (selectedOptions.isEmpty) return false;
+    return selectedOptions.first.optionId == correctAnswer.optionId;
   }
 }
