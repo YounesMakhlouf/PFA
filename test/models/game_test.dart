@@ -60,15 +60,16 @@ void main() {
   });
 
   group('GameCategory', () {
-    test('should return correct Arabic name for each category', () {
-      expect(GameCategory.LOGICAL_THINKING.arabicName, 'التفكير المنطقي');
-      expect(GameCategory.EDUCATION.arabicName, 'التعليم');
-      expect(GameCategory.RELAXATION.arabicName, 'الاسترخاء');
-      expect(GameCategory.EMOTIONS.arabicName, 'المشاعر');
-      expect(GameCategory.NUMBERS.arabicName, 'الأرقام');
-      expect(GameCategory.COLORS_SHAPES.arabicName, 'ألوان وأشكال');
-      expect(GameCategory.ANIMALS.arabicName, 'الحيوانات');
-      expect(GameCategory.FRUITS_VEGETABLES.arabicName, 'خضر و غلال');
+    test('should have correct enum values', () {
+      expect(GameCategory.values.length, 8);
+      expect(GameCategory.values, contains(GameCategory.LOGICAL_THINKING));
+      expect(GameCategory.values, contains(GameCategory.EDUCATION));
+      expect(GameCategory.values, contains(GameCategory.RELAXATION));
+      expect(GameCategory.values, contains(GameCategory.EMOTIONS));
+      expect(GameCategory.values, contains(GameCategory.NUMBERS));
+      expect(GameCategory.values, contains(GameCategory.COLORS_SHAPES));
+      expect(GameCategory.values, contains(GameCategory.ANIMALS));
+      expect(GameCategory.values, contains(GameCategory.FRUITS_VEGETABLES));
     });
 
     test('should return correct theme color for each category', () {

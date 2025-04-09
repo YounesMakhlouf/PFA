@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'games/colors_game.dart';
+import 'l10n/app_localizations.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,14 +14,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'تطبيق تعلم التوحد',
+      title: AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: 'Arial',
       ),
-      locale: const Locale('ar', 'SA'),
+      locale: const Locale('ar'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: const HomePage(),
     );
   }
@@ -42,11 +45,11 @@ class HomePage extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: [
-              const Padding(
-                padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
                 child: Text(
-                  'ألعاب التعلم',
-                  style: TextStyle(
+                  AppLocalizations.of(context).learningGames,
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF2D7A9C),
@@ -63,7 +66,7 @@ class HomePage extends StatelessWidget {
                     children: [
                       // Colors and Shapes Game
                       GameCard(
-                        title: 'ألوان وأشكال',
+                        title: AppLocalizations.of(context).colorsAndShapes,
                         imagePath: 'assets/images/colors_icon.png',
                         onTap: () {
                           // Set landscape orientation for game
@@ -87,7 +90,7 @@ class HomePage extends StatelessWidget {
 
                       // Animals Game
                       GameCard(
-                        title: 'الحيوانات',
+                        title: AppLocalizations.of(context).animals,
                         imagePath: 'assets/images/animals_icon.png',
                         onTap: () {
                           // Will implement later
@@ -96,7 +99,7 @@ class HomePage extends StatelessWidget {
 
                       // Fruits and Vegetables Game
                       GameCard(
-                        title: 'خضر و غلال',
+                        title: AppLocalizations.of(context).fruitsAndVegetables,
                         imagePath: 'assets/images/fruits_icon.png',
                         onTap: () {
                           // Will implement later
@@ -105,7 +108,7 @@ class HomePage extends StatelessWidget {
 
                       // Numbers Game
                       GameCard(
-                        title: 'الأرقام',
+                        title: AppLocalizations.of(context).numbers,
                         imagePath: 'assets/images/numbers_icon.png',
                         onTap: () {
                           // Will implement later
@@ -114,7 +117,7 @@ class HomePage extends StatelessWidget {
 
                       // Emotions Matching Game
                       GameCard(
-                        title: 'تطابق المشاعر',
+                        title: AppLocalizations.of(context).emotions,
                         imagePath: 'assets/images/emotions_icon.png',
                         onTap: () {
                           // Will implement later

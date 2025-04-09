@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/models/screen.dart';
 import 'package:pfa/ui/game_screen.dart';
+import 'package:pfa/l10n/app_localizations.dart';
 
 class ColorsGame extends StatefulWidget {
   const ColorsGame({Key? key}) : super(key: key);
@@ -30,6 +31,11 @@ class _ColorsGameState extends State<ColorsGame> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _initializeGame();
   }
 
@@ -39,13 +45,25 @@ class _ColorsGameState extends State<ColorsGame> {
   }
 
   // Initialize the game with levels and screens
+  // Store localized options
+  late Option redOption;
+  late Option greenOption;
+  late Option yellowOption;
+  late Option blueOption;
+  late Option purpleOption;
+
   void _initializeGame() {
     // Create color options with empty pictureUrl paths since we'll use colored circles
-    final redOption = Option(labelText: 'أحمر', pictureUrl: '');
-    final greenOption = Option(labelText: 'أخضر', pictureUrl: '');
-    final yellowOption = Option(labelText: 'أصفر', pictureUrl: '');
-    final blueOption = Option(labelText: 'أزرق', pictureUrl: '');
-    final purpleOption = Option(labelText: 'بنفسجي', pictureUrl: '');
+    redOption =
+        Option(labelText: AppLocalizations.of(context).red, pictureUrl: '');
+    greenOption =
+        Option(labelText: AppLocalizations.of(context).green, pictureUrl: '');
+    yellowOption =
+        Option(labelText: AppLocalizations.of(context).yellow, pictureUrl: '');
+    blueOption =
+        Option(labelText: AppLocalizations.of(context).blue, pictureUrl: '');
+    purpleOption =
+        Option(labelText: AppLocalizations.of(context).purple, pictureUrl: '');
 
     // Create screens for level 1
     final screens = [
@@ -74,9 +92,9 @@ class _ColorsGameState extends State<ColorsGame> {
 
     // Create game
     game = Game(
-      name: 'لعبة الألوان',
+      name: AppLocalizations.of(context).colorsAndShapes,
       pictureUrl: 'assets/images/colors_game.png',
-      instruction: 'اختر اللون الصحيح',
+      instruction: AppLocalizations.of(context).chooseCorrectColor,
       category: GameCategory.COLORS_SHAPES,
       type: GameType.MULTIPLE_CHOICE,
       levels: [level1],

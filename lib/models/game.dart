@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pfa/models/screen.dart';
+import 'package:pfa/l10n/app_localizations.dart';
 
 enum GameCategory {
   LOGICAL_THINKING,
@@ -15,24 +16,24 @@ enum GameCategory {
 
 // Extension to get UI-friendly properties for game categories
 extension GameCategoryExtension on GameCategory {
-  String get arabicName {
+  String localizedName(BuildContext context) {
     switch (this) {
       case GameCategory.LOGICAL_THINKING:
-        return 'التفكير المنطقي';
+        return AppLocalizations.of(context).logicalThinking;
       case GameCategory.EDUCATION:
-        return 'التعليم';
+        return AppLocalizations.of(context).education;
       case GameCategory.RELAXATION:
-        return 'الاسترخاء';
+        return AppLocalizations.of(context).relaxation;
       case GameCategory.EMOTIONS:
-        return 'المشاعر';
+        return AppLocalizations.of(context).emotions;
       case GameCategory.NUMBERS:
-        return 'الأرقام';
+        return AppLocalizations.of(context).numbers;
       case GameCategory.COLORS_SHAPES:
-        return 'ألوان وأشكال';
+        return AppLocalizations.of(context).colorsAndShapes;
       case GameCategory.ANIMALS:
-        return 'الحيوانات';
+        return AppLocalizations.of(context).animals;
       case GameCategory.FRUITS_VEGETABLES:
-        return 'خضر و غلال';
+        return AppLocalizations.of(context).fruitsAndVegetables;
     }
   }
 

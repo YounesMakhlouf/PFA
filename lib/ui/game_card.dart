@@ -45,7 +45,7 @@ class GameCardWidget extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                category.arabicName,
+                category.localizedName(context),
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

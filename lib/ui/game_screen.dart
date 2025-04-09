@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/models/screen.dart';
+import 'package:pfa/l10n/app_localizations.dart';
 
 class GameScreenWidget extends StatelessWidget {
   final Game game;
@@ -28,7 +29,8 @@ class GameScreenWidget extends StatelessWidget {
     } else if (currentScreen is MemoryScreen) {
       return _buildMemoryScreen(context, currentScreen as MemoryScreen);
     } else {
-      return const Center(child: Text('غير معروف نوع الشاشة'));
+      return Center(
+          child: Text(AppLocalizations.of(context).unknownScreenType));
     }
   }
 

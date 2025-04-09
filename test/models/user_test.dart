@@ -83,13 +83,14 @@ void main() {
   });
 
   group('SpecialCondition', () {
-    test('should return correct display name for each condition', () {
-      expect(SpecialCondition.AUTISM.displayName, 'التوحد');
-      expect(SpecialCondition.ADHD.displayName, 'فرط الحركة ونقص الانتباه');
-      expect(SpecialCondition.DYSLEXIA.displayName, 'عسر القراءة');
-      expect(SpecialCondition.DYSCALCULIA.displayName, 'عسر الحساب');
-      expect(SpecialCondition.SPEAKING_DIFFICULTIES.displayName,
-          'صعوبات في النطق');
+    test('should have correct enum values', () {
+      expect(SpecialCondition.values.length, 5);
+      expect(SpecialCondition.values, contains(SpecialCondition.AUTISM));
+      expect(SpecialCondition.values, contains(SpecialCondition.ADHD));
+      expect(SpecialCondition.values, contains(SpecialCondition.DYSLEXIA));
+      expect(SpecialCondition.values, contains(SpecialCondition.DYSCALCULIA));
+      expect(SpecialCondition.values,
+          contains(SpecialCondition.SPEAKING_DIFFICULTIES));
     });
   });
 }

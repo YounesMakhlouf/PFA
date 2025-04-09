@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import '../l10n/app_localizations.dart';
 
 abstract class User {
   final String userId;
@@ -25,18 +27,18 @@ enum SpecialCondition {
 }
 
 extension SpecialConditionExtension on SpecialCondition {
-  String get displayName {
+  String displayName(BuildContext context) {
     switch (this) {
       case SpecialCondition.AUTISM:
-        return 'التوحد';
+        return AppLocalizations.of(context).autism;
       case SpecialCondition.ADHD:
-        return 'فرط الحركة ونقص الانتباه';
+        return AppLocalizations.of(context).adhd;
       case SpecialCondition.DYSLEXIA:
-        return 'عسر القراءة';
+        return AppLocalizations.of(context).dyslexia;
       case SpecialCondition.DYSCALCULIA:
-        return 'عسر الحساب';
+        return AppLocalizations.of(context).dyscalculia;
       case SpecialCondition.SPEAKING_DIFFICULTIES:
-        return 'صعوبات في النطق';
+        return AppLocalizations.of(context).speakingDifficulties;
     }
   }
 }
