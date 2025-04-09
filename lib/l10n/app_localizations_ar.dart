@@ -60,4 +60,18 @@ class AppLocalizationsAr extends AppLocalizations {
   // Error messages
   @override
   String get unknownScreenType => 'غير معروف نوع الشاشة';
+
+  // Game feedback
+  @override
+  String get correct => 'صحيح! 👏';
+  @override
+  String get tryAgain => 'حاول مرة أخرى! 🤔';
+
+  // Game UI
+  @override
+  String get level => 'المستوى';
+  @override
+  String get screen => 'الشاشة';
+  @override
+  String get memoryGameUnderDevelopment => 'لعبة الذاكرة قيد التطوير';
 }

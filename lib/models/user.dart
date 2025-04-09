@@ -51,21 +51,16 @@ class Child extends User {
   final List<SpecialCondition> specialConditions;
 
   Child({
-    String? userId,
-    required String email,
-    required String password,
-    DateTime? createdAt,
+    super.userId,
+    required super.email,
+    required super.password,
+    super.createdAt,
     required this.firstName,
     required this.lastName,
     required this.birthdate,
     this.avatarUrl,
     required this.specialConditions,
-  }) : super(
-          userId: userId,
-          email: email,
-          password: password,
-          createdAt: createdAt,
-        );
+  });
 
   String get fullName => '$firstName $lastName';
 
@@ -85,15 +80,10 @@ class Educator extends User {
   final String speciality;
 
   Educator({
-    String? userId,
-    required String email,
-    required String password,
-    DateTime? createdAt,
+    super.userId,
+    required super.email,
+    required super.password,
+    super.createdAt,
     required this.speciality,
-  }) : super(
-          userId: userId,
-          email: email,
-          password: password,
-          createdAt: createdAt,
-        );
+  });
 }

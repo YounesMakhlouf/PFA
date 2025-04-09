@@ -66,6 +66,15 @@ abstract class AppLocalizations {
 
   // Error messages
   String get unknownScreenType;
+
+  // Game feedback
+  String get correct;
+  String get tryAgain;
+
+  // Game UI
+  String get level;
+  String get screen;
+  String get memoryGameUnderDevelopment;
 }
 
 class _AppLocalizationsDelegate

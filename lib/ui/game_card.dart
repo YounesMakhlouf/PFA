@@ -7,11 +7,11 @@ class GameCardWidget extends StatelessWidget {
   final bool isEnabled;
 
   const GameCardWidget({
-    Key? key,
+    super.key,
     required this.category,
     required this.onTap,
     this.isEnabled = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

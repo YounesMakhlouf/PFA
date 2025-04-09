@@ -36,10 +36,10 @@ class MemoryScreen extends Screen {
   final List<Option> options;
 
   MemoryScreen({
-    String? screenId,
+    super.screenId,
     required super.screenNumber,
     required this.options,
-  }) : super(screenId: screenId);
+  });
 
   @override
   List<Option> getOptions() {
@@ -64,11 +64,11 @@ class MultipleChoiceScreen extends Screen {
   final Option correctAnswer;
 
   MultipleChoiceScreen({
-    String? screenId,
+    super.screenId,
     required super.screenNumber,
     required this.options,
     required this.correctAnswer,
-  }) : super(screenId: screenId);
+  });
 
   @override
   List<Option> getOptions() {

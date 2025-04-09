@@ -6,7 +6,7 @@ import 'package:pfa/ui/game_screen.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 
 class ColorsGame extends StatefulWidget {
-  const ColorsGame({Key? key}) : super(key: key);
+  const ColorsGame({super.key});
 
   @override
   State<ColorsGame> createState() => _ColorsGameState();

@@ -12,14 +12,14 @@ class GameScreenWidget extends StatelessWidget {
   final Function(Option) onOptionSelected;
 
   const GameScreenWidget({
-    Key? key,
+    super.key,
     required this.game,
     required this.currentScreen,
     required this.currentLevel,
     required this.currentScreenNumber,
     required this.onOptionSelected,
     this.isCorrect,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -92,11 +92,11 @@ class GameScreenWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: color,
                       shape: BoxShape.circle,
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(
                           color: Colors.black26,
                           blurRadius: 5,
-                          offset: const Offset(0, 2),
+                          offset: Offset(0, 2),
                         ),
                       ],
                     ),
@@ -140,7 +140,9 @@ class GameScreenWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
-              isCorrect! ? 'صحيح! 👏' : 'حاول مرة أخرى! 🤔',
+              isCorrect!
+                  ? AppLocalizations.of(context).correct
+                  : AppLocalizations.of(context).tryAgain,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -158,7 +160,7 @@ class GameScreenWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'المستوى: $currentLevel',
+                '${AppLocalizations.of(context).level}: $currentLevel',
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -166,7 +168,7 @@ class GameScreenWidget extends StatelessWidget {
               ),
               const SizedBox(width: 16),
               Text(
-                'الشاشة: $currentScreenNumber',
+                '${AppLocalizations.of(context).screen}: $currentScreenNumber',
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -181,6 +183,7 @@ class GameScreenWidget extends StatelessWidget {
 
   Widget _buildMemoryScreen(BuildContext context, MemoryScreen screen) {
     // Implement memory game UI here
-    return const Center(child: Text('لعبة الذاكرة قيد التطوير'));
+    return Center(
+        child: Text(AppLocalizations.of(context).memoryGameUnderDevelopment));
   }
 }
