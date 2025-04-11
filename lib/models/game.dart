@@ -96,6 +96,9 @@ class Game {
   final GameCategory category;
   final GameType type;
   final List<Level> levels;
+  final String? educatorId;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   Game({
     String? gameId,
@@ -105,7 +108,45 @@ class Game {
     required this.category,
     required this.type,
     required this.levels,
+    this.educatorId,
+    this.createdAt,
+    this.updatedAt,
   }) : gameId = gameId ?? const Uuid().v4();
+
+  Map<String, dynamic> toJson() {
+    return {
+      'game_id': gameId,
+      'name': name,
+      'picture_url': pictureUrl,
+      'description': instruction,
+      'category': category.toString().split('.').last,
+      'type': type.toString().split('.').last,
+      'educator_id': educatorId,
+      'created_at': createdAt?.toIso8601String(),
+      'updated_at': updatedAt?.toIso8601String(),
+    };
+  }
+
+  factory Game.fromJson(Map<String, dynamic> json, {List<Level>? levels}) {
+    return Game(
+      gameId: json['game_id'],
+      name: json['name'],
+      pictureUrl: json['picture_url'] ?? '',
+      instruction: json['description'] ?? '',
+      category: GameCategory.values.firstWhere(
+          (e) => e.toString() == 'GameCategory.${json['category']}'),
+      type: GameType.values
+          .firstWhere((e) => e.toString() == 'GameType.${json['type']}'),
+      levels: levels ?? [],
+      educatorId: json['educator_id'],
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : null,
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
+          : null,
+    );
+  }
 
   Color get themeColor => category.themeColor;
 
@@ -116,14 +157,33 @@ class Level {
   final String levelId;
   final int levelNumber;
   final List<Screen> screens;
+  final String? gameId;
 
   Level({
     String? levelId,
     required this.levelNumber,
     required this.screens,
+    this.gameId,
   }) : levelId = levelId ?? const Uuid().v4();
 
   List<Screen> getScreens() {
     return screens;
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'level_id': levelId,
+      'level_number': levelNumber,
+      'game_id': gameId,
+    };
+  }
+
+  factory Level.fromJson(Map<String, dynamic> json, {List<Screen>? screens}) {
+    return Level(
+      levelId: json['level_id'],
+      levelNumber: json['level_number'],
+      gameId: json['game_id'],
+      screens: screens ?? [],
+    );
   }
 }

@@ -15,6 +15,14 @@ abstract class User {
     DateTime? createdAt,
   })  : userId = userId ?? const Uuid().v4(),
         createdAt = createdAt ?? DateTime.now();
+
+  Map<String, dynamic> toJson() {
+    return {
+      'user_id': userId,
+      'email': email,
+      'created_at': createdAt.toIso8601String(),
+    };
+  }
 }
 
 /// Represents a special condition that a child might have
@@ -74,6 +82,35 @@ class Child extends User {
     }
     return age;
   }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final baseJson = super.toJson();
+    return {
+      ...baseJson,
+      'first_name': firstName,
+      'last_name': lastName,
+      'birthdate': birthdate.toIso8601String(),
+      'avatar_url': avatarUrl,
+    };
+  }
+
+  factory Child.fromJson(Map<String, dynamic> json,
+      {List<SpecialCondition>? specialConditions}) {
+    return Child(
+      userId: json['user_id'],
+      email: json['email'],
+      password: '', // Password is not returned from the database
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : null,
+      firstName: json['first_name'],
+      lastName: json['last_name'],
+      birthdate: DateTime.parse(json['birthdate']),
+      avatarUrl: json['avatar_url'],
+      specialConditions: specialConditions ?? [],
+    );
+  }
 }
 
 class Educator extends User {
@@ -86,4 +123,25 @@ class Educator extends User {
     super.createdAt,
     required this.speciality,
   });
+
+  @override
+  Map<String, dynamic> toJson() {
+    final baseJson = super.toJson();
+    return {
+      ...baseJson,
+      'speciality': speciality,
+    };
+  }
+
+  factory Educator.fromJson(Map<String, dynamic> json) {
+    return Educator(
+      userId: json['user_id'],
+      email: json['email'],
+      password: '', // Password is not returned from the database
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : null,
+      speciality: json['speciality'],
+    );
+  }
 }

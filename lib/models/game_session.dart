@@ -24,6 +24,33 @@ class GameSession {
         startTime = startTime ?? DateTime.now(),
         attempts = attempts ?? [];
 
+  Map<String, dynamic> toJson() {
+    return {
+      'session_id': sessionId,
+      'start_time': startTime.toIso8601String(),
+      'end_time': endTime?.toIso8601String(),
+      'overall_result': overallResult,
+      'child_id': child.userId,
+      'game_id': game.gameId,
+    };
+  }
+
+  factory GameSession.fromJson(Map<String, dynamic> json,
+      {required Child child,
+      required Game game,
+      List<ScreenAttempt>? attempts}) {
+    return GameSession(
+      sessionId: json['session_id'],
+      startTime: DateTime.parse(json['start_time']),
+      endTime:
+          json['end_time'] != null ? DateTime.parse(json['end_time']) : null,
+      overallResult: json['overall_result'],
+      child: child,
+      game: game,
+      attempts: attempts ?? [],
+    );
+  }
+
   /// Calculates the duration of the session
   Duration get duration {
     if (endTime == null) {
@@ -57,6 +84,7 @@ class ScreenAttempt {
   final int hintsUsed;
   final Screen screen;
   final Option? selectedOption;
+  final String? sessionId;
 
   ScreenAttempt({
     String? attemptId,
@@ -66,6 +94,35 @@ class ScreenAttempt {
     this.hintsUsed = 0,
     required this.screen,
     this.selectedOption,
+    this.sessionId,
   })  : attemptId = attemptId ?? const Uuid().v4(),
         timestamp = timestamp ?? DateTime.now();
+
+  Map<String, dynamic> toJson() {
+    return {
+      'attempt_id': attemptId,
+      'timestamp': timestamp.toIso8601String(),
+      'is_correct': isCorrect,
+      'time_taken_ms': timeTakenMs,
+      'hints_used': hintsUsed,
+      'screen_id': screen.screenId,
+      'selected_option_ids':
+          selectedOption != null ? [selectedOption!.optionId] : [],
+      'session_id': sessionId,
+    };
+  }
+
+  factory ScreenAttempt.fromJson(Map<String, dynamic> json,
+      {required Screen screen, Option? selectedOption}) {
+    return ScreenAttempt(
+      attemptId: json['attempt_id'],
+      timestamp: DateTime.parse(json['timestamp']),
+      isCorrect: json['is_correct'],
+      timeTakenMs: json['time_taken_ms'],
+      hintsUsed: json['hints_used'] ?? 0,
+      screen: screen,
+      selectedOption: selectedOption,
+      sessionId: json['session_id'],
+    );
+  }
 }

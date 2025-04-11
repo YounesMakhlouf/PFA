@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pfa/services/supabase_service.dart';
 import 'games/colors_game.dart';
 import 'l10n/app_localizations.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await SupabaseService().initialize();
+
   runApp(const MyApp());
 }
 
