@@ -31,6 +31,9 @@ migrate_working_dir/
 .pub/
 /build/
 
+# Gradle problems report
+android/build/reports/problems/
+
 # Symbolication related
 app.*.symbols
 
