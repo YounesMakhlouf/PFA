@@ -5,13 +5,11 @@ import '../l10n/app_localizations.dart';
 abstract class User {
   final String userId;
   final String email;
-  final String password; // TODO: this should be handled securely
   final DateTime createdAt;
 
   User({
     String? userId,
     required this.email,
-    required this.password,
     DateTime? createdAt,
   })  : userId = userId ?? const Uuid().v4(),
         createdAt = createdAt ?? DateTime.now();
@@ -61,7 +59,6 @@ class Child extends User {
   Child({
     super.userId,
     required super.email,
-    required super.password,
     super.createdAt,
     required this.firstName,
     required this.lastName,
@@ -100,7 +97,6 @@ class Child extends User {
     return Child(
       userId: json['user_id'],
       email: json['email'],
-      password: '', // Password is not returned from the database
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
           : null,
@@ -119,7 +115,6 @@ class Educator extends User {
   Educator({
     super.userId,
     required super.email,
-    required super.password,
     super.createdAt,
     required this.speciality,
   });
@@ -137,7 +132,6 @@ class Educator extends User {
     return Educator(
       userId: json['user_id'],
       email: json['email'],
-      password: '', // Password is not returned from the database
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
           : null,

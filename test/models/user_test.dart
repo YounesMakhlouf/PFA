@@ -6,7 +6,6 @@ void main() {
     test('should create a Child with all required fields', () {
       final child = Child(
         email: 'test@example.com',
-        password: 'password123',
         firstName: 'Ahmed',
         lastName: 'Ali',
         birthdate: DateTime(2015, 5, 10),
@@ -15,7 +14,6 @@ void main() {
 
       expect(child.userId, isNotEmpty);
       expect(child.email, 'test@example.com');
-      expect(child.password, 'password123');
       expect(child.firstName, 'Ahmed');
       expect(child.lastName, 'Ali');
       expect(child.birthdate, DateTime(2015, 5, 10));
@@ -28,7 +26,6 @@ void main() {
           DateTime.now().day + 1);
       final child = Child(
         email: 'test@example.com',
-        password: 'password123',
         firstName: 'Ahmed',
         lastName: 'Ali',
         birthdate: birthdate,
@@ -41,7 +38,6 @@ void main() {
           DateTime.now().year - 8, DateTime.now().month, DateTime.now().day);
       final childBirthdayToday = Child(
         email: 'test@example.com',
-        password: 'password123',
         firstName: 'Ahmed',
         lastName: 'Ali',
         birthdate: birthdateToday,
@@ -55,7 +51,6 @@ void main() {
     test('should return full name correctly', () {
       final child = Child(
         email: 'test@example.com',
-        password: 'password123',
         firstName: 'Ahmed',
         lastName: 'Ali',
         birthdate: DateTime(2015, 5, 10),
@@ -70,13 +65,11 @@ void main() {
     test('should create an Educator with all required fields', () {
       final educator = Educator(
         email: 'teacher@example.com',
-        password: 'password123',
         speciality: 'Special Education',
       );
 
       expect(educator.userId, isNotEmpty);
       expect(educator.email, 'teacher@example.com');
-      expect(educator.password, 'password123');
       expect(educator.speciality, 'Special Education');
       expect(educator.createdAt, isNotNull);
     });

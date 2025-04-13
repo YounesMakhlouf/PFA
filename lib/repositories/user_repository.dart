@@ -31,7 +31,6 @@ class UserRepository {
       return Child(
         userId: response['user_id'],
         email: response['email'],
-        password: '', // Password is not returned from the database
         createdAt: DateTime.parse(response['created_at']),
         firstName: response['first_name'],
         lastName: response['last_name'],
@@ -45,12 +44,12 @@ class UserRepository {
     }
   }
 
-  Future<Child?> createChild(Child child) async {
+  Future<Child?> createChild(Child child, String password) async {
     try {
       // First create the user account
       final authResponse = await _supabaseService.signUp(
         email: child.email,
-        password: child.password,
+        password: password,
       );
 
       if (authResponse.user == null) {
@@ -79,7 +78,6 @@ class UserRepository {
       return Child(
         userId: userId,
         email: child.email,
-        password: child.password,
         firstName: child.firstName,
         lastName: child.lastName,
         birthdate: child.birthdate,
@@ -135,7 +133,6 @@ class UserRepository {
       return Educator(
         userId: response['user_id'],
         email: response['email'],
-        password: '', // Password is not returned from the database
         createdAt: DateTime.parse(response['created_at']),
         speciality: response['specialty'],
       );
@@ -145,12 +142,12 @@ class UserRepository {
     }
   }
 
-  Future<Educator?> createEducator(Educator educator) async {
+  Future<Educator?> createEducator(Educator educator, String password) async {
     try {
       // First create the user account
       final authResponse = await _supabaseService.signUp(
         email: educator.email,
-        password: educator.password,
+        password: password,
       );
 
       if (authResponse.user == null) {
@@ -169,7 +166,6 @@ class UserRepository {
       return Educator(
         userId: userId,
         email: educator.email,
-        password: educator.password,
         speciality: educator.speciality,
       );
     } catch (e) {
