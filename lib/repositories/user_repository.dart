@@ -2,7 +2,10 @@ import 'package:pfa/models/user.dart';
 import 'package:pfa/services/supabase_service.dart';
 
 class UserRepository {
-  final SupabaseService _supabaseService = SupabaseService();
+  final SupabaseService _supabaseService;
+
+  UserRepository({required SupabaseService supabaseService})
+      : _supabaseService = supabaseService;
 
   Future<Child?> getChildById(String userId) async {
     try {
@@ -12,8 +15,6 @@ class UserRepository {
           .eq('user_id', userId)
           .single();
 
-      if (response == null) return null;
-
       // Get special conditions
       final specialConditionsResponse = await _supabaseService.client
           .from('ChildSpecialCondition')
@@ -21,13 +22,11 @@ class UserRepository {
           .eq('child_id', userId);
 
       List<SpecialCondition> specialConditions = [];
-      if (specialConditionsResponse != null) {
-        specialConditions = (specialConditionsResponse as List)
-            .map((condition) => SpecialCondition.values.firstWhere((e) =>
-                e.toString() == 'SpecialCondition.${condition['condition']}'))
-            .toList();
-      }
-
+      specialConditions = (specialConditionsResponse as List)
+          .map((condition) => SpecialCondition.values.firstWhere((e) =>
+              e.toString() == 'SpecialCondition.${condition['condition']}'))
+          .toList();
+    
       return Child(
         userId: response['user_id'],
         email: response['email'],
@@ -127,8 +126,6 @@ class UserRepository {
           .select()
           .eq('user_id', userId)
           .single();
-
-      if (response == null) return null;
 
       return Educator(
         userId: response['user_id'],
