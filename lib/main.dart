@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pfa/services/supabase_service.dart';
+import 'package:pfa/services/logging_service.dart';
 import 'games/colors_game.dart';
 import 'l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await SupabaseService().initialize();
+  // Initialize logging service
+  final logger = LoggingService();
+  logger.initialize();
 
-  runApp(const MyApp());
+  try {
+    // Initialize Supabase
+    await SupabaseService().initialize();
+
+    runApp(const MyApp());
+  } catch (e, stackTrace) {
+    logger.error('Failed to initialize app', e, stackTrace);
+    // Show error UI instead of crashing
+    runApp(ErrorApp(errorMessage: e.toString()));
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -132,6 +144,55 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ErrorApp extends StatelessWidget {
+  final String errorMessage;
+
+  const ErrorApp({super.key, required this.errorMessage});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                  size: 60,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Application Error',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  errorMessage,
+                  style: const TextStyle(fontSize: 16),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: () {
+                    // Attempt to restart the app
+                    WidgetsBinding.instance.reassembleApplication();
+                  },
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

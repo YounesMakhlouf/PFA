@@ -1,15 +1,18 @@
 import 'package:pfa/models/game.dart';
 import 'package:pfa/models/screen.dart';
 import 'package:pfa/services/supabase_service.dart';
+import 'package:pfa/services/logging_service.dart';
 
 class GameRepository {
   final SupabaseService _supabaseService;
+  final LoggingService _logger = LoggingService();
 
   GameRepository({required SupabaseService supabaseService})
       : _supabaseService = supabaseService;
 
   Future<List<Game>> getAllGames() async {
     try {
+      _logger.info('Fetching all games');
       final response = await _supabaseService.client
           .from('Game')
           .select()
@@ -23,24 +26,27 @@ class GameRepository {
         }
       }
 
+      _logger.info('Successfully fetched ${games.length} games');
       return games;
-    } catch (e) {
-      print('Error getting games: $e');
+    } catch (e, stackTrace) {
+      _logger.error('Error getting games', e, stackTrace);
       return [];
     }
   }
 
   Future<Game?> getGameById(String gameId) async {
     try {
+      _logger.info('Fetching game by ID: $gameId');
       return await _getGameWithLevels(gameId);
-    } catch (e) {
-      print('Error getting game: $e');
+    } catch (e, stackTrace) {
+      _logger.error('Error getting game: $gameId', e, stackTrace);
       return null;
     }
   }
 
   Future<Game?> _getGameWithLevels(String gameId) async {
     try {
+      _logger.debug('Fetching game with levels: $gameId');
       final gameResponse = await _supabaseService.client
           .from('Game')
           .select()
@@ -61,7 +67,8 @@ class GameRepository {
           levels.add(level);
         }
       }
-    
+
+      _logger.debug('Successfully fetched game with ${levels.length} levels');
       return Game(
         gameId: gameResponse['game_id'],
         name: gameResponse['name'],
@@ -73,8 +80,8 @@ class GameRepository {
             (e) => e.toString() == 'GameType.${gameResponse['type']}'),
         levels: levels,
       );
-    } catch (e) {
-      print('Error in _getGameWithLevels: $e');
+    } catch (e, stackTrace) {
+      _logger.error('Error in _getGameWithLevels: $gameId', e, stackTrace);
       return null;
     }
   }
@@ -109,7 +116,7 @@ class GameRepository {
           }
         }
       }
-    
+
       return Level(
         levelId: levelResponse['level_id'],
         levelNumber: levelResponse['level_number'],
@@ -203,7 +210,6 @@ class GameRepository {
     }
   }
 
-  // Create a new game
   Future<Game?> createGame(Game game) async {
     try {
       // Insert game
