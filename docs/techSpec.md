@@ -9,7 +9,7 @@
         - Create games specifically focused on recognizing and understanding emotions.
         - Implement activities promoting logical thinking and problem-solving (puzzles, identify the intruder).
         - Ensure a user interface and experience designed according to autism-friendly principles (See Section 7).
-        - Provide an integrated dashboard accessible *after login* for parents to track the child's progress within the app.
+        - Provide an integrated dashboard accessible *after login* for parents to track the child's progress within the app. Use a complex question to ensure only the parent accesses statistics (like an addition)
         - Develop a *separate, web-based interface* for verified Educators/Specialists to submit new game configurations.
 - **3. Target Audience**
     - **Primary Users (Child):** Children with learning difficulties. The design, content, and interaction patterns must be tailored to their specific learning styles and sensory sensitivities.
@@ -119,7 +119,7 @@
     - **Performance:** Target <200ms UI response time for interactions. Smooth animations (60fps). Fast game load times (<3 seconds). Optimized asset loading.
     - **Scalability:** Supabase provides managed scaling. Database queries must be optimized (use indexes, efficient joins). Design for potential growth in users and content.
     - **Security:** Secure authentication (password hashing via Supabase Auth). Role-based access control *within the backend functions* if needed (e.g., ensuring only authorized functions can trigger AI analysis). Encrypted data transmission (HTTPS default with Supabase). Regular security audits.
-    - **Accessibility:** Adhere to [WCAG AA guidelines](https://webaim.org/standards/wcag/checklist) where applicable. Crucially, implement all autism-specific UX considerations (Section 7). Support dynamic font sizes if feasible.
+    - **Accessibility:** Adhere to [WCAG AA guidelines](https://webaim.org/standards/wcag/checklist) where applicable. Crucially, implement all autism-specific UX considerations (Section 7). Support dynamic font sizes if feasible. Add accessibility tests (https://docs.flutter.dev/ui/accessibility-and-internationalization/accessibility#testing-accessibility-on-mobile)
     - **Reliability:** High availability (>99.5%). Graceful degradation if network fails (offline caching of basic data).
     - **Maintainability:** Clean, well-documented code. Consistent coding style. Use of a clear architectural pattern. Modular design for games.
 - **11. Deployment & Infrastructure**

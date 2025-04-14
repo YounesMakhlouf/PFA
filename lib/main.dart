@@ -8,12 +8,10 @@ import 'l10n/app_localizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize logging service
   final logger = LoggingService();
   logger.initialize();
 
   try {
-    // Initialize Supabase
     await SupabaseService().initialize();
 
     runApp(const MyApp());

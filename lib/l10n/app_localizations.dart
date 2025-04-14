@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'app_localizations_ar.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_fr.dart';
 
 abstract class AppLocalizations {
   AppLocalizations(String locale) : localeName = locale;
@@ -29,6 +30,7 @@ abstract class AppLocalizations {
   static const List<Locale> supportedLocales = [
     Locale('en'),
     Locale('ar'),
+    Locale('fr'),
   ];
 
   // App title
@@ -95,12 +97,13 @@ class _AppLocalizationsDelegate
 }
 
 AppLocalizations _lookupAppLocalizations(Locale locale) {
-  // Lookup logic when a locale is passed.
   switch (locale.languageCode) {
     case 'en':
       return AppLocalizationsEn();
     case 'ar':
       return AppLocalizationsAr();
+    case 'fr':
+      return AppLocalizationsFr();
   }
 
   throw FlutterError(
