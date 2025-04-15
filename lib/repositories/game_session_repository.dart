@@ -9,15 +9,17 @@ class GameSessionRepository {
   final SupabaseService _supabaseService;
   final GameRepository _gameRepository;
   final UserRepository _userRepository;
-  final LoggingService _logger = LoggingService();
+  final LoggingService _logger;
 
   GameSessionRepository({
     required SupabaseService supabaseService,
     required GameRepository gameRepository,
     required UserRepository userRepository,
+    required LoggingService logger,
   })  : _supabaseService = supabaseService,
         _gameRepository = gameRepository,
-        _userRepository = userRepository;
+        _userRepository = userRepository,
+        _logger = logger;
 
   Future<List<GameSession>> getSessionsByChildId(String childId) async {
     try {

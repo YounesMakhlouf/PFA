@@ -4,10 +4,13 @@ import 'package:pfa/services/supabase_service.dart';
 
 class UserRepository {
   final SupabaseService _supabaseService;
-  final LoggingService _logger = LoggingService();
+  final LoggingService _logger;
 
-  UserRepository({required SupabaseService supabaseService})
-      : _supabaseService = supabaseService;
+  UserRepository(
+      {required SupabaseService supabaseService,
+      required LoggingService logger})
+      : _supabaseService = supabaseService,
+        _logger = logger;
 
   Future<Child?> getChildById(String userId) async {
     try {
