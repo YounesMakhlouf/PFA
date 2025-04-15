@@ -158,7 +158,7 @@ class _ColorsGameState extends State<ColorsGame> {
     return Scaffold(
       appBar: AppBar(
         title: Text(game.name),
-        backgroundColor: game.themeColor.withOpacity(0.8),
+        backgroundColor: game.themeColor.withAlpha((0.8 * 255).round()),
         elevation: 0,
       ),
       body: Container(
@@ -167,7 +167,7 @@ class _ColorsGameState extends State<ColorsGame> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              game.themeColor.withOpacity(0.3),
+              game.themeColor.withAlpha((0.3 * 255).round()),
               Colors.white,
             ],
           ),

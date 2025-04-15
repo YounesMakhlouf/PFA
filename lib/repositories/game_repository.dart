@@ -122,8 +122,8 @@ class GameRepository {
         levelNumber: levelResponse['level_number'],
         screens: screens,
       );
-    } catch (e) {
-      print('Error in _getLevelWithScreens: $e');
+    } catch (e, stackTrace) {
+      _logger.error('Error in _getLevelWithScreens', e, stackTrace);
       return null;
     }
   }
@@ -168,8 +168,8 @@ class GameRepository {
         options: options,
         correctAnswer: correctAnswer!,
       );
-    } catch (e) {
-      print('Error in _getMultipleChoiceScreen: $e');
+    } catch (e, stackTrace) {
+      _logger.error('Error in _getMultipleChoiceScreen', e, stackTrace);
       return null;
     }
   }
@@ -204,8 +204,8 @@ class GameRepository {
         screenNumber: screenData['screen_number'],
         options: options,
       );
-    } catch (e) {
-      print('Error in _getMemoryScreen: $e');
+    } catch (e, stackTrace) {
+      _logger.error('Error in _getMemoryScreen', e, stackTrace);
       return null;
     }
   }
@@ -294,8 +294,8 @@ class GameRepository {
 
       // Return the created game with the new IDs
       return await getGameById(gameId);
-    } catch (e) {
-      print('Error creating game: $e');
+    } catch (e, stackTrace) {
+      _logger.error('Error creating game', e, stackTrace);
       return null;
     }
   }
