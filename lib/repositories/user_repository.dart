@@ -1,11 +1,16 @@
 import 'package:pfa/models/user.dart';
+import 'package:pfa/services/logging_service.dart';
 import 'package:pfa/services/supabase_service.dart';
 
 class UserRepository {
   final SupabaseService _supabaseService;
+  final LoggingService _logger;
 
-  UserRepository({required SupabaseService supabaseService})
-      : _supabaseService = supabaseService;
+  UserRepository(
+      {required SupabaseService supabaseService,
+      required LoggingService logger})
+      : _supabaseService = supabaseService,
+        _logger = logger;
 
   Future<Child?> getChildById(String userId) async {
     try {
@@ -26,7 +31,7 @@ class UserRepository {
           .map((condition) => SpecialCondition.values.firstWhere((e) =>
               e.toString() == 'SpecialCondition.${condition['condition']}'))
           .toList();
-    
+
       return Child(
         userId: response['user_id'],
         email: response['email'],
@@ -37,8 +42,8 @@ class UserRepository {
         avatarUrl: response['avatar_url'],
         specialConditions: specialConditions,
       );
-    } catch (e) {
-      print('Error getting child: $e');
+    } catch (e, stackTrace) {
+      _logger.error('Error getting child', e, stackTrace);
       return null;
     }
   }
@@ -83,8 +88,8 @@ class UserRepository {
         avatarUrl: child.avatarUrl,
         specialConditions: child.specialConditions,
       );
-    } catch (e) {
-      print('Error creating child: $e');
+    } catch (e, stackTrace) {
+      _logger.error('Error creating child', e, stackTrace);
       return null;
     }
   }
@@ -113,8 +118,8 @@ class UserRepository {
       }
 
       return true;
-    } catch (e) {
-      print('Error updating child: $e');
+    } catch (e, stackTrace) {
+      _logger.error('Error updating child', e, stackTrace);
       return false;
     }
   }
@@ -133,8 +138,8 @@ class UserRepository {
         createdAt: DateTime.parse(response['created_at']),
         speciality: response['specialty'],
       );
-    } catch (e) {
-      print('Error getting educator: $e');
+    } catch (e, stackTrace) {
+      _logger.error('Error getting educator', e, stackTrace);
       return null;
     }
   }
@@ -165,8 +170,8 @@ class UserRepository {
         email: educator.email,
         speciality: educator.speciality,
       );
-    } catch (e) {
-      print('Error creating educator: $e');
+    } catch (e, stackTrace) {
+      _logger.error('Error creating educator', e, stackTrace);
       return null;
     }
   }

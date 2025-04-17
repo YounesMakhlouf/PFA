@@ -23,14 +23,14 @@ class GameCardWidget extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: isEnabled ? onTap : null,
-        splashColor: category.themeColor.withOpacity(0.3),
+        splashColor: category.themeColor.withAlpha((0.3 * 255).round()),
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                category.themeColor.withOpacity(0.7),
+                category.themeColor.withAlpha((0.7 * 255).round()),
                 category.themeColor,
               ],
             ),

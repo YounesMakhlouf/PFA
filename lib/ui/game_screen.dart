@@ -135,8 +135,8 @@ class GameScreenWidget extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: isCorrect!
-                  ? Colors.green.withOpacity(0.2)
-                  : Colors.red.withOpacity(0.2),
+                  ? Colors.green.withAlpha((0.2 * 255).round())
+                  : Colors.red.withAlpha((0.2 * 255).round()),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
