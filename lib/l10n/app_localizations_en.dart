@@ -76,4 +76,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get memoryGameUnderDevelopment => 'Memory game under development';
   @override
   String get goBack => 'Go Back';
+  @override
+  String get selectableOption => 'Selectable option';
+  @override
+  String get selected => 'Selected';
+  @override
+  String get selectCorrectOption => 'Select the correct option';
 }

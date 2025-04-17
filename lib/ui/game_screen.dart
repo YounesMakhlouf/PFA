@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/models/screen.dart';
 import 'package:pfa/l10n/app_localizations.dart';
+import 'package:pfa/ui/option_widget.dart';
 
 class GameScreenWidget extends StatelessWidget {
   final Game game;
@@ -23,167 +24,119 @@ class GameScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (currentScreen is MultipleChoiceScreen) {
-      return _buildMultipleChoiceScreen(
-          context, currentScreen as MultipleChoiceScreen);
-    } else if (currentScreen is MemoryScreen) {
-      return _buildMemoryScreen(context, currentScreen as MemoryScreen);
+    final screenData = currentScreen;
+
+    if (screenData is MultipleChoiceScreen) {
+      return _buildMultipleChoiceUI(context,
+          screenData); // TODO: We will later add the logic here for memory games
     } else {
       return Center(
           child: Text(AppLocalizations.of(context).unknownScreenType));
     }
   }
 
-  Widget _buildMultipleChoiceScreen(
+  // --- Builder for Multiple Choice UI ---
+  Widget _buildMultipleChoiceUI(
       BuildContext context, MultipleChoiceScreen screen) {
+    final String prompt = AppLocalizations.of(context).selectCorrectOption;
+    // TODO: change to "screen.promptText ?? AppLocalizations.of(context).selectCorrectOption;" once we updazte the db
+
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        // Question or prompt
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            screen.correctAnswer.labelText ?? '',
-            style: const TextStyle(
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
+        _buildPrompt(context, prompt),
+        Expanded(
+          child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: _buildOptionsArea(context, screen.options),
+              )
           ),
         ),
-
-        const SizedBox(height: 24),
-
-        // Options
-        Wrap(
-          alignment: WrapAlignment.center,
-          spacing: 16,
-          runSpacing: 16,
-          children: screen.options.map((option) {
-            // For colors game, use colored circles
-            if (game.category == GameCategory.COLORS_SHAPES) {
-              Color color;
-              switch (option.labelText) {
-                case 'أحمر':
-                  color = Colors.red;
-                  break;
-                case 'أخضر':
-                  color = Colors.green;
-                  break;
-                case 'أصفر':
-                  color = Colors.yellow;
-                  break;
-                case 'أزرق':
-                  color = Colors.blue;
-                  break;
-                case 'بنفسجي':
-                  color = Colors.purple;
-                  break;
-                default:
-                  color = Colors.grey;
-              }
-
-              return Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () => onOptionSelected(option),
-                  borderRadius: BorderRadius.circular(40),
-                  child: Ink(
-                    decoration: BoxDecoration(
-                      color: color,
-                      shape: BoxShape.circle,
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 5,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    width: 80,
-                    height: 80,
-                  ),
-                ),
-              );
-            } else {
-              // For other games, use cards with text
-              return ElevatedButton(
-                onPressed: () => onOptionSelected(option),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: game.themeColor,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: Text(
-                  option.labelText ?? '',
-                  style: const TextStyle(fontSize: 18),
-                ),
-              );
-            }
-          }).toList(),
-        ),
-
-        const SizedBox(height: 24),
-
-        // Feedback area
-        if (isCorrect != null)
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: isCorrect!
-                  ? Colors.green.withAlpha((0.2 * 255).round())
-                  : Colors.red.withAlpha((0.2 * 255).round()),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              isCorrect!
-                  ? AppLocalizations.of(context).correct
-                  : AppLocalizations.of(context).tryAgain,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: isCorrect! ? Colors.green : Colors.red,
-              ),
-            ),
-          ),
-
-        const SizedBox(height: 16),
-
-        // Progress indicator
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '${AppLocalizations.of(context).level}: $currentLevel',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Text(
-                '${AppLocalizations.of(context).screen}: $currentScreenNumber',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
+        _buildFeedbackArea(context, isCorrect),
+        _buildProgressIndicator(context, currentLevel, currentScreenNumber),
       ],
     );
   }
 
-  Widget _buildMemoryScreen(BuildContext context, MemoryScreen screen) {
-    // Implement memory game UI here
-    return Center(
-        child: Text(AppLocalizations.of(context).memoryGameUnderDevelopment));
+  Widget _buildPrompt(BuildContext context, String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Widget _buildOptionsArea(BuildContext context, List<Option> options) {
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 16,
+      runSpacing: 16,
+      children: options.map((option) {
+        return OptionWidget(
+          option: option,
+          onTap: () => onOptionSelected(option),
+          gameThemeColor: game.themeColor,
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildFeedbackArea(BuildContext context, bool? isCorrect) {
+    if (isCorrect == null) {
+      return const SizedBox(height: 60);
+    }
+
+    final Color feedbackColor = isCorrect ? Colors.green : Colors.red;
+    final String feedbackText = isCorrect
+        ? AppLocalizations.of(context).correct
+        : AppLocalizations.of(context).tryAgain;
+    final IconData feedbackIcon = isCorrect ? Icons.check_circle : Icons.cancel;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+          color: feedbackColor.withOpacity(0.15),
+          borderRadius: BorderRadius.circular(12),
+          border:
+              Border.all(color: feedbackColor.withOpacity(0.5), width: 1.5)),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(feedbackIcon, color: feedbackColor, size: 28),
+          const SizedBox(width: 12),
+          Text(
+            feedbackText,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: feedbackColor,
+                ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProgressIndicator(
+      BuildContext context, int level, int screenNum) {
+    final l10n = AppLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8.0),
+      child: Text(
+        '${l10n.level}: $level / ${l10n.screen}: $screenNum',
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Colors.grey[600],
+              fontWeight: FontWeight.bold,
+            ),
+        textAlign: TextAlign.center,
+      ),
+    );
   }
 }

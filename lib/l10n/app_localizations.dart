@@ -78,6 +78,9 @@ abstract class AppLocalizations {
   String get screen;
   String get memoryGameUnderDevelopment;
   String get goBack;
+  String get selectableOption;
+  String get selected;
+  String get selectCorrectOption;
 }
 
 class _AppLocalizationsDelegate

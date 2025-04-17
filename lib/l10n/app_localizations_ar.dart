@@ -76,4 +76,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get memoryGameUnderDevelopment => 'لعبة الذاكرة قيد التطوير';
   @override
   String get goBack => 'رجوع';
+  @override
+  String get selectableOption => 'خيار قابل للتحديد';
+  @override
+  String get selected => 'تم التحديد';
+  @override
+  String get selectCorrectOption => 'حدد الخيار الصحيح';
 }

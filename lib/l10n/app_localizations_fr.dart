@@ -77,4 +77,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Jeu de mémoire en cours de développement';
   @override
   String get goBack => 'Retour';
+  @override
+  String get selectableOption => 'Option sélectionnable';
+  @override
+  String get selected => 'Sélectionné';
+  @override
+  String get selectCorrectOption => 'Sélectionnez la bonne option';
 }
