@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pfa/services/supabase_service.dart';
 import 'package:pfa/services/logging_service.dart';
-import 'games/colors_game.dart';
+import 'games/multiple_choice_game.dart';
 import 'l10n/app_localizations.dart';
 
 void main() async {
@@ -91,7 +91,10 @@ class HomePage extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const ColorsGame()),
+                                builder: (context) => const MultipleChoiceGame(
+                                      gameId:
+                                          'a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1',
+                                    )),
                           ).then((_) {
                             // Reset to portrait when returning to home
                             SystemChrome.setPreferredOrientations([

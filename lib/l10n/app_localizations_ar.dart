@@ -74,4 +74,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get screen => 'الشاشة';
   @override
   String get memoryGameUnderDevelopment => 'لعبة الذاكرة قيد التطوير';
+  @override
+  String get goBack => 'رجوع';
 }

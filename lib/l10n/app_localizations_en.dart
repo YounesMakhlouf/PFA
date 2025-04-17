@@ -74,4 +74,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get screen => 'Screen';
   @override
   String get memoryGameUnderDevelopment => 'Memory game under development';
+  @override
+  String get goBack => 'Go Back';
 }

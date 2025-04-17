@@ -73,5 +73,8 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get screen => 'Écran';
   @override
-  String get memoryGameUnderDevelopment => 'Jeu de mémoire en cours de développement';
+  String get memoryGameUnderDevelopment =>
+      'Jeu de mémoire en cours de développement';
+  @override
+  String get goBack => 'Retour';
 }

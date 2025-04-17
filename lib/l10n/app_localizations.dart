@@ -77,6 +77,7 @@ abstract class AppLocalizations {
   String get level;
   String get screen;
   String get memoryGameUnderDevelopment;
+  String get goBack;
 }
 
 class _AppLocalizationsDelegate
