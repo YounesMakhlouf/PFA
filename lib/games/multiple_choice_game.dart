@@ -43,6 +43,10 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
   @override
   void dispose() {
     super.dispose();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
   }
 
   Future<void> _loadGameData() async {
