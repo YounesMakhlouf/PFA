@@ -96,7 +96,10 @@ class MultipleChoiceGameService {
   }
 
   bool checkAnswer(Option selectedOption) {
-    return selectedOption.optionId == currentScreen!.correctAnswer.optionId;
+    final bool correct =
+        selectedOption.optionId == currentScreen!.correctAnswer.optionId;
+    isCorrect = correct;
+    return correct;
   }
 
   void reset() {

@@ -60,6 +60,10 @@ class AppLocalizationsEn extends AppLocalizations {
   // Error messages
   @override
   String get unknownScreenType => 'Unknown screen type';
+  @override
+  String get applicationError => 'Application Error';
+  @override
+  String get retry => 'Retry';
 
   // Game feedback
   @override

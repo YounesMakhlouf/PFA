@@ -60,6 +60,10 @@ class AppLocalizationsAr extends AppLocalizations {
   // Error messages
   @override
   String get unknownScreenType => 'غير معروف نوع الشاشة';
+  @override
+  String get applicationError => 'خطأ في التطبيق';
+  @override
+  String get retry => 'إعادة المحاولة';
 
   // Game feedback
   @override

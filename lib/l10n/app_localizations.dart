@@ -68,6 +68,8 @@ abstract class AppLocalizations {
 
   // Error messages
   String get unknownScreenType;
+  String get applicationError;
+  String get retry;
 
   // Game feedback
   String get correct;

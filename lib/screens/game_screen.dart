@@ -38,8 +38,8 @@ class GameScreenWidget extends StatelessWidget {
   // --- Builder for Multiple Choice UI ---
   Widget _buildMultipleChoiceUI(
       BuildContext context, MultipleChoiceScreen screen) {
-    final String prompt = AppLocalizations.of(context).selectCorrectOption;
-    // TODO: change to "screen.promptText ?? AppLocalizations.of(context).selectCorrectOption;" once we updazte the db
+    final String prompt =
+        screen.instruction ?? AppLocalizations.of(context).selectCorrectOption;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -48,10 +48,9 @@ class GameScreenWidget extends StatelessWidget {
         Expanded(
           child: Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: _buildOptionsArea(context, screen.options),
-              )
-          ),
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: _buildOptionsArea(context, screen.options),
+          )),
         ),
         _buildFeedbackArea(context, isCorrect),
         _buildProgressIndicator(context, currentLevel, currentScreenNumber),

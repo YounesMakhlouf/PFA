@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pfa/models/screen.dart';
-import 'package:pfa/ui/game_screen.dart';
+import 'package:pfa/screens/game_screen.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/repositories/game_repository.dart';
 import 'package:pfa/services/supabase_service.dart';

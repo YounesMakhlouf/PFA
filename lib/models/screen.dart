@@ -4,11 +4,13 @@ class Screen {
   final String screenId;
   final int screenNumber;
   final String? levelId;
+  final String? instruction;
 
   Screen({
     String? screenId,
     required this.screenNumber,
     this.levelId,
+    this.instruction,
   }) : screenId = screenId ?? const Uuid().v4();
 
   List<Option> getOptions() {
@@ -24,6 +26,7 @@ class Screen {
       'screen_id': screenId,
       'screen_number': screenNumber,
       'level_id': levelId,
+      'instruction': instruction,
       'screen_type': runtimeType.toString(),
     };
   }
@@ -33,6 +36,7 @@ class Screen {
       screenId: json['screen_id'],
       screenNumber: json['screen_number'],
       levelId: json['level_id'],
+      instruction: json['instruction'],
     );
   }
 }
@@ -80,6 +84,7 @@ class MemoryScreen extends Screen {
     super.screenId,
     required super.screenNumber,
     super.levelId,
+    super.instruction,
     required this.options,
   });
 
@@ -115,6 +120,7 @@ class MemoryScreen extends Screen {
       screenId: json['screen_id'],
       screenNumber: json['screen_number'],
       levelId: json['level_id'],
+      instruction: json['instruction'],
       options: options,
     );
   }
@@ -128,6 +134,7 @@ class MultipleChoiceScreen extends Screen {
     super.screenId,
     required super.screenNumber,
     super.levelId,
+    super.instruction,
     required this.options,
     required this.correctAnswer,
   });
@@ -159,6 +166,7 @@ class MultipleChoiceScreen extends Screen {
       screenId: json['screen_id'],
       screenNumber: json['screen_number'],
       levelId: json['level_id'],
+      instruction: json['instruction'],
       options: options,
       correctAnswer: correctAnswer,
     );

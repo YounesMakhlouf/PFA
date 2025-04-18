@@ -165,6 +165,7 @@ class GameRepository {
       return MultipleChoiceScreen(
         screenId: screenId,
         screenNumber: screenData['screen_number'],
+        instruction: screenData['instruction'],
         options: options,
         correctAnswer: correctAnswer!,
       );
@@ -202,6 +203,7 @@ class GameRepository {
       return MemoryScreen(
         screenId: screenId,
         screenNumber: screenData['screen_number'],
+        instruction: screenData['instruction'],
         options: options,
       );
     } catch (e, stackTrace) {
