@@ -57,6 +57,26 @@ class SupabaseService {
     return _client;
   }
 
+  String getPublicUrl({
+    required String bucketId,
+    required String filePath,
+  }) {
+    if (!_initialized) {
+      _logger.error('SupabaseService accessed before initialization');
+      throw Exception('SupabaseService must be initialized before use');
+    }
+    try {
+      // Construct the public URL using the client's storage methods
+      final url = _client.storage.from(bucketId).getPublicUrl(filePath);
+      _logger.debug('Generated public URL for $bucketId/$filePath: $url');
+      return url;
+    } catch (e, stackTrace) {
+      _logger.error(
+          'Failed to get public URL for $bucketId/$filePath', e, stackTrace);
+      rethrow;
+    }
+  }
+
   // Auth methods
   Future<AuthResponse> signUp({
     required String email,

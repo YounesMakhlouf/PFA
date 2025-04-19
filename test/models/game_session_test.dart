@@ -44,6 +44,8 @@ void main() {
       expect(session.child, testChild);
       expect(session.game, testGame);
       expect(session.attempts, isEmpty);
+      expect(
+          session.successRate, 0.0); // Success rate should be 0 for no attempts
     });
 
     test('should calculate duration correctly', () {
@@ -130,6 +132,22 @@ void main() {
 
       // 2 out of 3 attempts are correct
       expect(session.successRate, 2 / 3);
+
+      // Test with all correct attempts
+      final allCorrectSession = GameSession(child: testChild, game: testGame);
+      allCorrectSession.addAttempt(
+          ScreenAttempt(isCorrect: true, timeTakenMs: 100, screen: testScreen));
+      allCorrectSession.addAttempt(
+          ScreenAttempt(isCorrect: true, timeTakenMs: 100, screen: testScreen));
+      expect(allCorrectSession.successRate, 1.0);
+
+      // Test with all incorrect attempts
+      final allIncorrectSession = GameSession(child: testChild, game: testGame);
+      allIncorrectSession.addAttempt(ScreenAttempt(
+          isCorrect: false, timeTakenMs: 100, screen: testScreen));
+      allIncorrectSession.addAttempt(ScreenAttempt(
+          isCorrect: false, timeTakenMs: 100, screen: testScreen));
+      expect(allIncorrectSession.successRate, 0.0);
     });
   });
 
@@ -166,6 +184,23 @@ void main() {
 
       expect(attempt.hintsUsed, 0);
       expect(attempt.selectedOption, isNull);
+    });
+
+    test('should create a ScreenAttempt with only required fields', () {
+      final screen = Screen(screenNumber: 1);
+      final attempt = ScreenAttempt(
+        isCorrect: true,
+        timeTakenMs: 1200,
+        screen: screen,
+      );
+
+      expect(attempt.attemptId, isNotEmpty);
+      expect(attempt.timestamp, isNotNull);
+      expect(attempt.isCorrect, isTrue);
+      expect(attempt.timeTakenMs, 1200);
+      expect(attempt.hintsUsed, 0); // Default value
+      expect(attempt.screen, screen);
+      expect(attempt.selectedOption, isNull); // Default value
     });
   });
 }

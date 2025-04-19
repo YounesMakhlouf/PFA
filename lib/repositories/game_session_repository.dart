@@ -24,7 +24,7 @@ class GameSessionRepository {
   Future<List<GameSession>> getSessionsByChildId(String childId) async {
     try {
       final response = await _supabaseService.client
-          .from('GameSession')
+          .from('gamesession')
           .select()
           .eq('child_id', childId)
           .order('start_time', ascending: false);
@@ -47,7 +47,7 @@ class GameSessionRepository {
   Future<GameSession?> getSessionById(String sessionId) async {
     try {
       final response = await _supabaseService.client
-          .from('GameSession')
+          .from('gamesession')
           .select()
           .eq('session_id', sessionId)
           .single();
@@ -73,7 +73,7 @@ class GameSessionRepository {
 
       // Get all attempts for this session
       final attemptsResponse = await _supabaseService.client
-          .from('ScreenAttempt')
+          .from('screenattempt')
           .select()
           .eq('session_id', sessionId)
           .order('timestamp');

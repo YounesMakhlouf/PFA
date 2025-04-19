@@ -14,7 +14,7 @@ class GameRepository {
     try {
       _logger.info('Fetching all games');
       final response = await _supabaseService.client
-          .from('Game')
+          .from('game')
           .select()
           .order('created_at');
 
@@ -48,14 +48,14 @@ class GameRepository {
     try {
       _logger.debug('Fetching game with levels: $gameId');
       final gameResponse = await _supabaseService.client
-          .from('Game')
+          .from('game')
           .select()
           .eq('game_id', gameId)
           .single();
 
       // Get all levels for this game
       final levelsResponse = await _supabaseService.client
-          .from('Level')
+          .from('level')
           .select()
           .eq('game_id', gameId)
           .order('level_number');
@@ -89,14 +89,14 @@ class GameRepository {
   Future<Level?> _getLevelWithScreens(String levelId) async {
     try {
       final levelResponse = await _supabaseService.client
-          .from('Level')
+          .from('level')
           .select()
           .eq('level_id', levelId)
           .single();
 
       // Get all screens for this level
       final screensResponse = await _supabaseService.client
-          .from('Screen')
+          .from('screen')
           .select()
           .eq('level_id', levelId)
           .order('screen_number');
@@ -136,7 +136,7 @@ class GameRepository {
 
       // Get all options for this screen
       final optionsResponse = await _supabaseService.client
-          .from('Option')
+          .from('option')
           .select()
           .eq('screen_id', screenId);
 
@@ -165,6 +165,7 @@ class GameRepository {
       return MultipleChoiceScreen(
         screenId: screenId,
         screenNumber: screenData['screen_number'],
+        instruction: screenData['instruction'],
         options: options,
         correctAnswer: correctAnswer!,
       );
@@ -182,7 +183,7 @@ class GameRepository {
 
       // Get all options for this screen
       final optionsResponse = await _supabaseService.client
-          .from('Option')
+          .from('option')
           .select()
           .eq('screen_id', screenId);
 
@@ -202,6 +203,7 @@ class GameRepository {
       return MemoryScreen(
         screenId: screenId,
         screenNumber: screenData['screen_number'],
+        instruction: screenData['instruction'],
         options: options,
       );
     } catch (e, stackTrace) {
@@ -213,7 +215,7 @@ class GameRepository {
   Future<Game?> createGame(Game game) async {
     try {
       // Insert game
-      final gameResponse = await _supabaseService.client.from('Game').insert({
+      final gameResponse = await _supabaseService.client.from('game').insert({
         'name': game.name,
         'description': game.instruction,
         'category': game.category.toString().split('.').last,
@@ -232,7 +234,7 @@ class GameRepository {
       // Insert levels
       for (var level in game.levels) {
         final levelResponse =
-            await _supabaseService.client.from('Level').insert({
+            await _supabaseService.client.from('level').insert({
           'game_id': gameId,
           'level_number': level.levelNumber,
           'created_at': DateTime.now().toIso8601String(),
@@ -253,7 +255,7 @@ class GameRepository {
           }
 
           final screenResponse =
-              await _supabaseService.client.from('Screen').insert({
+              await _supabaseService.client.from('screen').insert({
             'level_id': levelId,
             'screen_number': screen.screenNumber,
             'type': screenType,
@@ -268,7 +270,7 @@ class GameRepository {
           // Insert options
           if (screen is MultipleChoiceScreen) {
             for (var option in screen.options) {
-              await _supabaseService.client.from('Option').insert({
+              await _supabaseService.client.from('option').insert({
                 'screen_id': screenId,
                 'label_text': option.labelText,
                 'picture_url': option.pictureUrl,
@@ -279,7 +281,7 @@ class GameRepository {
             }
           } else if (screen is MemoryScreen) {
             for (var option in screen.options) {
-              await _supabaseService.client.from('Option').insert({
+              await _supabaseService.client.from('option').insert({
                 'screen_id': screenId,
                 'label_text': option.labelText,
                 'picture_url': option.pictureUrl,

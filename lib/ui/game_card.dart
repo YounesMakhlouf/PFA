@@ -1,59 +1,106 @@
 import 'package:flutter/material.dart';
-import 'package:pfa/models/game.dart';
 
 class GameCardWidget extends StatelessWidget {
-  final GameCategory category;
-  final VoidCallback onTap;
+  final String title;
+  final IconData? iconData;
+  final String? imagePath;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final VoidCallback? onTap;
   final bool isEnabled;
 
   const GameCardWidget({
     super.key,
-    required this.category,
-    required this.onTap,
+    required this.title,
+    this.iconData,
+    this.imagePath,
+    this.backgroundColor,
+    this.foregroundColor,
+    this.onTap,
     this.isEnabled = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: isEnabled ? onTap : null,
-        splashColor: category.themeColor.withAlpha((0.3 * 255).round()),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                category.themeColor.withAlpha((0.7 * 255).round()),
-                category.themeColor,
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+
+    final effectiveBackgroundColor =
+        backgroundColor ?? theme.cardTheme.color ?? colorScheme.secondary;
+    final effectiveForegroundColor = foregroundColor ?? colorScheme.onSecondary;
+
+    Widget cardContent;
+    if (imagePath != null && imagePath!.isNotEmpty) {
+      cardContent = Image.asset(
+        imagePath!,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) {
+          // Fallback icon if image fails to load
+          return Icon(
+            Icons.broken_image_outlined,
+            size: 50,
+            color: effectiveForegroundColor.withAlpha((0.7 * 255).round()),
+          );
+        },
+      );
+    } else if (iconData != null) {
+      cardContent = Icon(
+        iconData,
+        size: 60, // Consistent size
+        color: effectiveForegroundColor,
+      );
+    } else {
+      // Default placeholder if neither image nor icon is provided
+      cardContent = Icon(
+        Icons.category, // Generic category icon
+        size: 60,
+        color: effectiveForegroundColor.withAlpha((0.7 * 255).round()),
+      );
+    }
+
+    return Opacity(
+      opacity: isEnabled ? 1.0 : 0.6,
+      child: Card(
+        elevation: isEnabled ? (theme.cardTheme.elevation ?? 4) : 1,
+        shape: theme.cardTheme.shape ??
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        clipBehavior: theme.cardTheme.clipBehavior ?? Clip.antiAlias,
+        color: effectiveBackgroundColor,
+        child: InkWell(
+          onTap: isEnabled ? onTap : null,
+          splashColor: effectiveForegroundColor.withAlpha((0.1 * 255).round()),
+          highlightColor:
+              effectiveForegroundColor.withAlpha((0.05 * 255).round()),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Flexible(
+                  child: AspectRatio(
+                    aspectRatio: 1.0,
+                    child: Center(
+                      child: cardContent,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    title,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: effectiveForegroundColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ],
             ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                category.icon,
-                size: 48,
-                color: Colors.white,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                category.localizedName(context),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
           ),
         ),
       ),

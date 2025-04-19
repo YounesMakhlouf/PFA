@@ -60,6 +60,10 @@ class AppLocalizationsEn extends AppLocalizations {
   // Error messages
   @override
   String get unknownScreenType => 'Unknown screen type';
+  @override
+  String get applicationError => 'Application Error';
+  @override
+  String get retry => 'Retry';
 
   // Game feedback
   @override
@@ -74,4 +78,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get screen => 'Screen';
   @override
   String get memoryGameUnderDevelopment => 'Memory game under development';
+  @override
+  String get goBack => 'Go Back';
+  @override
+  String get selectableOption => 'Selectable option';
+  @override
+  String get selected => 'Selected';
+  @override
+  String get selectCorrectOption => 'Select the correct option';
 }

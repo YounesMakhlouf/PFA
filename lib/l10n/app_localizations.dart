@@ -68,6 +68,8 @@ abstract class AppLocalizations {
 
   // Error messages
   String get unknownScreenType;
+  String get applicationError;
+  String get retry;
 
   // Game feedback
   String get correct;
@@ -77,6 +79,10 @@ abstract class AppLocalizations {
   String get level;
   String get screen;
   String get memoryGameUnderDevelopment;
+  String get goBack;
+  String get selectableOption;
+  String get selected;
+  String get selectCorrectOption;
 }
 
 class _AppLocalizationsDelegate

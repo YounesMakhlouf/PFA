@@ -72,12 +72,15 @@ class Child extends User {
   /// Returns the child's age in years
   int get age {
     final now = DateTime.now();
+    if (birthdate.isAfter(now)) {
+      return 0;
+    }
     int age = now.year - birthdate.year;
     if (now.month < birthdate.month ||
         (now.month == birthdate.month && now.day < birthdate.day)) {
       age--;
     }
-    return age;
+    return age < 0 ? 0 : age;
   }
 
   @override

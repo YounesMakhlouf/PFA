@@ -62,14 +62,26 @@ class LoggingService {
     }
   }
 
-  String formatError(String message, Object error) {
-    return '$message: $error';
+  String formatError(String? message, Object? error) {
+    if (message == null && error == null) {
+      return 'null';
+    } else if (message == null) {
+      return 'null: $error';
+    } else if (error == null) {
+      return message;
+    } else {
+      return '$message: $error';
+    }
   }
 
-  String handleNetworkError(Object error) {
-    if (error.toString().contains('connection')) {
+  String handleNetworkError(Object? error) {
+    if (error == null) {
+      return 'An unexpected network error occurred. Please try again.';
+    }
+    final errorString = error.toString().toLowerCase();
+    if (errorString.contains('connection')) {
       return 'Network connection error. Please check your internet connection.';
-    } else if (error.toString().contains('timeout')) {
+    } else if (errorString.contains('timeout')) {
       return 'Request timed out. Please try again later.';
     } else {
       return 'An unexpected network error occurred. Please try again.';

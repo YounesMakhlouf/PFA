@@ -60,6 +60,10 @@ class AppLocalizationsAr extends AppLocalizations {
   // Error messages
   @override
   String get unknownScreenType => 'غير معروف نوع الشاشة';
+  @override
+  String get applicationError => 'خطأ في التطبيق';
+  @override
+  String get retry => 'إعادة المحاولة';
 
   // Game feedback
   @override
@@ -74,4 +78,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get screen => 'الشاشة';
   @override
   String get memoryGameUnderDevelopment => 'لعبة الذاكرة قيد التطوير';
+  @override
+  String get goBack => 'رجوع';
+  @override
+  String get selectableOption => 'خيار قابل للتحديد';
+  @override
+  String get selected => 'تم التحديد';
+  @override
+  String get selectCorrectOption => 'حدد الخيار الصحيح';
 }
