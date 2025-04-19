@@ -102,10 +102,10 @@ class GameScreenWidget extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-          color: feedbackColor.withOpacity(0.15),
+          color: feedbackColor.withAlpha((0.15 * 255).round()),
           borderRadius: BorderRadius.circular(12),
-          border:
-              Border.all(color: feedbackColor.withOpacity(0.5), width: 1.5)),
+          border: Border.all(
+              color: feedbackColor.withAlpha((0.5 * 255).round()), width: 1.5)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

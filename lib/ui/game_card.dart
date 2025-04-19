@@ -23,11 +23,10 @@ class GameCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final CardTheme cardTheme = theme.cardTheme;
     final ColorScheme colorScheme = theme.colorScheme;
 
     final effectiveBackgroundColor =
-        backgroundColor ?? cardTheme.color ?? colorScheme.secondary;
+        backgroundColor ?? theme.cardTheme.color ?? colorScheme.secondary;
     final effectiveForegroundColor = foregroundColor ?? colorScheme.onSecondary;
 
     Widget cardContent;
@@ -62,10 +61,10 @@ class GameCardWidget extends StatelessWidget {
     return Opacity(
       opacity: isEnabled ? 1.0 : 0.6,
       child: Card(
-        elevation: isEnabled ? (cardTheme.elevation ?? 4) : 1,
-        shape: cardTheme.shape ??
+        elevation: isEnabled ? (theme.cardTheme.elevation ?? 4) : 1,
+        shape: theme.cardTheme.shape ??
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        clipBehavior: cardTheme.clipBehavior ?? Clip.antiAlias,
+        clipBehavior: theme.cardTheme.clipBehavior ?? Clip.antiAlias,
         color: effectiveBackgroundColor,
         child: InkWell(
           onTap: isEnabled ? onTap : null,
