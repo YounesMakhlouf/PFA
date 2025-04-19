@@ -40,7 +40,7 @@ class GameCardWidget extends StatelessWidget {
           return Icon(
             Icons.broken_image_outlined,
             size: 50,
-            color: effectiveForegroundColor.withOpacity(0.7),
+            color: effectiveForegroundColor.withAlpha((0.7 * 255).round()),
           );
         },
       );
@@ -55,7 +55,7 @@ class GameCardWidget extends StatelessWidget {
       cardContent = Icon(
         Icons.category, // Generic category icon
         size: 60,
-        color: effectiveForegroundColor.withOpacity(0.7),
+        color: effectiveForegroundColor.withAlpha((0.7 * 255).round()),
       );
     }
 
@@ -69,8 +69,9 @@ class GameCardWidget extends StatelessWidget {
         color: effectiveBackgroundColor,
         child: InkWell(
           onTap: isEnabled ? onTap : null,
-          splashColor: effectiveForegroundColor.withOpacity(0.1),
-          highlightColor: effectiveForegroundColor.withOpacity(0.05),
+          splashColor: effectiveForegroundColor.withAlpha((0.1 * 255).round()),
+          highlightColor:
+              effectiveForegroundColor.withAlpha((0.05 * 255).round()),
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(

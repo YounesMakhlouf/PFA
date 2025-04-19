@@ -95,10 +95,12 @@ class _HomePageState extends State<HomeScreen> {
 
   void _navigateToGame(
       BuildContext context, String routeName, dynamic arguments) {
+    final navigator = Navigator.of(context);
     SystemChrome.setPreferredOrientations(
             [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight])
         .then((_) {
-      Navigator.pushNamed(context, routeName, arguments: arguments);
+      if (!mounted) return;
+      navigator.pushNamed(routeName, arguments: arguments);
     });
   }
 }

@@ -82,8 +82,9 @@ class OptionWidget extends StatelessWidget {
               child: InkWell(
                 onTap: isDisabled ? null : onTap,
                 borderRadius: borderRadius,
-                splashColor: defaultButtonColor.withOpacity(0.3),
-                highlightColor: defaultButtonColor.withOpacity(0.1),
+                splashColor: defaultButtonColor.withAlpha((0.3 * 255).round()),
+                highlightColor:
+                    defaultButtonColor.withAlpha((0.1 * 255).round()),
                 child: content,
               ),
             ),
