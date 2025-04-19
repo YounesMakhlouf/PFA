@@ -146,7 +146,7 @@ class MultipleChoiceScreen extends Screen {
 
   @override
   bool checkAnswer(List<Option> selectedOptions) {
-    if (selectedOptions.isEmpty) return false;
+    if (selectedOptions.length != 1) return false;
     return selectedOptions.first.optionId == correctAnswer.optionId;
   }
 

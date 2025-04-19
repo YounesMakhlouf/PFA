@@ -103,7 +103,9 @@ void main() {
 
       expect(screen.checkAnswer([option1]), isTrue);
       expect(screen.checkAnswer([option2]), isFalse);
-      expect(screen.checkAnswer([]), isFalse);
+      expect(screen.checkAnswer([]), isFalse); // Empty selection
+      expect(
+          screen.checkAnswer([option1, option2]), isFalse); // Too many options
     });
   });
 
@@ -158,6 +160,12 @@ void main() {
       // Test with null pairId
       final optionNoPair = Option(labelText: 'No Pair');
       expect(screen.checkAnswer([option1, optionNoPair]), isFalse);
+
+      // Test with only one option provided
+      expect(screen.checkAnswer([option1]), isFalse);
+
+      // Test with three options provided
+      expect(screen.checkAnswer([option1, option2, option3]), isFalse);
     });
   });
 }

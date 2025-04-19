@@ -46,6 +46,17 @@ void main() {
 
       expect(
           childBirthdayToday.age, 8); // Should be 8 because birthday is today
+
+      // Test edge case: birthdate in the future
+      final futureBirthdate = DateTime.now().add(const Duration(days: 365));
+      final futureChild = Child(
+        email: 'future@example.com',
+        firstName: 'Future',
+        lastName: 'Kid',
+        birthdate: futureBirthdate,
+        specialConditions: [],
+      );
+      expect(futureChild.age, 0);
     });
 
     test('should return full name correctly', () {
@@ -58,6 +69,26 @@ void main() {
       );
 
       expect(child.fullName, 'Ahmed Ali');
+
+      // Test with only first name
+      final childFirstNameOnly = Child(
+        email: 'first@example.com',
+        firstName: 'Samia',
+        lastName: '',
+        birthdate: DateTime(2016, 1, 1),
+        specialConditions: [],
+      );
+      expect(childFirstNameOnly.fullName, 'Samia ');
+
+      // Test with only last name
+      final childLastNameOnly = Child(
+        email: 'last@example.com',
+        firstName: '',
+        lastName: 'Ben Salah',
+        birthdate: DateTime(2017, 2, 2),
+        specialConditions: [],
+      );
+      expect(childLastNameOnly.fullName, ' Ben Salah');
     });
   });
 
