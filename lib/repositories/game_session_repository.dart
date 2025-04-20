@@ -17,8 +17,6 @@ class GameSessionRepository {
           .eq('child_id', childId)
           .order('start_time', ascending: false);
 
-      if (response == null) return [];
-
       List<GameSession> sessions = [];
       for (var sessionData in response) {
         final session = await _getSessionWithAttempts(sessionData);
@@ -41,8 +39,6 @@ class GameSessionRepository {
           .select()
           .eq('session_id', sessionId)
           .single();
-
-      if (response == null) return null;
 
       return await _getSessionWithAttempts(response);
     } catch (e) {
@@ -71,57 +67,55 @@ class GameSessionRepository {
           .order('timestamp');
 
       List<ScreenAttempt> attempts = [];
-      if (attemptsResponse != null) {
-        for (var attemptData in attemptsResponse) {
-          // Find the screen in the game
-          Screen? screen;
-          for (var level in game.levels) {
-            for (var s in level.screens) {
-              if (s.screenId == attemptData['screen_id']) {
-                screen = s;
+      for (var attemptData in attemptsResponse) {
+        // Find the screen in the game
+        Screen? screen;
+        for (var level in game.levels) {
+          for (var s in level.screens) {
+            if (s.screenId == attemptData['screen_id']) {
+              screen = s;
+              break;
+            }
+          }
+          if (screen != null) break;
+        }
+
+        if (screen == null) continue;
+
+        // Get selected option if any
+        Option? selectedOption;
+        if (attemptData['selected_option_ids'] != null &&
+            attemptData['selected_option_ids'].isNotEmpty) {
+          final optionId = attemptData['selected_option_ids'][0];
+          // Find the option in the screen
+          if (screen is MultipleChoiceScreen) {
+            for (var option in screen.options) {
+              if (option.optionId == optionId) {
+                selectedOption = option;
                 break;
               }
             }
-            if (screen != null) break;
-          }
-
-          if (screen == null) continue;
-
-          // Get selected option if any
-          Option? selectedOption;
-          if (attemptData['selected_option_ids'] != null &&
-              attemptData['selected_option_ids'].isNotEmpty) {
-            final optionId = attemptData['selected_option_ids'][0];
-            // Find the option in the screen
-            if (screen is MultipleChoiceScreen) {
-              for (var option in screen.options) {
-                if (option.optionId == optionId) {
-                  selectedOption = option;
-                  break;
-                }
-              }
-            } else if (screen is MemoryScreen) {
-              for (var option in screen.options) {
-                if (option.optionId == optionId) {
-                  selectedOption = option;
-                  break;
-                }
+          } else if (screen is MemoryScreen) {
+            for (var option in screen.options) {
+              if (option.optionId == optionId) {
+                selectedOption = option;
+                break;
               }
             }
           }
-
-          attempts.add(ScreenAttempt(
-            attemptId: attemptData['attempt_id'],
-            timestamp: DateTime.parse(attemptData['timestamp']),
-            isCorrect: attemptData['is_correct'],
-            timeTakenMs: attemptData['time_taken_ms'],
-            hintsUsed: attemptData['hints_used'] ?? 0,
-            screen: screen,
-            selectedOption: selectedOption,
-          ));
         }
-      }
 
+        attempts.add(ScreenAttempt(
+          attemptId: attemptData['attempt_id'],
+          timestamp: DateTime.parse(attemptData['timestamp']),
+          isCorrect: attemptData['is_correct'],
+          timeTakenMs: attemptData['time_taken_ms'],
+          hintsUsed: attemptData['hints_used'] ?? 0,
+          screen: screen,
+          selectedOption: selectedOption,
+        ));
+      }
+    
       return GameSession(
         sessionId: sessionId,
         startTime: DateTime.parse(sessionData['start_time']),
@@ -155,7 +149,7 @@ class GameSessionRepository {
         'completed': session.endTime != null,
       }).select();
 
-      if (sessionResponse == null || sessionResponse.isEmpty) {
+      if (sessionResponse.isEmpty) {
         throw Exception('Failed to create game session');
       }
 

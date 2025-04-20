@@ -56,15 +56,13 @@ class GameRepository {
           .order('level_number');
 
       List<Level> levels = [];
-      if (levelsResponse != null) {
-        for (var levelData in levelsResponse) {
-          final level = await _getLevelWithScreens(levelData['level_id']);
-          if (level != null) {
-            levels.add(level);
-          }
+      for (var levelData in levelsResponse) {
+        final level = await _getLevelWithScreens(levelData['level_id']);
+        if (level != null) {
+          levels.add(level);
         }
       }
-
+    
       return Game(
         gameId: gameResponse['game_id'],
         name: gameResponse['name'],
@@ -90,8 +88,6 @@ class GameRepository {
           .eq('level_id', levelId)
           .single();
 
-      if (levelResponse == null) return null;
-
       // Get all screens for this level
       final screensResponse = await _supabaseService.client
           .from('Screen')
@@ -100,23 +96,21 @@ class GameRepository {
           .order('screen_number');
 
       List<Screen> screens = [];
-      if (screensResponse != null) {
-        for (var screenData in screensResponse) {
-          final screenType = screenData['type'];
-          if (screenType == 'MULTIPLE_CHOICE') {
-            final screen = await _getMultipleChoiceScreen(screenData);
-            if (screen != null) {
-              screens.add(screen);
-            }
-          } else if (screenType == 'MEMORY') {
-            final screen = await _getMemoryScreen(screenData);
-            if (screen != null) {
-              screens.add(screen);
-            }
+      for (var screenData in screensResponse) {
+        final screenType = screenData['type'];
+        if (screenType == 'MULTIPLE_CHOICE') {
+          final screen = await _getMultipleChoiceScreen(screenData);
+          if (screen != null) {
+            screens.add(screen);
+          }
+        } else if (screenType == 'MEMORY') {
+          final screen = await _getMemoryScreen(screenData);
+          if (screen != null) {
+            screens.add(screen);
           }
         }
       }
-
+    
       return Level(
         levelId: levelResponse['level_id'],
         levelNumber: levelResponse['level_number'],
@@ -139,8 +133,6 @@ class GameRepository {
           .from('Option')
           .select()
           .eq('screen_id', screenId);
-
-      if (optionsResponse == null) return null;
 
       List<Option> options = [];
       Option? correctAnswer;
@@ -188,8 +180,6 @@ class GameRepository {
           .select()
           .eq('screen_id', screenId);
 
-      if (optionsResponse == null) return null;
-
       List<Option> options = [];
 
       for (var optionData in optionsResponse) {
@@ -228,7 +218,7 @@ class GameRepository {
         'updated_at': DateTime.now().toIso8601String(),
       }).select();
 
-      if (gameResponse == null || gameResponse.isEmpty) {
+      if (gameResponse.isEmpty) {
         throw Exception('Failed to create game');
       }
 
@@ -244,7 +234,7 @@ class GameRepository {
           'updated_at': DateTime.now().toIso8601String(),
         }).select();
 
-        if (levelResponse == null || levelResponse.isEmpty) continue;
+        if (levelResponse.isEmpty) continue;
 
         final levelId = levelResponse[0]['level_id'];
 
@@ -266,7 +256,7 @@ class GameRepository {
             'updated_at': DateTime.now().toIso8601String(),
           }).select();
 
-          if (screenResponse == null || screenResponse.isEmpty) continue;
+          if (screenResponse.isEmpty) continue;
 
           final screenId = screenResponse[0]['screen_id'];
 
