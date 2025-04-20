@@ -1,0 +1,45 @@
+name: Unit Tests
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Run Flutter Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout the code from the PR branch
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Set up Java (Required by Flutter SDK/Android build tools)
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # 3. Set up Flutter SDK using a community action
+      #    This action also handles caching Flutter dependencies efficiently
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      # 4. Install project dependencies
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Create dummy .env file
+        run: echo "" > .env # Creates an empty .env file.env
+
+      # 5. (Optional but Recommended) Run static analysis
+      - name: Analyze project source
+        run: flutter analyze
+
+      # 6. Run unit tests
+      - name: Run unit tests
+        run: flutter test

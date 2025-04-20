@@ -29,6 +29,24 @@ void main() {
       expect(game.themeColor, GameCategory.COLORS_SHAPES.themeColor);
       expect(game.icon, GameCategory.COLORS_SHAPES.icon);
     });
+
+    test('should create a Game with a different type and category', () {
+      final level = Level(levelNumber: 1, screens: []);
+      final game = Game(
+        name: 'Memory Game',
+        pictureUrl: 'assets/images/memory_game.png',
+        instruction: 'Match the pairs',
+        category: GameCategory.LOGICAL_THINKING,
+        type: GameType.MEMORY_MATCH,
+        levels: [level],
+      );
+
+      expect(game.name, 'Memory Game');
+      expect(game.category, GameCategory.LOGICAL_THINKING);
+      expect(game.type, GameType.MEMORY_MATCH);
+      expect(game.themeColor, GameCategory.LOGICAL_THINKING.themeColor);
+      expect(game.icon, GameCategory.LOGICAL_THINKING.icon);
+    });
   });
 
   group('Level', () {
@@ -41,6 +59,11 @@ void main() {
       expect(level.levelId, isNotEmpty);
       expect(level.levelNumber, 1);
       expect(level.screens, isEmpty);
+    });
+
+    test('getScreens should return an empty list if no screens', () {
+      final level = Level(levelNumber: 1, screens: []);
+      expect(level.getScreens(), isEmpty);
     });
 
     test('getScreens should return all screens', () {
@@ -92,6 +115,16 @@ void main() {
       expect(GameCategory.COLORS_SHAPES.icon, isNotNull);
       expect(GameCategory.ANIMALS.icon, isNotNull);
       expect(GameCategory.FRUITS_VEGETABLES.icon, isNotNull);
+    });
+
+    test('should have unique theme colors for different categories', () {
+      final colors = GameCategory.values.map((c) => c.themeColor).toSet();
+      expect(colors.length, greaterThan(1));
+    });
+
+    test('should have unique icons for different categories', () {
+      final icons = GameCategory.values.map((c) => c.icon).toSet();
+      expect(icons.length, greaterThan(1));
     });
   });
 }

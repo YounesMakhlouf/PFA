@@ -2,17 +2,29 @@ import 'package:pfa/models/game_session.dart';
 import 'package:pfa/models/screen.dart';
 import 'package:pfa/repositories/game_repository.dart';
 import 'package:pfa/repositories/user_repository.dart';
+import 'package:pfa/services/logging_service.dart';
 import 'package:pfa/services/supabase_service.dart';
 
 class GameSessionRepository {
-  final SupabaseService _supabaseService = SupabaseService();
-  final GameRepository _gameRepository = GameRepository();
-  final UserRepository _userRepository = UserRepository();
+  final SupabaseService _supabaseService;
+  final GameRepository _gameRepository;
+  final UserRepository _userRepository;
+  final LoggingService _logger;
+
+  GameSessionRepository({
+    required SupabaseService supabaseService,
+    required GameRepository gameRepository,
+    required UserRepository userRepository,
+    required LoggingService logger,
+  })  : _supabaseService = supabaseService,
+        _gameRepository = gameRepository,
+        _userRepository = userRepository,
+        _logger = logger;
 
   Future<List<GameSession>> getSessionsByChildId(String childId) async {
     try {
       final response = await _supabaseService.client
-          .from('GameSession')
+          .from('gamesession')
           .select()
           .eq('child_id', childId)
           .order('start_time', ascending: false);
@@ -26,8 +38,8 @@ class GameSessionRepository {
       }
 
       return sessions;
-    } catch (e) {
-      print('Error getting game sessions: $e');
+    } catch (e, stackTrace) {
+      _logger.error('Error getting game sessions', e, stackTrace);
       return [];
     }
   }
@@ -35,14 +47,14 @@ class GameSessionRepository {
   Future<GameSession?> getSessionById(String sessionId) async {
     try {
       final response = await _supabaseService.client
-          .from('GameSession')
+          .from('gamesession')
           .select()
           .eq('session_id', sessionId)
           .single();
 
       return await _getSessionWithAttempts(response);
-    } catch (e) {
-      print('Error getting game session: $e');
+    } catch (e, stackTrace) {
+      _logger.error('Error getting game session', e, stackTrace);
       return null;
     }
   }
@@ -61,7 +73,7 @@ class GameSessionRepository {
 
       // Get all attempts for this session
       final attemptsResponse = await _supabaseService.client
-          .from('ScreenAttempt')
+          .from('screenattempt')
           .select()
           .eq('session_id', sessionId)
           .order('timestamp');
@@ -115,7 +127,7 @@ class GameSessionRepository {
           selectedOption: selectedOption,
         ));
       }
-    
+
       return GameSession(
         sessionId: sessionId,
         startTime: DateTime.parse(sessionData['start_time']),
@@ -127,8 +139,8 @@ class GameSessionRepository {
         game: game,
         attempts: attempts,
       );
-    } catch (e) {
-      print('Error in _getSessionWithAttempts: $e');
+    } catch (e, stackTrace) {
+      _logger.error('Error in _getSessionWithAttempts', e, stackTrace);
       return null;
     }
   }
@@ -172,8 +184,8 @@ class GameSessionRepository {
 
       // Return the created session with the new ID
       return await getSessionById(sessionId);
-    } catch (e) {
-      print('Error creating game session: $e');
+    } catch (e, stackTrace) {
+      _logger.error('Error creating game session', e, stackTrace);
       return null;
     }
   }
@@ -212,8 +224,8 @@ class GameSessionRepository {
       }
 
       return true;
-    } catch (e) {
-      print('Error updating game session: $e');
+    } catch (e, stackTrace) {
+      _logger.error('Error updating game session', e, stackTrace);
       return false;
     }
   }
@@ -245,8 +257,8 @@ class GameSessionRepository {
       }
 
       return true;
-    } catch (e) {
-      print('Error adding attempt to session: $e');
+    } catch (e, stackTrace) {
+      _logger.error('Error adding attempt to session', e, stackTrace);
       return false;
     }
   }
