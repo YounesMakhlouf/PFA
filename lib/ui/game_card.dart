@@ -25,10 +25,10 @@ class GameCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
-    final CardTheme cardTheme = theme.cardTheme;
 
-    final Color effectiveBackgroundColor =
-        backgroundColor ?? cardTheme.color ?? colorScheme.primaryContainer;
+    final Color effectiveBackgroundColor = backgroundColor ??
+        theme.cardTheme.color ??
+        colorScheme.primaryContainer;
     final Color defaultForegroundColor =
         effectiveBackgroundColor.computeLuminance() > 0.5
             ? AppColors.textPrimary // Dark text on light background
@@ -69,18 +69,18 @@ class GameCardWidget extends StatelessWidget {
     return Opacity(
       opacity: isEnabled ? 1.0 : 0.5,
       child: Card(
-        elevation: isEnabled ? (cardTheme.elevation ?? 2) : 0.5,
-        shape: cardTheme.shape ??
+        elevation: isEnabled ? (theme.cardTheme.elevation ?? 2) : 0.5,
+        shape: theme.cardTheme.shape ??
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        clipBehavior: cardTheme.clipBehavior ?? Clip.antiAlias,
+        clipBehavior: theme.cardTheme.clipBehavior ?? Clip.antiAlias,
         color: effectiveBackgroundColor,
-        margin: cardTheme.margin ?? const EdgeInsets.all(4.0),
+        margin: theme.cardTheme.margin ?? const EdgeInsets.all(4.0),
         child: InkWell(
           onTap: isEnabled ? onTap : null,
           splashColor: theme.splashColor,
           highlightColor: theme.highlightColor,
-          borderRadius: cardTheme.shape is RoundedRectangleBorder
-              ? (cardTheme.shape as RoundedRectangleBorder).borderRadius
+          borderRadius: theme.cardTheme.shape is RoundedRectangleBorder
+              ? (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius
                   as BorderRadius
               : BorderRadius.circular(10),
           child: Padding(
