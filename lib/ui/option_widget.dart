@@ -128,13 +128,11 @@ class OptionWidget extends StatelessWidget {
             );
           },
           errorBuilder: (context, error, stackTrace) {
-            return Container(
-              child: Center(
-                child: Icon(
-                  Icons.broken_image_outlined,
-                  color: theme.colorScheme.error,
-                  size: 40,
-                ),
+            return Center(
+              child: Icon(
+                Icons.broken_image_outlined,
+                color: theme.colorScheme.error,
+                size: 40,
               ),
             );
           },

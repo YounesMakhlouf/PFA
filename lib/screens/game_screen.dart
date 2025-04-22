@@ -59,12 +59,16 @@ class GameScreenWidget extends StatelessWidget {
         ),
         Expanded(
           child: Center(
-              child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: _buildOptionsArea(context, screen.options),
-          )),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildOptionsArea(context, screen.options),
+                _buildFeedbackArea(context, isCorrect),
+              ],
+            ),
+          ),
         ),
-        _buildFeedbackArea(context, isCorrect),
         _buildProgressIndicator(context, currentLevel, currentScreenNumber),
       ],
     );
