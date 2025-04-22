@@ -3,6 +3,7 @@ import 'package:pfa/models/game.dart';
 import 'package:pfa/models/screen.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/ui/option_widget.dart';
+import 'package:pfa/config/app_theme.dart';
 
 class GameScreenWidget extends StatelessWidget {
   final Game game;
@@ -25,26 +26,37 @@ class GameScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenData = currentScreen;
+    final theme = Theme.of(context);
 
     if (screenData is MultipleChoiceScreen) {
-      return _buildMultipleChoiceUI(context,
-          screenData); // TODO: We will later add the logic here for memory games
+      return _buildMultipleChoiceUI(context, screenData,
+          theme); // TODO: We will later add the logic here for memory games
     } else {
       return Center(
-          child: Text(AppLocalizations.of(context).unknownScreenType));
+          child: Text(
+        AppLocalizations.of(context).unknownScreenType,
+        style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.error),
+      ));
     }
   }
 
   // --- Builder for Multiple Choice UI ---
   Widget _buildMultipleChoiceUI(
-      BuildContext context, MultipleChoiceScreen screen) {
+      BuildContext context, MultipleChoiceScreen screen, ThemeData theme) {
     final String prompt =
         screen.instruction ?? AppLocalizations.of(context).selectCorrectOption;
 
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        _buildPrompt(context, prompt),
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            prompt,
+            style: theme.textTheme.titleLarge,
+            textAlign: TextAlign.center,
+          ),
+        ),
         Expanded(
           child: Center(
               child: SingleChildScrollView(
@@ -55,19 +67,6 @@ class GameScreenWidget extends StatelessWidget {
         _buildFeedbackArea(context, isCorrect),
         _buildProgressIndicator(context, currentLevel, currentScreenNumber),
       ],
-    );
-  }
-
-  Widget _buildPrompt(BuildContext context, String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Text(
-        text,
-        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-        textAlign: TextAlign.center,
-      ),
     );
   }
 

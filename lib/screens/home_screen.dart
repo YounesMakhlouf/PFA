@@ -23,6 +23,7 @@ class _HomePageState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -46,6 +47,7 @@ class _HomePageState extends State<HomeScreen> {
     ];
 
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -53,12 +55,12 @@ class _HomePageState extends State<HomeScreen> {
               padding: const EdgeInsets.only(top: 24.0, bottom: 12.0),
               child: Text(
                 AppLocalizations.of(context).learningGames,
-                style: Theme.of(context).textTheme.headlineMedium,
+                style: theme.textTheme.headlineMedium,
               ),
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: theme.cardTheme.margin ?? const EdgeInsets.all(16.0),
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
@@ -75,8 +77,6 @@ class _HomePageState extends State<HomeScreen> {
                       title: game['title'],
                       imagePath: game['imagePath'],
                       iconData: game['iconData'],
-                      backgroundColor: game['backgroundColor'],
-                      foregroundColor: game['foregroundColor'],
                       isEnabled: isEnabled,
                       onTap: isEnabled
                           ? () => _navigateToGame(
