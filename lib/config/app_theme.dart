@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color primary = Color(0xFF2D7A9C);
-  static const Color secondary = Color(0xFF7FBCD2);
+  static const Color primary = Color(0xFF5E9BAF);
+  static const Color primaryLight = Color(0xFFB1D6E7);
+  static const Color secondary = Color(0xFFFCCBA8);
   static const Color background = Color(0xFFE6F2F5);
-  static const Color cardBackground = Color(0xFF7FBCD2);
-  static const Color textPrimary = Color(0xFF2D7A9C);
+  static const Color cardBackground = Color(0xFFB1D6E7);
+  static const Color textPrimary = Color(0xFF000000);
   static const Color textLight = Colors.white;
-  static const Color error = Colors.red;
+  static const Color error = Color(0xFFBE2522);
+  static const Color success = Color(0xFF3DC87D);
+  static const Color warning = Color(0xFFDFEF35);
+  static const Color disabled = Color(0xFFBBBBBB);
 }
 
 class AppTheme {
@@ -16,16 +20,18 @@ class AppTheme {
       primaryColor: AppColors.primary,
       scaffoldBackgroundColor: AppColors.background,
       visualDensity: VisualDensity.adaptivePlatformDensity,
-      fontFamily: 'Arial',
+      fontFamily: 'Sarabun',
       colorScheme: ColorScheme.light(
         primary: AppColors.primary,
-        secondary: AppColors.secondary,
-        surface: AppColors.background,
-        error: AppColors.error,
         onPrimary: AppColors.textLight,
+        primaryContainer: AppColors.primaryLight,
+        secondary: AppColors.secondary,
         onSecondary: AppColors.textPrimary,
+        surface: AppColors.background,
         onSurface: AppColors.textPrimary,
+        error: AppColors.error,
         onError: AppColors.textLight,
+        brightness: Brightness.light,
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.primary,
@@ -34,10 +40,10 @@ class AppTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
-          foregroundColor: AppColors.textLight,
+          backgroundColor: AppColors.primaryLight,
+          foregroundColor: AppColors.textPrimary,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(10),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         ),
@@ -46,32 +52,58 @@ class AppTheme {
         color: AppColors.cardBackground,
         elevation: 2,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
         ),
+        margin: const EdgeInsets.all(8.0),
       ),
       textTheme: const TextTheme(
+        headlineLarge: TextStyle(
+          fontFamily: 'Sarabun',
+          fontSize: 64,
+          fontWeight: FontWeight.w800,
+          color: AppColors.textPrimary,
+        ),
         headlineMedium: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
+          fontFamily: 'Sarabun',
+          fontSize: 36,
+          fontWeight: FontWeight.w400,
           color: AppColors.textPrimary,
         ),
         titleLarge: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
+          fontFamily: 'Sarabun',
+          fontSize: 28,
+          fontWeight: FontWeight.w400,
           color: AppColors.textPrimary,
         ),
         titleMedium: TextStyle(
+          fontFamily: 'Sarabun',
+          fontSize: 20,
+          fontWeight: FontWeight.w400,
+          color: AppColors.textPrimary,
+        ),
+        titleSmall: TextStyle(
+          fontFamily: 'Sarabun',
+          fontSize: 17,
+          fontWeight: FontWeight.w400,
+          color: AppColors.textPrimary,
+        ),
+        bodyLarge: TextStyle(
+          fontFamily: 'Sarabun',
           fontSize: 16,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w400,
           color: AppColors.textPrimary,
         ),
         bodyMedium: TextStyle(
-          fontSize: 14,
+          fontFamily: 'Sarabun',
+          fontSize: 15,
+          fontWeight: FontWeight.w400,
           color: AppColors.textPrimary,
         ),
         labelLarge: TextStyle(
+          fontFamily: 'Sarabun',
           fontSize: 16,
           fontWeight: FontWeight.bold,
+          color: AppColors.textPrimary,
         ),
       ),
       iconTheme: const IconThemeData(

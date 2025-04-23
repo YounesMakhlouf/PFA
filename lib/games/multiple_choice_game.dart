@@ -143,26 +143,14 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
             _gameService.game!.themeColor.withAlpha((0.8 * 255).round()),
         elevation: 0,
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              _gameService.game!.themeColor.withAlpha((0.3 * 255).round()),
-              Colors.white,
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: GameScreenWidget(
-            game: _gameService.game!,
-            currentScreen: _gameService.currentScreen!,
-            currentLevel: _gameService.currentLevel!.levelNumber,
-            currentScreenNumber: _gameService.currentScreen!.screenNumber,
-            isCorrect: _gameService.isCorrect,
-            onOptionSelected: _checkAnswer,
-          ),
+      body: SafeArea(
+        child: GameScreenWidget(
+          game: _gameService.game!,
+          currentScreen: _gameService.currentScreen!,
+          currentLevel: _gameService.currentLevel!.levelNumber,
+          currentScreenNumber: _gameService.currentScreen!.screenNumber,
+          isCorrect: _gameService.isCorrect,
+          onOptionSelected: _checkAnswer,
         ),
       ),
     );
