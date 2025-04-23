@@ -29,6 +29,25 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get fruitsAndVegetables => 'Fruits and Vegetables';
 
+  //Stats
+  @override
+  String get statsTitle => 'Stats';
+  @override
+  String get globalStatsTitle => 'Global Statistics';
+  @override
+  String get categoryStatsTitle => 'Category Statistics';
+  @override
+  String get accuracy => 'Accuracy';
+  @override
+  String get averageTime => 'Avg time';
+  @override
+  String get hintsUsed => 'Hints Used';
+  @override
+  String get periodAll => 'All';
+  @override
+  String get periodThisWeek => 'This week';
+
+
   // Game instructions
   @override
   String get chooseCorrectColor => 'Choose the correct color';

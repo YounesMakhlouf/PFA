@@ -29,6 +29,24 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get fruitsAndVegetables => 'Fruits et Légumes';
 
+  //Stats
+  @override
+  String get statsTitle => 'Statistiques';
+  @override
+  String get globalStatsTitle => 'Statistiques globales';
+  @override
+  String get categoryStatsTitle => 'Statistiques par catégorie';
+  @override
+  String get accuracy => 'Précision';
+  @override
+  String get averageTime => 'Temps Moyen';
+  @override
+  String get hintsUsed => 'Indice utilisés';
+  @override
+  String get periodAll => 'Tout';
+  @override
+  String get periodThisWeek => 'Cette Semaine';
+
   // Game instructions
   @override
   String get chooseCorrectColor => 'Choisissez la bonne couleur';

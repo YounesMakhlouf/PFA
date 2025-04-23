@@ -43,6 +43,15 @@ class _HomePageState extends State<HomeScreen> {
         'route': null,
         'args': null,
       }, // TODO: Change these to be retrieved from the database
+      {
+        'title': AppLocalizations.of(context).statsTitle,
+        'imagePath': 'assets/images/stats_icon.png',
+        'iconData': Icons.bar_chart,
+        'route': AppRoutes.stats,
+        'args': {
+          'childUuid': '33333333-3333-3333-3333-333333333333'//TODO: get this from the app's global state
+        },
+      },
     ];
 
     return Scaffold(
@@ -96,11 +105,16 @@ class _HomePageState extends State<HomeScreen> {
   void _navigateToGame(
       BuildContext context, String routeName, dynamic arguments) {
     final navigator = Navigator.of(context);
-    SystemChrome.setPreferredOrientations(
-            [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight])
-        .then((_) {
-      if (!mounted) return;
+    if (routeName == AppRoutes.stats) {
       navigator.pushNamed(routeName, arguments: arguments);
-    });
+    } else {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]).then((_) {
+        if (!mounted) return;
+        navigator.pushNamed(routeName, arguments: arguments);
+      });
+    }
   }
 }

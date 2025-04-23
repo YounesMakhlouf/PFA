@@ -29,6 +29,24 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get fruitsAndVegetables => 'خضر و غلال';
 
+  //Stats
+  @override
+  String get statsTitle => 'الاحصائيات';
+  @override
+  String get globalStatsTitle => 'الإحصاءات العامة';
+  @override
+  String get categoryStatsTitle => 'الإحصاءات حسب الفئة';
+  @override
+  String get accuracy => 'الدقة';
+  @override
+  String get averageTime => 'متوسط الوقت';
+  @override
+  String get hintsUsed => 'التلميحات المستخدمة';
+  @override
+  String get periodAll => 'الكل';
+  @override
+  String get periodThisWeek => 'هذا الأسبوع';
+
   // Game instructions
   @override
   String get chooseCorrectColor => 'اختر اللون الصحيح';

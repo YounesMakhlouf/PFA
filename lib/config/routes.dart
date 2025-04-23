@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:pfa/screens/home_screen.dart';
 import 'package:pfa/games/multiple_choice_game.dart';
 
+import '../screens/stats_screen.dart';
+
 class AppRoutes {
   static const String home = '/';
   static const String multipleChoiceGame = '/game/multiple-choice';
+  static const String stats = '/stats';
 
   static Map<String, WidgetBuilder> get routes {
     return {
@@ -20,6 +23,17 @@ class AppRoutes {
         }
         return MultipleChoiceGame(gameId: gameId);
       },
+      stats: (context) {
+        final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+        final childUuid = args?['childUuid'] as String?;
+
+        if (childUuid == null) {
+          return const Scaffold(body: Center(child: Text("Error: Child UUID missing")));
+        }
+
+        return StatsScreen(childUuid: childUuid);
+      },
+
     };
   }
 }
