@@ -172,7 +172,7 @@ void main() {
     test('Child.fromJson parses correctly with all fields', () {
       final jsonData = {
         'child_id': testChildId,
-        'account_id': testAccountId,
+        'user_id': testAccountId,
         'first_name': 'Liam',
         'last_name': 'Smith',
         'birthdate': '2018-05-15',
@@ -202,7 +202,7 @@ void main() {
         () {
       final jsonData = {
         'child_id': testChildId,
-        'account_id': testAccountId,
+        'user_id': testAccountId,
         'first_name': 'Sara',
         'last_name': null, // Explicit null
         'birthdate': testBirthdate.toIso8601String(),
@@ -223,7 +223,7 @@ void main() {
     test('Child.fromJson handles invalid condition strings gracefully', () {
       final jsonData = {
         'child_id': testChildId,
-        'account_id': testAccountId,
+        'user_id': testAccountId,
         'first_name': 'Test',
         'special_conditions': [
           'AUTISM',
