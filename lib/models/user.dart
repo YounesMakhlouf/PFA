@@ -47,8 +47,6 @@ extension SpecialConditionExtension on SpecialCondition {
         return l10n.dyscalculia;
       case SpecialCondition.SPEAKING_DIFFICULTIES:
         return l10n.speakingDifficulties;
-      default:
-        return name;
     }
   }
 }
@@ -120,7 +118,7 @@ class Child {
       if (conditionsData is List) {
         return conditionsData
             .map((item) => item?.toString())
-            .whereNotNull()
+            .nonNulls
             .map((name) =>
                 SpecialCondition.values.firstWhereOrNull((e) => e.name == name))
             .whereType<SpecialCondition>()

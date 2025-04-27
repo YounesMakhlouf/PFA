@@ -276,7 +276,9 @@ class _CreateChildProfileScreenState extends State<CreateChildProfileScreen> {
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     foregroundColor: AppColors.textPrimary,
-                    side: BorderSide(color: AppColors.primary.withOpacity(0.5)),
+                    side: BorderSide(
+                        color:
+                            AppColors.primary.withAlpha((0.5 * 255).round())),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     backgroundColor: AppColors.textLight,
@@ -311,7 +313,8 @@ class _CreateChildProfileScreenState extends State<CreateChildProfileScreen> {
                           }
                         });
                       },
-                      selectedColor: AppColors.primaryLight.withOpacity(0.8),
+                      selectedColor:
+                          AppColors.primaryLight.withAlpha((0.8 * 255).round()),
                       checkmarkColor: AppColors.primary,
                       labelStyle: TextStyle(
                         color: isSelected
@@ -323,7 +326,8 @@ class _CreateChildProfileScreenState extends State<CreateChildProfileScreen> {
                       backgroundColor: AppColors.background,
                       shape: StadiumBorder(
                           side: BorderSide(
-                              color: AppColors.primary.withOpacity(0.3))),
+                              color: AppColors.primary
+                                  .withAlpha((0.3 * 255).round()))),
                     );
                   }).toList(),
                 ),

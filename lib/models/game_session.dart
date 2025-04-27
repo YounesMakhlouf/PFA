@@ -1,5 +1,3 @@
-import 'package:collection/collection.dart';
-
 class GameSession {
   final String sessionId;
   final String childId;
@@ -98,7 +96,7 @@ class ScreenAttempt {
   factory ScreenAttempt.fromJson(Map<String, dynamic> json) {
     List<String>? parseSelectedIds(dynamic data) {
       if (data is List) {
-        return data.map((item) => item?.toString()).whereNotNull().toList();
+        return data.map((item) => item?.toString()).nonNulls.toList();
       }
       return null;
     }
