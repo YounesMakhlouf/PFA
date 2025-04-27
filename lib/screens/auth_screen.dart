@@ -36,7 +36,8 @@ class AuthScreen extends StatelessWidget {
             Navigator.pushReplacementNamed(context, AppRoutes.home);
           },
           onSignUpComplete: (response) {
-            Navigator.pushReplacementNamed(context, AppRoutes.home);
+            Navigator.pushReplacementNamed(
+                context, AppRoutes.createChildProfile);
           },
           onError: (error) {
             ScaffoldMessenger.of(context).showSnackBar(

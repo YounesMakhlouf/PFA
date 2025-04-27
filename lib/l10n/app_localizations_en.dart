@@ -121,4 +121,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmPasswordError => 'Passwords do not match';
   @override
   String get confirmPassword => 'Confirm Password';
+
+  @override
+  String get createChildProfileTitle => 'Create Child Profile';
+  @override
+  String get selectAvatarPrompt => 'Choose an Avatar';
+  @override
+  String get firstNameLabel => 'First Name';
+  @override
+  String get enterFirstNameHint => 'Enter first name';
+  @override
+  String get errorFirstNameRequired => 'Please enter a first name';
+  @override
+  String get lastNameLabelOptional => 'Last Name (Optional)';
+  @override
+  String get enterLastNameHintOptional => 'Enter last name (optional)';
+  @override
+  String get birthdateLabelOptional => 'Birthdate (Optional)';
+  @override
+  String get selectDateButton => 'Select Date';
+  @override
+  String get specialConditionsLabelOptional => 'Special Conditions (Optional)';
+  @override
+  String get createProfileButton => 'Create Profile';
+  @override
+  String profileCreatedSuccess(String firstName) =>
+      'Profile created for $firstName!';
+  @override
+  String get errorCreatingProfile =>
+      'Could not create profile. Please try again.';
 }

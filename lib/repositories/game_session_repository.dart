@@ -1,265 +1,205 @@
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:pfa/models/game_session.dart';
-import 'package:pfa/models/screen.dart';
-import 'package:pfa/repositories/game_repository.dart';
-import 'package:pfa/repositories/user_repository.dart';
 import 'package:pfa/services/logging_service.dart';
 import 'package:pfa/services/supabase_service.dart';
 
 class GameSessionRepository {
   final SupabaseService _supabaseService;
-  final GameRepository _gameRepository;
-  final UserRepository _userRepository;
   final LoggingService _logger;
 
   GameSessionRepository({
     required SupabaseService supabaseService,
-    required GameRepository gameRepository,
-    required UserRepository userRepository,
     required LoggingService logger,
   })  : _supabaseService = supabaseService,
-        _gameRepository = gameRepository,
-        _userRepository = userRepository,
         _logger = logger;
 
+  /// Fetches basic session data for a given child ID, ordered by start time.
   Future<List<GameSession>> getSessionsByChildId(String childId) async {
     try {
+      _logger.info('Fetching game sessions for child ID: $childId');
       final response = await _supabaseService.client
-          .from('gamesession')
+          .from('game_session')
           .select()
           .eq('child_id', childId)
           .order('start_time', ascending: false);
 
-      List<GameSession> sessions = [];
-      for (var sessionData in response) {
-        final session = await _getSessionWithAttempts(sessionData);
-        if (session != null) {
-          sessions.add(session);
-        }
-      }
+      final sessions =
+          response.map((data) => GameSession.fromJson(data)).toList();
 
+      _logger.info('Found ${sessions.length} sessions for child ID: $childId');
       return sessions;
+    } on PostgrestException catch (e, stackTrace) {
+      _logger.error(
+          'Supabase error fetching sessions for child $childId', e, stackTrace);
+      throw Exception('Failed to load game sessions: ${e.message}');
     } catch (e, stackTrace) {
-      _logger.error('Error getting game sessions', e, stackTrace);
-      return [];
+      _logger.error('Unexpected error fetching sessions for child $childId', e,
+          stackTrace);
+      throw Exception('An unexpected error occurred loading sessions.');
     }
   }
 
   Future<GameSession?> getSessionById(String sessionId) async {
     try {
+      _logger.info('Fetching game session by ID: $sessionId');
       final response = await _supabaseService.client
-          .from('gamesession')
+          .from('game_session')
           .select()
           .eq('session_id', sessionId)
+          .maybeSingle();
+
+      if (response == null) {
+        _logger.warning('Game session not found or not accessible: $sessionId');
+        return null;
+      }
+
+      _logger.info('Successfully fetched session: $sessionId');
+      return GameSession.fromJson(response);
+    } on PostgrestException catch (e, stackTrace) {
+      _logger.error(
+          'Supabase error fetching session $sessionId', e, stackTrace);
+      throw Exception('Failed to load game session: ${e.message}');
+    } catch (e, stackTrace) {
+      _logger.error(
+          'Unexpected error fetching session $sessionId', e, stackTrace);
+      throw Exception('An unexpected error occurred loading the session.');
+    }
+  }
+
+  Future<List<ScreenAttempt>> getAttemptsForSession(String sessionId) async {
+    try {
+      _logger.info('Fetching attempts for session ID: $sessionId');
+      final response = await _supabaseService.client
+          .from('screen_attempt')
+          .select()
+          .eq('session_id', sessionId)
+          .order('timestamp', ascending: true);
+
+      final attempts =
+          response.map((data) => ScreenAttempt.fromJson(data)).toList();
+
+      _logger
+          .info('Found ${attempts.length} attempts for session ID: $sessionId');
+      return attempts;
+    } on PostgrestException catch (e, stackTrace) {
+      _logger.error('Supabase error fetching attempts for session $sessionId',
+          e, stackTrace);
+      throw Exception('Failed to load session attempts: ${e.message}');
+    } catch (e, stackTrace) {
+      _logger.error('Unexpected error fetching attempts for session $sessionId',
+          e, stackTrace);
+      throw Exception('An unexpected error occurred loading attempts.');
+    }
+  }
+
+  Future<GameSession> createSession({
+    required String childId,
+    required String gameId,
+    required String levelId,
+    DateTime? startTime,
+  }) async {
+    try {
+      _logger.info(
+          'Creating game session for child $childId, game $gameId, level $levelId');
+      final response = await _supabaseService.client
+          .from('game_session')
+          .insert({
+            'child_id': childId,
+            'game_id': gameId,
+            'level_id': levelId,
+            'start_time': (startTime ?? DateTime.now()).toIso8601String(),
+            'total_attempts': 0,
+            'correct_attempts': 0,
+            'hints_used': 0,
+            'completed': false,
+          })
+          .select()
           .single();
 
-      return await _getSessionWithAttempts(response);
+      _logger.info('Game session created with ID: ${response['session_id']}');
+      return GameSession.fromJson(response);
+    } on PostgrestException catch (e, stackTrace) {
+      _logger.error('Supabase error creating game session', e, stackTrace);
+      throw Exception('Database error: Failed to create session. ${e.message}');
     } catch (e, stackTrace) {
-      _logger.error('Error getting game session', e, stackTrace);
-      return null;
+      _logger.error('Unexpected error creating game session', e, stackTrace);
+      throw Exception(
+          'An unexpected error occurred while creating the session.');
     }
   }
 
-  Future<GameSession?> _getSessionWithAttempts(
-      Map<String, dynamic> sessionData) async {
+  /// Adds a single screen attempt to an existing session.
+  Future<ScreenAttempt> addAttemptToSession({
+    required String sessionId,
+    required String screenId,
+    required bool isCorrect,
+    required int timeTakenMs,
+    List<String>? selectedOptionIds,
+    int hintsUsed = 0,
+    DateTime? timestamp,
+  }) async {
     try {
-      final sessionId = sessionData['session_id'];
-      final childId = sessionData['child_id'];
-      final gameId = sessionData['game_id'];
-
-      final child = await _userRepository.getChildById(childId);
-      final game = await _gameRepository.getGameById(gameId);
-
-      if (child == null || game == null) return null;
-
-      // Get all attempts for this session
-      final attemptsResponse = await _supabaseService.client
-          .from('screenattempt')
+      _logger
+          .debug('Adding attempt to session $sessionId for screen $screenId');
+      final response = await _supabaseService.client
+          .from('screen_attempt')
+          .insert({
+            'session_id': sessionId,
+            'screen_id': screenId,
+            'selected_option_ids': selectedOptionIds,
+            'timestamp': (timestamp ?? DateTime.now()).toIso8601String(),
+            'is_correct': isCorrect,
+            'time_taken_ms': timeTakenMs,
+            'hints_used': hintsUsed,
+          })
           .select()
-          .eq('session_id', sessionId)
-          .order('timestamp');
+          .single();
 
-      List<ScreenAttempt> attempts = [];
-      for (var attemptData in attemptsResponse) {
-        // Find the screen in the game
-        Screen? screen;
-        for (var level in game.levels) {
-          for (var s in level.screens) {
-            if (s.screenId == attemptData['screen_id']) {
-              screen = s;
-              break;
-            }
-          }
-          if (screen != null) break;
-        }
+      _logger.debug('Attempt added with ID: ${response['attempt_id']}');
 
-        if (screen == null) continue;
-
-        // Get selected option if any
-        Option? selectedOption;
-        if (attemptData['selected_option_ids'] != null &&
-            attemptData['selected_option_ids'].isNotEmpty) {
-          final optionId = attemptData['selected_option_ids'][0];
-          // Find the option in the screen
-          if (screen is MultipleChoiceScreen) {
-            for (var option in screen.options) {
-              if (option.optionId == optionId) {
-                selectedOption = option;
-                break;
-              }
-            }
-          } else if (screen is MemoryScreen) {
-            for (var option in screen.options) {
-              if (option.optionId == optionId) {
-                selectedOption = option;
-                break;
-              }
-            }
-          }
-        }
-
-        attempts.add(ScreenAttempt(
-          attemptId: attemptData['attempt_id'],
-          timestamp: DateTime.parse(attemptData['timestamp']),
-          isCorrect: attemptData['is_correct'],
-          timeTakenMs: attemptData['time_taken_ms'],
-          hintsUsed: attemptData['hints_used'] ?? 0,
-          screen: screen,
-          selectedOption: selectedOption,
-        ));
-      }
-
-      return GameSession(
-        sessionId: sessionId,
-        startTime: DateTime.parse(sessionData['start_time']),
-        endTime: sessionData['end_time'] != null
-            ? DateTime.parse(sessionData['end_time'])
-            : null,
-        overallResult: sessionData['overall_result'],
-        child: child,
-        game: game,
-        attempts: attempts,
-      );
-    } catch (e, stackTrace) {
-      _logger.error('Error in _getSessionWithAttempts', e, stackTrace);
-      return null;
-    }
-  }
-
-  Future<GameSession?> createSession(GameSession session) async {
-    try {
-      // Insert session
-      final sessionResponse =
-          await _supabaseService.client.from('GameSession').insert({
-        'child_id': session.child.userId,
-        'game_id': session.game.gameId,
-        'start_time': session.startTime.toIso8601String(),
-        'end_time': session.endTime?.toIso8601String(),
-        'overall_result': session.overallResult,
-        'total_attempts': session.attempts.length,
-        'correct_attempts': session.attempts.where((a) => a.isCorrect).length,
-        'hints_used': session.attempts.fold(0, (sum, a) => sum + a.hintsUsed),
-        'completed': session.endTime != null,
-      }).select();
-
-      if (sessionResponse.isEmpty) {
-        throw Exception('Failed to create game session');
-      }
-
-      final sessionId = sessionResponse[0]['session_id'];
-
-      // Insert attempts
-      for (var attempt in session.attempts) {
-        await _supabaseService.client.from('ScreenAttempt').insert({
-          'session_id': sessionId,
-          'screen_id': attempt.screen.screenId,
-          'selected_option_ids': attempt.selectedOption != null
-              ? [attempt.selectedOption!.optionId]
-              : [],
-          'timestamp': attempt.timestamp.toIso8601String(),
-          'is_correct': attempt.isCorrect,
-          'time_taken_ms': attempt.timeTakenMs,
-          'hints_used': attempt.hintsUsed,
-        });
-      }
-
-      // Return the created session with the new ID
-      return await getSessionById(sessionId);
-    } catch (e, stackTrace) {
-      _logger.error('Error creating game session', e, stackTrace);
-      return null;
-    }
-  }
-
-  // Update an existing game session (e.g., when ending a session)
-  Future<bool> updateSession(GameSession session) async {
-    try {
-      // Update session
-      await _supabaseService.client.from('GameSession').update({
-        'end_time': session.endTime?.toIso8601String(),
-        'overall_result': session.overallResult,
-        'total_attempts': session.attempts.length,
-        'correct_attempts': session.attempts.where((a) => a.isCorrect).length,
-        'hints_used': session.attempts.fold(0, (sum, a) => sum + a.hintsUsed),
-        'completed': session.endTime != null,
-      }).eq('session_id', session.sessionId);
-
-      // Delete existing attempts and insert new ones
-      await _supabaseService.client
-          .from('ScreenAttempt')
-          .delete()
-          .eq('session_id', session.sessionId);
-
-      for (var attempt in session.attempts) {
-        await _supabaseService.client.from('ScreenAttempt').insert({
-          'session_id': session.sessionId,
-          'screen_id': attempt.screen.screenId,
-          'selected_option_ids': attempt.selectedOption != null
-              ? [attempt.selectedOption!.optionId]
-              : [],
-          'timestamp': attempt.timestamp.toIso8601String(),
-          'is_correct': attempt.isCorrect,
-          'time_taken_ms': attempt.timeTakenMs,
-          'hints_used': attempt.hintsUsed,
-        });
-      }
-
-      return true;
-    } catch (e, stackTrace) {
-      _logger.error('Error updating game session', e, stackTrace);
-      return false;
-    }
-  }
-
-  Future<bool> addAttemptToSession(
-      String sessionId, ScreenAttempt attempt) async {
-    try {
-      // Insert attempt
-      await _supabaseService.client.from('ScreenAttempt').insert({
-        'session_id': sessionId,
-        'screen_id': attempt.screen.screenId,
-        'selected_option_ids': attempt.selectedOption != null
-            ? [attempt.selectedOption!.optionId]
-            : [],
-        'timestamp': attempt.timestamp.toIso8601String(),
-        'is_correct': attempt.isCorrect,
-        'time_taken_ms': attempt.timeTakenMs,
-        'hints_used': attempt.hintsUsed,
+      await _supabaseService.client.rpc('increment_session_stats', params: {
+        'p_session_id': sessionId,
+        'p_is_correct': isCorrect,
+        'p_hints_used_increment': hintsUsed
       });
 
-      // Update session stats
-      final session = await getSessionById(sessionId);
-      if (session != null) {
-        await _supabaseService.client.from('GameSession').update({
-          'total_attempts': session.attempts.length,
-          'correct_attempts': session.attempts.where((a) => a.isCorrect).length,
-          'hints_used': session.attempts.fold(0, (sum, a) => sum + a.hintsUsed),
-        }).eq('session_id', sessionId);
-      }
-
-      return true;
+      return ScreenAttempt.fromJson(response);
+    } on PostgrestException catch (e, stackTrace) {
+      _logger.error(
+          'Supabase error adding attempt to session $sessionId', e, stackTrace);
+      throw Exception('Database error: Failed to add attempt. ${e.message}');
     } catch (e, stackTrace) {
-      _logger.error('Error adding attempt to session', e, stackTrace);
-      return false;
+      _logger.error('Unexpected error adding attempt to session $sessionId', e,
+          stackTrace);
+      throw Exception('An unexpected error occurred while adding the attempt.');
+    }
+  }
+
+  /// Updates an existing game session, typically to mark it as ended.
+  Future<bool> endSession({
+    required String sessionId,
+    required bool completed,
+    DateTime? endTime,
+    String? overallResult,
+  }) async {
+    try {
+      _logger.info('Ending session: $sessionId');
+      await _supabaseService.client.from('game_session').update({
+        'end_time': (endTime ?? DateTime.now()).toIso8601String(),
+        'completed': completed,
+        'overall_result': overallResult,
+      }).eq('session_id', sessionId);
+
+      _logger
+          .info('Session $sessionId marked as ended (completed: $completed)');
+      return true;
+    } on PostgrestException catch (e, stackTrace) {
+      _logger.error('Supabase error ending session $sessionId', e, stackTrace);
+      throw Exception('Database error: Failed to end session. ${e.message}');
+    } catch (e, stackTrace) {
+      _logger.error(
+          'Unexpected error ending session $sessionId', e, stackTrace);
+      throw Exception('An unexpected error occurred while ending the session.');
     }
   }
 }

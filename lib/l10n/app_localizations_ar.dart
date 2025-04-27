@@ -121,4 +121,32 @@ class AppLocalizationsAr extends AppLocalizations {
   String get confirmPasswordError => 'كلمات المرور غير متطابقة';
   @override
   String get confirmPassword => 'تأكيد كلمة المرور';
+  @override
+  String get createChildProfileTitle => 'إنشاء ملف تعريف الطفل';
+  @override
+  String get selectAvatarPrompt => 'اختر صورة رمزية';
+  @override
+  String get firstNameLabel => 'الاسم الأول';
+  @override
+  String get enterFirstNameHint => 'أدخل الاسم الأول';
+  @override
+  String get errorFirstNameRequired => 'الرجاء إدخال الاسم الأول';
+  @override
+  String get lastNameLabelOptional => 'اسم العائلة (اختياري)';
+  @override
+  String get enterLastNameHintOptional => 'أدخل اسم العائلة (اختياري)';
+  @override
+  String get birthdateLabelOptional => 'تاريخ الميلاد (اختياري)';
+  @override
+  String get selectDateButton => 'تحديد التاريخ';
+  @override
+  String get specialConditionsLabelOptional => 'الحالات الخاصة (اختياري)';
+  @override
+  String get createProfileButton => 'إنشاء الملف الشخصي';
+  @override
+  String profileCreatedSuccess(String firstName) =>
+      '!$firstName تم إنشاء الملف الشخصي لـ';
+  @override
+  String get errorCreatingProfile =>
+      'تعذر إنشاء الملف الشخصي. الرجاء المحاولة مرة أخرى.';
 }

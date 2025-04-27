@@ -101,6 +101,21 @@ abstract class AppLocalizations {
   String get requiredFieldError;
   String get confirmPasswordError;
   String get confirmPassword;
+
+  // Create Child Profile Screen
+  String get createChildProfileTitle;
+  String get selectAvatarPrompt;
+  String get firstNameLabel;
+  String get enterFirstNameHint;
+  String get errorFirstNameRequired;
+  String get lastNameLabelOptional;
+  String get enterLastNameHintOptional;
+  String get birthdateLabelOptional;
+  String get selectDateButton;
+  String get specialConditionsLabelOptional;
+  String get createProfileButton;
+  String profileCreatedSuccess(String firstName);
+  String get errorCreatingProfile;
 }
 
 class _AppLocalizationsDelegate

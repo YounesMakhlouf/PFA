@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pfa/config/app_theme.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/config/routes.dart';
+import 'package:pfa/services/logging_service.dart';
+import 'package:pfa/services/supabase_service.dart';
 import 'package:pfa/ui/game_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,6 +15,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomeScreen> {
+  final _logger = LoggingService();
+  final _supabaseService = SupabaseService();
+
   @override
   void initState() {
     super.initState();
@@ -21,8 +27,34 @@ class _HomePageState extends State<HomeScreen> {
     ]);
   }
 
+  Future<void> _handleLogout() async {
+    _logger.info('Logout button tapped');
+    try {
+      await _supabaseService.signOut();
+      _logger.info('Sign out successful');
+
+      if (mounted) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          AppRoutes.auth,
+          (Route<dynamic> route) => false, // Remove all previous routes
+        );
+      }
+    } catch (e, stackTrace) {
+      _logger.error('Error during sign out', e, stackTrace);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Logout failed: ${e.toString()}'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -47,6 +79,19 @@ class _HomePageState extends State<HomeScreen> {
     ];
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(l10n.learningGames),
+        backgroundColor: AppColors.background,
+        foregroundColor: AppColors.textPrimary,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Logout', // TODO: Localize
+            onPressed: _handleLogout,
+          ),
+        ],
+      ),
       backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(

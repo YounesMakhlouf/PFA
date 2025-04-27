@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import 'package:collection/collection.dart';
 import '../l10n/app_localizations.dart';
 
 abstract class User {
@@ -34,40 +35,53 @@ enum SpecialCondition {
 
 extension SpecialConditionExtension on SpecialCondition {
   String displayName(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     switch (this) {
       case SpecialCondition.AUTISM:
-        return AppLocalizations.of(context).autism;
+        return l10n.autism;
       case SpecialCondition.ADHD:
-        return AppLocalizations.of(context).adhd;
+        return l10n.adhd;
       case SpecialCondition.DYSLEXIA:
-        return AppLocalizations.of(context).dyslexia;
+        return l10n.dyslexia;
       case SpecialCondition.DYSCALCULIA:
-        return AppLocalizations.of(context).dyscalculia;
+        return l10n.dyscalculia;
       case SpecialCondition.SPEAKING_DIFFICULTIES:
-        return AppLocalizations.of(context).speakingDifficulties;
+        return l10n.speakingDifficulties;
+      default:
+        return name;
     }
   }
 }
 
-class Child extends User {
+class Child {
+  final String childId;
+  final String accountId; // Foreign Key linking to parent's auth.users.id
   final String firstName;
-  final String lastName;
+  final String? lastName;
   final DateTime birthdate;
   final String? avatarUrl;
-  final List<SpecialCondition> specialConditions;
+  final Set<SpecialCondition> specialConditions;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   Child({
-    super.userId,
-    required super.email,
-    super.createdAt,
+    required this.childId,
+    required this.accountId,
     required this.firstName,
-    required this.lastName,
+    this.lastName,
     required this.birthdate,
     this.avatarUrl,
     required this.specialConditions,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
-  String get fullName => '$firstName $lastName';
+  String get fullName {
+    if (lastName != null && lastName!.isNotEmpty) {
+      return '$firstName $lastName';
+    }
+    return firstName;
+  }
 
   /// Returns the child's age in years
   int get age {
@@ -83,62 +97,48 @@ class Child extends User {
     return age < 0 ? 0 : age;
   }
 
-  @override
   Map<String, dynamic> toJson() {
-    final baseJson = super.toJson();
     return {
-      ...baseJson,
+      'account_id': accountId,
       'first_name': firstName,
       'last_name': lastName,
-      'birthdate': birthdate.toIso8601String(),
+      'birthdate': birthdate.toIso8601String().substring(0, 10),
       'avatar_url': avatarUrl,
+      'special_conditions': specialConditions.map((e) => e.name).toList()
     };
   }
 
-  factory Child.fromJson(Map<String, dynamic> json,
-      {List<SpecialCondition>? specialConditions}) {
+  factory Child.fromJson(Map<String, dynamic> json) {
+    DateTime parseRequiredDateTime(String? dateStr) {
+      if (dateStr == null) {
+        return DateTime.now();
+      }
+      return DateTime.parse(dateStr).toLocal();
+    }
+
+    Set<SpecialCondition> parseConditions(dynamic conditionsData) {
+      if (conditionsData is List) {
+        return conditionsData
+            .map((item) => item?.toString())
+            .whereNotNull()
+            .map((name) =>
+                SpecialCondition.values.firstWhereOrNull((e) => e.name == name))
+            .whereType<SpecialCondition>()
+            .toSet();
+      }
+      return {}; // Return empty set if data is not a list or is null
+    }
+
     return Child(
-      userId: json['user_id'],
-      email: json['email'],
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : null,
-      firstName: json['first_name'],
-      lastName: json['last_name'],
-      birthdate: DateTime.parse(json['birthdate']),
-      avatarUrl: json['avatar_url'],
-      specialConditions: specialConditions ?? [],
-    );
-  }
-}
-
-class Educator extends User {
-  final String speciality;
-
-  Educator({
-    super.userId,
-    required super.email,
-    super.createdAt,
-    required this.speciality,
-  });
-
-  @override
-  Map<String, dynamic> toJson() {
-    final baseJson = super.toJson();
-    return {
-      ...baseJson,
-      'speciality': speciality,
-    };
-  }
-
-  factory Educator.fromJson(Map<String, dynamic> json) {
-    return Educator(
-      userId: json['user_id'],
-      email: json['email'],
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : null,
-      speciality: json['speciality'],
+      childId: json['child_id'] as String,
+      accountId: json['user_id'] as String,
+      firstName: json['first_name'] as String,
+      lastName: json['last_name'] as String?,
+      birthdate: parseRequiredDateTime(json['birthdate'] as String?),
+      avatarUrl: json['avatar_url'] as String?,
+      specialConditions: parseConditions(json['special_conditions']),
+      createdAt: DateTime.parse(json['created_at'] as String),
+      updatedAt: DateTime.parse(json['updated_at'] as String),
     );
   }
 }
