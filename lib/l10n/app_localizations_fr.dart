@@ -87,4 +87,40 @@ class AppLocalizationsFr extends AppLocalizations {
   String get selected => 'Sélectionné';
   @override
   String get selectCorrectOption => 'Sélectionnez la bonne option';
+
+// Authenticatio
+  @override
+  String get signIn => 'Se connecter';
+  @override
+  String get signUp => 'S\'inscrire';
+  @override
+  String get enterEmail => 'Entrez votre e-mail';
+  @override
+  String get validEmailError => 'Veuillez entrer une adresse e-mail valide';
+  @override
+  String get enterPassword => 'Entrez votre mot de passe';
+  @override
+  String get passwordLengthError =>
+      'Veuillez entrer un mot de passe d\'au moins 6 caractères';
+  @override
+  String get forgotPassword => 'Mot de passe oublié ?';
+  @override
+  String get dontHaveAccount => 'Pas de compte ? S\'inscrire';
+  @override
+  String get haveAccount => 'Déjà un compte ? Se connecter';
+  @override
+  String get sendPasswordReset => 'Envoyer l\'e-mail de réinitialisation';
+  @override
+  String get passwordResetSent =>
+      'L\'e-mail de réinitialisation du mot de passe a été envoyé';
+  @override
+  String get backToSignIn => 'Retour à la connexion';
+  @override
+  String get unexpectedError => 'Une erreur inattendue s\'est produite';
+  @override
+  String get requiredFieldError => 'Ce champ est requis';
+  @override
+  String get confirmPasswordError => 'Les mots de passe ne correspondent pas';
+  @override
+  String get confirmPassword => 'Confirmer le mot de passe';
 }

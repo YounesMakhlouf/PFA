@@ -83,6 +83,24 @@ abstract class AppLocalizations {
   String get selectableOption;
   String get selected;
   String get selectCorrectOption;
+
+  // Authentication
+  String get signIn;
+  String get signUp;
+  String get enterEmail;
+  String get validEmailError;
+  String get enterPassword;
+  String get passwordLengthError;
+  String get forgotPassword;
+  String get dontHaveAccount;
+  String get haveAccount;
+  String get sendPasswordReset;
+  String get passwordResetSent;
+  String get backToSignIn;
+  String get unexpectedError;
+  String get requiredFieldError;
+  String get confirmPasswordError;
+  String get confirmPassword;
 }
 
 class _AppLocalizationsDelegate

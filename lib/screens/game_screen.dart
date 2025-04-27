@@ -77,8 +77,8 @@ class GameScreenWidget extends StatelessWidget {
   Widget _buildOptionsArea(BuildContext context, List<Option> options) {
     return Wrap(
       alignment: WrapAlignment.center,
-      spacing: 16,
-      runSpacing: 16,
+      spacing: 90,
+      runSpacing: 90,
       children: options.map((option) {
         return OptionWidget(
           option: option,

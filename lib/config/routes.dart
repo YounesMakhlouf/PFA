@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:pfa/screens/home_screen.dart';
+import 'package:pfa/screens/auth_screen.dart';
 import 'package:pfa/games/multiple_choice_game.dart';
 
 class AppRoutes {
   static const String home = '/';
+  static const String auth = '/auth';
   static const String multipleChoiceGame = '/game/multiple-choice';
 
   static Map<String, WidgetBuilder> get routes {
     return {
       home: (context) => const HomeScreen(),
+      auth: (context) => const AuthScreen(),
       multipleChoiceGame: (context) {
         final args =
             ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
