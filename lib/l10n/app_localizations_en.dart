@@ -150,4 +150,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorCreatingProfile =>
       'Could not create profile. Please try again.';
+  @override
+  String get logout => 'Logout';
 }

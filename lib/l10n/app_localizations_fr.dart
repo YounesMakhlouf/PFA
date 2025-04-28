@@ -153,4 +153,7 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get errorCreatingProfile =>
       'Impossible de créer le profil. Veuillez réessayer.';
+
+  @override
+  String get logout => 'Déconnexion';
 }

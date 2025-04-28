@@ -301,8 +301,7 @@ class _CreateChildProfileScreenState extends State<CreateChildProfileScreen> {
                   children: SpecialCondition.values.map((condition) {
                     final isSelected = _selectedConditions.contains(condition);
                     return FilterChip(
-                      label: Text(condition
-                          .name), // TODO: Replace with condition.localizedName(context) if available
+                      label: Text(condition.displayName(context)),
                       selected: isSelected,
                       onSelected: (bool selected) {
                         setState(() {

@@ -149,4 +149,7 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get errorCreatingProfile =>
       'تعذر إنشاء الملف الشخصي. الرجاء المحاولة مرة أخرى.';
+
+  @override
+  String get logout => 'تسجيل الخروج';
 }

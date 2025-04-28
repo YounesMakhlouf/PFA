@@ -87,7 +87,7 @@ class _HomePageState extends State<HomeScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            tooltip: 'Logout', // TODO: Localize
+            tooltip: l10n.logout,
             onPressed: _handleLogout,
           ),
         ],

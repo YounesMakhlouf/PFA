@@ -116,6 +116,8 @@ abstract class AppLocalizations {
   String get createProfileButton;
   String profileCreatedSuccess(String firstName);
   String get errorCreatingProfile;
+
+  String get logout;
 }
 
 class _AppLocalizationsDelegate
