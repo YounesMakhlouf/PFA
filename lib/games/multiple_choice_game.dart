@@ -155,7 +155,7 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
         ),
       );
     }
-    final gameThemeColor = _gameService.game!.themeColor ?? theme.primaryColor;
+    final gameThemeColor = _gameService.game!.themeColor;
     final appBarForegroundColor = colorScheme.onPrimary;
 
     return Scaffold(
