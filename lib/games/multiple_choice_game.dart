@@ -94,11 +94,16 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    final TextTheme textTheme = theme.textTheme;
+    final l10n = AppLocalizations.of(context);
+
     if (_isLoading) {
       return Scaffold(
         body: Center(
           child: CircularProgressIndicator(
-            color: Colors.blue,
+            color: colorScheme.primary,
           ),
         ),
       );
@@ -108,40 +113,57 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
         _gameService.game == null ||
         _gameService.currentScreen == null) {
       return Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: Text(l10n.applicationError),
+          backgroundColor: colorScheme.error,
+          foregroundColor: colorScheme.onError,
+          elevation: 0,
+        ),
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.error_outline,
-                color: Colors.red,
-                size: 60,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                _errorMessage ?? 'Unknown error',
-                style: const TextStyle(fontSize: 18),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(AppLocalizations.of(context).goBack),
-              ),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  color: colorScheme.error,
+                  size: 60,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  _errorMessage ?? l10n.unexpectedError,
+                  style:
+                      textTheme.titleMedium?.copyWith(color: colorScheme.error),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(AppLocalizations.of(context).goBack),
+                ),
+              ],
+            ),
           ),
         ),
       );
     }
+    final gameThemeColor = _gameService.game!.themeColor ?? theme.primaryColor;
+    final appBarForegroundColor = colorScheme.onPrimary;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(_gameService.game!.name),
-        backgroundColor:
-            _gameService.game!.themeColor.withAlpha((0.8 * 255).round()),
-        elevation: 0,
+        backgroundColor: gameThemeColor.withAlpha((0.9 * 255).round()),
+        foregroundColor: appBarForegroundColor,
+        elevation: theme.appBarTheme.elevation,
       ),
       body: SafeArea(
         child: GameScreenWidget(

@@ -5,7 +5,7 @@ import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/config/routes.dart';
 import 'package:pfa/services/logging_service.dart';
 import 'package:pfa/services/supabase_service.dart';
-import 'package:pfa/ui/game_card.dart';
+import 'package:pfa/widgets/game_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

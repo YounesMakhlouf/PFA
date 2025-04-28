@@ -19,7 +19,13 @@ void main() async {
   } catch (e, stackTrace) {
     logger.error('Failed to initialize app', e, stackTrace);
     // Show error UI instead of crashing
-    runApp(ErrorScreen(errorMessage: e.toString()));
+    runApp(MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.lightTheme,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: ErrorScreen(errorMessage: e.toString()),
+    ));
   }
 }
 

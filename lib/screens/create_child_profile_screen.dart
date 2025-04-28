@@ -258,10 +258,9 @@ class _CreateChildProfileScreenState extends State<CreateChildProfileScreen> {
                 // --- Birthdate ---
                 Text(
                   l10n.birthdateLabelOptional,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall
-                      ?.copyWith(color: Colors.grey[700]),
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      color:
+                          AppColors.textPrimary.withAlpha((0.7 * 255).round())),
                 ),
                 const SizedBox(height: 8),
                 OutlinedButton.icon(
@@ -289,10 +288,9 @@ class _CreateChildProfileScreenState extends State<CreateChildProfileScreen> {
                 // --- Special Conditions ---
                 Text(
                   l10n.specialConditionsLabelOptional,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall
-                      ?.copyWith(color: Colors.grey[700]),
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      color:
+                          AppColors.textPrimary.withAlpha((0.7 * 255).round())),
                 ),
                 const SizedBox(height: 8),
                 Wrap(

@@ -156,4 +156,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get logout => 'Déconnexion';
+  @override
+  String get errorScreenRestartInstruction =>
+      'Veuillez fermer et rouvrir l\'application.';
 }
