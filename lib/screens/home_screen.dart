@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/config/app_theme.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/config/routes.dart';
-import 'package:pfa/services/logging_service.dart';
-import 'package:pfa/services/supabase_service.dart';
+import 'package:pfa/providers/global_providers.dart';
 import 'package:pfa/widgets/game_card.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomePageState();
+  ConsumerState<HomeScreen> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomeScreen> {
-  final _logger = LoggingService();
-  final _supabaseService = SupabaseService();
-
+class _HomePageState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
@@ -28,23 +25,18 @@ class _HomePageState extends State<HomeScreen> {
   }
 
   Future<void> _handleLogout() async {
-    _logger.info('Logout button tapped');
+    final logger = ref.read(loggingServiceProvider);
+    final supabaseService = ref.read(supabaseServiceProvider);
+    logger.info('Logout button tapped');
     try {
-      await _supabaseService.signOut();
-      _logger.info('Sign out successful');
-
-      if (mounted) {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          AppRoutes.auth,
-          (Route<dynamic> route) => false, // Remove all previous routes
-        );
-      }
+      await supabaseService.signOut();
+      logger.info('Sign out successful');
     } catch (e, stackTrace) {
-      _logger.error('Error during sign out', e, stackTrace);
+      logger.error('Error during sign out', e, stackTrace);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Logout failed: ${e.toString()}'),
+            content: Text(AppLocalizations.of(context).applicationError),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );

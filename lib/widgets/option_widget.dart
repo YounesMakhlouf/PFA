@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/models/screen.dart';
-import 'package:pfa/services/supabase_service.dart';
+import 'package:pfa/providers/global_providers.dart';
 
-class OptionWidget extends StatelessWidget {
+class OptionWidget extends ConsumerWidget {
   final Option option;
   final VoidCallback onTap;
   final Color? gameThemeColor;
@@ -20,24 +21,26 @@ class OptionWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final logger = ref.read(loggingServiceProvider);
     final bool hasImagePath =
         option.pictureUrl != null && option.pictureUrl!.isNotEmpty;
-
-    final supabaseService = SupabaseService();
 
     String? fullImageUrl;
     if (hasImagePath) {
       try {
+        final supabaseService = ref.read(supabaseServiceProvider);
         fullImageUrl = supabaseService.getPublicUrl(
           bucketId: 'game-assets',
           filePath: option.pictureUrl!,
         );
-      } catch (e) {
-        rethrow;
+      } catch (e, stackTrace) {
+        logger.error(
+            'Failed to get public URL for ${option.pictureUrl}', e, stackTrace);
       }
     }
+
     Widget content;
     final Color effectiveButtonColor =
         gameThemeColor ?? theme.colorScheme.primary;

@@ -3,8 +3,8 @@ import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import 'package:pfa/config/routes.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 
-class AuthScreen extends StatelessWidget {
-  const AuthScreen({super.key});
+class WelcomeScreen extends StatelessWidget {
+  const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,8 @@ class AuthScreen extends StatelessWidget {
           onError: (error) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                  content: Text('Authentication Error: ${error.toString()}')),
+                  content:
+                      Text('${l10n.applicationError}: ${error.toString()}')),
             );
           },
         ),

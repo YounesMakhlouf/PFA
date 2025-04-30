@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:pfa/screens/auth_gate.dart';
 import 'package:pfa/screens/create_child_profile_screen.dart';
+import 'package:pfa/screens/error_screen.dart';
 import 'package:pfa/screens/home_screen.dart';
-import 'package:pfa/screens/auth_screen.dart';
+import 'package:pfa/screens/welcome_screen.dart';
 import 'package:pfa/games/multiple_choice_game.dart';
 
 class AppRoutes {
-  static const String home = '/';
-  static const String auth = '/auth';
-  static const String createChildProfile = '/auth/create-child-profile';
+  static const String authGate = '/';
+  static const String welcome = '/welcome';
+  static const String home = '/home';
+  static const String createChildProfile = '/create-child-profile';
   static const String multipleChoiceGame = '/game/multiple-choice';
 
   static Map<String, WidgetBuilder> get routes {
     return {
+      authGate: (context) => const AuthGate(),
+      welcome: (context) => const WelcomeScreen(),
       home: (context) => const HomeScreen(),
-      auth: (context) => const AuthScreen(),
       createChildProfile: (context) => const CreateChildProfileScreen(),
       multipleChoiceGame: (context) {
         final args =
@@ -21,8 +25,9 @@ class AppRoutes {
         final gameId = args?['gameId'] as String?;
 
         if (gameId == null) {
-          return const Scaffold(
-              body: Center(child: Text("Error: Game ID missing")));
+          return ErrorScreen(
+            errorMessage: 'Error: Game category or ID missing',
+          );
         }
         return MultipleChoiceGame(gameId: gameId);
       },

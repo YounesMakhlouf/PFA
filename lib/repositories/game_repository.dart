@@ -5,10 +5,13 @@ import 'package:pfa/services/logging_service.dart';
 
 class GameRepository {
   final SupabaseService _supabaseService;
-  final LoggingService _logger = LoggingService();
+  final LoggingService _logger;
 
-  GameRepository({required SupabaseService supabaseService})
-      : _supabaseService = supabaseService;
+  GameRepository(
+      {required SupabaseService supabaseService,
+      required LoggingService logger})
+      : _supabaseService = supabaseService,
+        _logger = logger;
 
   Future<List<Game>> getAllGames() async {
     try {
