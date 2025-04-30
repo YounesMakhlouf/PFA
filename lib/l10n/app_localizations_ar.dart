@@ -86,4 +86,72 @@ class AppLocalizationsAr extends AppLocalizations {
   String get selected => 'تم التحديد';
   @override
   String get selectCorrectOption => 'حدد الخيار الصحيح';
+
+// Authentication
+  @override
+  String get signIn => 'تسجيل الدخول';
+  @override
+  String get signUp => 'إنشاء حساب';
+  @override
+  String get enterEmail => 'أدخل بريدك الإلكتروني';
+  @override
+  String get validEmailError => 'الرجاء إدخال عنوان بريد إلكتروني صالح';
+  @override
+  String get enterPassword => 'أدخل كلمة المرور الخاصة بك';
+  @override
+  String get passwordLengthError =>
+      'الرجاء إدخال كلمة مرور تتكون من 6 أحرف على الأقل';
+  @override
+  String get forgotPassword => 'هل نسيت كلمة المرور؟';
+  @override
+  String get dontHaveAccount => 'ليس لديك حساب؟ أنشئ حسابًا';
+  @override
+  String get haveAccount => 'هل لديك حساب بالفعل؟ تسجيل الدخول';
+  @override
+  String get sendPasswordReset => 'إرسال بريد إعادة تعيين كلمة المرور';
+  @override
+  String get passwordResetSent => 'تم إرسال بريد إعادة تعيين كلمة المرور';
+  @override
+  String get backToSignIn => 'العودة لتسجيل الدخول';
+  @override
+  String get unexpectedError => 'حدث خطأ غير متوقع';
+  @override
+  String get requiredFieldError => 'هذا الحقل مطلوب';
+  @override
+  String get confirmPasswordError => 'كلمات المرور غير متطابقة';
+  @override
+  String get confirmPassword => 'تأكيد كلمة المرور';
+  @override
+  String get createChildProfileTitle => 'إنشاء ملف تعريف الطفل';
+  @override
+  String get selectAvatarPrompt => 'اختر صورة رمزية';
+  @override
+  String get firstNameLabel => 'الاسم الأول';
+  @override
+  String get enterFirstNameHint => 'أدخل الاسم الأول';
+  @override
+  String get errorFirstNameRequired => 'الرجاء إدخال الاسم الأول';
+  @override
+  String get lastNameLabelOptional => 'اسم العائلة (اختياري)';
+  @override
+  String get enterLastNameHintOptional => 'أدخل اسم العائلة (اختياري)';
+  @override
+  String get birthdateLabelOptional => 'تاريخ الميلاد (اختياري)';
+  @override
+  String get selectDateButton => 'تحديد التاريخ';
+  @override
+  String get specialConditionsLabelOptional => 'الحالات الخاصة (اختياري)';
+  @override
+  String get createProfileButton => 'إنشاء الملف الشخصي';
+  @override
+  String profileCreatedSuccess(String firstName) =>
+      '!$firstName تم إنشاء الملف الشخصي لـ';
+  @override
+  String get errorCreatingProfile =>
+      'تعذر إنشاء الملف الشخصي. الرجاء المحاولة مرة أخرى.';
+
+  @override
+  String get logout => 'تسجيل الخروج';
+  @override
+  String get errorScreenRestartInstruction => 'يرجى إغلاق التطبيق وإعادة فتحه.';
 }
