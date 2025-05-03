@@ -195,12 +195,11 @@ class _CreateChildProfileScreenState
                           ),
                         ),
                         child: CircleAvatar(
-                          radius: 40, // Adjust size as needed
+                          radius: 40,
                           backgroundColor:
                               Colors.grey[200], // Placeholder background
                           backgroundImage: AssetImage(path),
                           onBackgroundImageError: (_, __) {
-                            // Handle asset load error
                             logger.error("Failed to load avatar asset: $path");
                           },
                         ),

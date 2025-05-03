@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
-import 'package:pfa/config/routes.dart';
 import 'package:pfa/l10n/app_localizations.dart';
+import 'package:pfa/providers/global_providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends ConsumerWidget {
   const WelcomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final logger = ref.read(loggingServiceProvider);
+
     return Scaffold(
       appBar: AppBar(title: const Text('Authentication')),
       body: Padding(
@@ -33,13 +36,15 @@ class WelcomeScreen extends StatelessWidget {
             confirmPassword: l10n.confirmPassword,
           ),
           onSignInComplete: (response) {
-            Navigator.pushReplacementNamed(context, AppRoutes.home);
+            logger.info(
+                'SupaEmailAuth: Sign In Complete. User: ${response.user?.id}. AuthGate will handle navigation.');
           },
           onSignUpComplete: (response) {
-            Navigator.pushReplacementNamed(
-                context, AppRoutes.createChildProfile);
+            logger.info(
+                'SupaEmailAuth: Sign Up Complete. User: ${response.user?.id}. AuthGate will handle navigation.');
           },
           onError: (error) {
+            logger.error('SupaEmailAuth Error', error);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                   content:

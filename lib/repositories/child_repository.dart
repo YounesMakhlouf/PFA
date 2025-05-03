@@ -44,7 +44,6 @@ class ChildRepository {
     }
   }
 
-  /// Fetches a specific child profile by its unique ID.
   Future<Child?> getChildProfileById(String childId) async {
     try {
       _logger.info('Fetching child profile by ID: $childId');
@@ -124,7 +123,6 @@ class ChildRepository {
     }
   }
 
-  /// Updates an existing child profile.
   Future<bool> updateChildProfile(Child updatedChild) async {
     final currentUser = _supabaseService.currentUser;
     if (currentUser == null) {
@@ -169,7 +167,6 @@ class ChildRepository {
     }
   }
 
-  /// Deletes a specific child profile.
   Future<bool> deleteChildProfile(String childId) async {
     final currentUser = _supabaseService.currentUser;
     if (currentUser == null) {

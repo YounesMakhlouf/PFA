@@ -26,6 +26,11 @@ final supabaseAuthStateProvider = StreamProvider<AuthState>((ref) {
   return supabaseClient.auth.onAuthStateChange;
 });
 
+final currentUserIdProvider = Provider<String?>((ref) {
+  final authState = ref.watch(supabaseAuthStateProvider);
+  return authState.valueOrNull?.session?.user.id;
+});
+
 final childRepositoryProvider = Provider<ChildRepository>((ref) {
   final supabaseService = ref.watch(supabaseServiceProvider);
   final logger = ref.watch(loggingServiceProvider);
