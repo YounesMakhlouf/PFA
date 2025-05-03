@@ -5,7 +5,7 @@ import 'package:pfa/services/logging_service.dart';
 
 class MultipleChoiceGameService {
   final GameRepository _gameRepository;
-  final LoggingService _logger = LoggingService();
+  final LoggingService _logger;
 
   Game? game;
   Level? currentLevel;
@@ -16,8 +16,10 @@ class MultipleChoiceGameService {
   bool isLoading = true;
   String? errorMessage;
 
-  MultipleChoiceGameService({required GameRepository gameRepository})
-      : _gameRepository = gameRepository;
+  MultipleChoiceGameService(
+      {required GameRepository gameRepository, required LoggingService logger})
+      : _gameRepository = gameRepository,
+        _logger = logger;
 
   Future<void> loadGameData(String gameId) async {
     try {

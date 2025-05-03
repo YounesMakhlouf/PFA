@@ -3,26 +3,23 @@ import 'package:intl/intl.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/config/app_theme.dart';
 import 'package:pfa/models/user.dart';
-import 'package:pfa/repositories/child_repository.dart';
-import 'package:pfa/services/supabase_service.dart';
-import 'package:pfa/services/logging_service.dart';
 import 'package:pfa/config/routes.dart';
+import 'package:pfa/providers/global_providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CreateChildProfileScreen extends StatefulWidget {
+class CreateChildProfileScreen extends ConsumerStatefulWidget {
   const CreateChildProfileScreen({super.key});
 
   @override
-  State<CreateChildProfileScreen> createState() =>
+  ConsumerState<CreateChildProfileScreen> createState() =>
       _CreateChildProfileScreenState();
 }
 
-class _CreateChildProfileScreenState extends State<CreateChildProfileScreen> {
+class _CreateChildProfileScreenState
+    extends ConsumerState<CreateChildProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
-  final _logger = LoggingService();
-  final _supabaseService = SupabaseService();
-  late final ChildRepository _childRepository;
 
   String? _selectedAvatarPath;
   DateTime? _selectedBirthdate;
@@ -39,13 +36,13 @@ class _CreateChildProfileScreenState extends State<CreateChildProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _childRepository = ChildRepository(
-      supabaseService: _supabaseService,
-      logger: _logger,
-    );
+
     if (_defaultAvatarPaths.isNotEmpty) {
       _selectedAvatarPath = _defaultAvatarPaths.first;
     }
+    ref
+        .read(loggingServiceProvider)
+        .info("CreateChildProfileScreen initialized");
   }
 
   @override
@@ -89,29 +86,25 @@ class _CreateChildProfileScreenState extends State<CreateChildProfileScreen> {
   Future<void> _submitForm() async {
     FocusScope.of(context).unfocus();
 
+    final logger = ref.read(loggingServiceProvider);
+    final childRepository = ref.read(childRepositoryProvider);
+
     if (_formKey.currentState?.validate() ?? false) {
       setState(() => _isLoading = true);
-      _logger.info('Submitting child profile form');
+      logger.info('Submitting child profile form');
 
       try {
-        final currentUser = _supabaseService.currentUser;
-        if (currentUser == null) {
-          throw Exception('User not logged in');
-        }
-        final accountId = currentUser.id;
-
         final firstName = _firstNameController.text.trim();
         final lastName = _lastNameController.text.trim().isEmpty
             ? null
             : _lastNameController.text.trim();
-        // TODO: Handle custom avatar upload. For now, we just save the selected asset path (or null)
-        final avatarUrl =
-            _selectedAvatarPath; // TODO: This should be a Supabase Storage URL after upload
+        // TODO: Handle custom avatar upload. For now, we just save the selected asset path (or null). This should be a Supabase Storage URL after upload
+        final avatarUrl = _selectedAvatarPath;
 
-        _logger.debug(
-            'Creating profile for account: $accountId, name: $firstName');
+        logger.debug(
+            'Calling repository createChildProfile for name: $firstName');
 
-        await _childRepository.createChildProfile(
+        final newChildProfile = await childRepository.createChildProfile(
             firstName: firstName,
             lastName: lastName,
             birthdate: _selectedBirthdate,
@@ -119,7 +112,8 @@ class _CreateChildProfileScreenState extends State<CreateChildProfileScreen> {
             specialConditions:
                 _selectedConditions); // TODO: I disabled email verification because it would need another screen in between (before creating a new child profile) as the parent is only considered logged in when the email verification is done
 
-        _logger.info('Child profile created successfully for $firstName');
+        logger.info(
+            'Child profile created successfully for $firstName: ${newChildProfile?.childId}');
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -132,11 +126,12 @@ class _CreateChildProfileScreenState extends State<CreateChildProfileScreen> {
           Navigator.of(context).pushReplacementNamed(AppRoutes.home);
         }
       } catch (e, stackTrace) {
-        _logger.error('Failed to create child profile', e, stackTrace);
+        logger.error('Failed to create child profile', e, stackTrace);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(AppLocalizations.of(context).errorCreatingProfile),
+              content: Text(
+                  '${AppLocalizations.of(context).errorCreatingProfile} ${e.toString().replaceFirst("Exception: ", "")}'),
               backgroundColor: AppColors.error,
             ),
           );
@@ -147,12 +142,13 @@ class _CreateChildProfileScreenState extends State<CreateChildProfileScreen> {
         }
       }
     } else {
-      _logger.error('Child profile form validation failed');
+      logger.warning('Child profile form validation failed');
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final logger = ref.read(loggingServiceProvider);
     final l10n = AppLocalizations.of(context);
 
     return Scaffold(
@@ -199,13 +195,12 @@ class _CreateChildProfileScreenState extends State<CreateChildProfileScreen> {
                           ),
                         ),
                         child: CircleAvatar(
-                          radius: 40, // Adjust size as needed
+                          radius: 40,
                           backgroundColor:
                               Colors.grey[200], // Placeholder background
                           backgroundImage: AssetImage(path),
                           onBackgroundImageError: (_, __) {
-                            // Handle asset load error
-                            _logger.error("Failed to load avatar asset: $path");
+                            logger.error("Failed to load avatar asset: $path");
                           },
                         ),
                       ),
