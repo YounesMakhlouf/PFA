@@ -118,7 +118,8 @@ class _SelectChildProfileScreenState
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       foregroundColor: theme.colorScheme.primary,
                       side: BorderSide(
-                          color: theme.colorScheme.primary.withOpacity(0.5)),
+                          color: theme.colorScheme.primary
+                              .withAlpha((0.5 * 255).round())),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                     ),
