@@ -4,7 +4,7 @@ class Screen {
   final String screenId;
   final int screenNumber;
   final String? levelId;
-  final String? instruction;
+  String? instruction;
 
   Screen({
     String? screenId,

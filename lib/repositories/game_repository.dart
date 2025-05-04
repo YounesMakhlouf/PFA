@@ -70,6 +70,7 @@ class GameRepository {
           levels.add(level);
         }
       }
+      levels.sort((a, b) => a.levelNumber.compareTo(b.levelNumber));
 
       _logger.debug('Successfully fetched game with ${levels.length} levels');
       return Game(
@@ -119,6 +120,8 @@ class GameRepository {
           }
         }
       }
+
+      screens.sort((a, b) => a.screenNumber.compareTo(b.screenNumber));
 
       return Level(
         levelId: levelResponse['level_id'],

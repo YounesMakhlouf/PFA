@@ -150,6 +150,13 @@ class _HomePageState extends ConsumerState<HomeScreen> {
         'iconData': Icons.pets,
         'route': null,
         'args': null,
+      },
+      {
+        'title': AppLocalizations.of(context).emotions,
+        'imagePath': 'assets/images/emotions_icon.png',
+        'iconData': Icons.emoji_emotions,
+        'route': AppRoutes.emotionDetectionGame,
+        'args': {'gameId': GameIds.emotionsGame},
       }, // TODO: Change these to be retrieved from the database
     ];
 

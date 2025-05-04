@@ -100,6 +100,7 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
     final ColorScheme colorScheme = theme.colorScheme;
     final TextTheme textTheme = theme.textTheme;
     final l10n = AppLocalizations.of(context);
+    final translationService = ref.read(translationServiceProvider);
 
     if (_isLoading) {
       return Scaffold(
@@ -159,10 +160,13 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
     }
     final gameThemeColor = gameService.game!.themeColor;
     final appBarForegroundColor = colorScheme.onPrimary;
-
+    gameService.currentScreen!.instruction =
+        translationService.getTranslatedText(
+            context, gameService.currentScreen!.instruction ?? "");
     return Scaffold(
       appBar: AppBar(
-        title: Text(gameService.game!.name),
+        title: Text(translationService.getTranslatedText(
+            context, gameService.game!.name)),
         backgroundColor: gameThemeColor.withAlpha((0.9 * 255).round()),
         foregroundColor: appBarForegroundColor,
         elevation: theme.appBarTheme.elevation,

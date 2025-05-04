@@ -12,6 +12,7 @@ class AppRoutes {
   static const String home = '/home';
   static const String createChildProfile = '/create-child-profile';
   static const String multipleChoiceGame = '/game/multiple-choice';
+  static const String emotionDetectionGame = '/game/multiple-choice';
 
   static Map<String, WidgetBuilder> get routes {
     return {
@@ -38,4 +39,5 @@ class AppRoutes {
 class GameIds {
   static const String colorsGame =
       '4a5e6b80-7c1f-4d3a-9b9e-5c8f9a0d1b2c'; // TODO: Use better logic and get rid of this
+  static const String emotionsGame = 'e1f2a3b4-c5d6-7e8f-9012-3456789abcde';
 }

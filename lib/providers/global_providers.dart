@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/services/multiple_choice_game_service.dart';
+import 'package:pfa/services/translation_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:pfa/services/logging_service.dart';
 import 'package:pfa/services/supabase_service.dart';
@@ -9,6 +10,10 @@ import 'package:pfa/repositories/game_session_repository.dart';
 
 final loggingServiceProvider = Provider<LoggingService>((ref) {
   return LoggingService();
+});
+
+final translationServiceProvider = Provider<TranslationService>((ref) {
+  return TranslationService();
 });
 
 final supabaseServiceProvider = Provider<SupabaseService>((ref) {
@@ -47,6 +52,7 @@ final gameSessionRepositoryProvider = Provider<GameSessionRepository>((ref) {
 final gameRepositoryProvider = Provider<GameRepository>((ref) {
   final supabaseService = ref.watch(supabaseServiceProvider);
   final logger = ref.watch(loggingServiceProvider);
+  final translationService = ref.watch(translationServiceProvider);
   return GameRepository(supabaseService: supabaseService, logger: logger);
 });
 
