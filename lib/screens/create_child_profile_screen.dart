@@ -114,7 +114,7 @@ class _CreateChildProfileScreenState
 
         logger.info(
             'Child profile created successfully for $firstName: ${newChildProfile?.childId}');
-
+        ref.invalidate(initialChildProfilesProvider);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -123,7 +123,6 @@ class _CreateChildProfileScreenState
               backgroundColor: AppColors.success,
             ),
           );
-          Navigator.of(context).pushReplacementNamed(AppRoutes.home);
         }
       } catch (e, stackTrace) {
         logger.error('Failed to create child profile', e, stackTrace);
