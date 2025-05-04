@@ -84,7 +84,8 @@ class _CreateChildProfileScreenState
 
   Future<void> _submitForm() async {
     FocusScope.of(context).unfocus();
-
+    final navigator = Navigator.of(context);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     final logger = ref.read(loggingServiceProvider);
     final childRepository = ref.read(childRepositoryProvider);
 
@@ -114,14 +115,19 @@ class _CreateChildProfileScreenState
         logger.info(
             'Child profile created successfully for $firstName: ${newChildProfile?.childId}');
         ref.invalidate(initialChildProfilesProvider);
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)
-                  .profileCreatedSuccess(firstName)),
-              backgroundColor: AppColors.success,
-            ),
-          );
+        if (!mounted) return;
+        scaffoldMessenger.showSnackBar(
+          SnackBar(
+            content: Text(
+                AppLocalizations.of(context).profileCreatedSuccess(firstName)),
+            backgroundColor: AppColors.success,
+          ),
+        );
+        logger.info("Popping CreateChildProfileScreen after success.");
+        if (navigator.canPop()) {
+          navigator.pop();
+        } else {
+          logger.warning("CreateChildProfileScreen cannot pop.");
         }
       } catch (e, stackTrace) {
         logger.error('Failed to create child profile', e, stackTrace);

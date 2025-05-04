@@ -117,7 +117,12 @@ abstract class AppLocalizations {
   String profileCreatedSuccess(String firstName);
   String get errorCreatingProfile;
   String get errorScreenRestartInstruction;
-
+  String get selectChildProfileTitle;
+  String get whoIsPlayingPrompt;
+  String get addChildProfileButton;
+  String get manageProfilesTooltip;
+  String get switchChildProfileButton;
+  String get onlyOneProfileExists;
   String get logout;
 }
 

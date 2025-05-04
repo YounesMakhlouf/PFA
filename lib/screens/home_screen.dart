@@ -69,6 +69,46 @@ class _HomePageState extends ConsumerState<HomeScreen> {
           foregroundColor: AppColors.textPrimary,
           elevation: 0,
           actions: [
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.account_circle_outlined),
+              tooltip: l10n.manageProfilesTooltip,
+              onSelected: (value) {
+                if (value == 'add') {
+                  Navigator.pushNamed(context, AppRoutes.createChildProfile);
+                } else if (value == 'switch') {
+                  final profiles =
+                      ref.read(initialChildProfilesProvider).valueOrNull ?? [];
+                  if (profiles.length > 1) {
+                    logger.info("Navigating to SelectChildProfileScreen");
+                    Navigator.pushNamed(context, AppRoutes.selectChildProfile,
+                        arguments: {"profiles": profiles});
+                  } else {
+                    logger.info(
+                        "Switch profile selected, but only one profile exists.");
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(l10n.onlyOneProfileExists)));
+                  }
+                }
+              },
+              itemBuilder: (BuildContext context) {
+                final profilesCount = ref
+                        .read(initialChildProfilesProvider)
+                        .valueOrNull
+                        ?.length ??
+                    0;
+                return <PopupMenuEntry<String>>[
+                  PopupMenuItem<String>(
+                    value: 'add',
+                    child: Text(l10n.addChildProfileButton),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'switch',
+                    enabled: profilesCount > 1, // Disable if only one profile
+                    child: Text(l10n.switchChildProfileButton),
+                  ),
+                ];
+              },
+            ),
             IconButton(
               icon: const Icon(Icons.logout),
               tooltip: l10n.logout,
