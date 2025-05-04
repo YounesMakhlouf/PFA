@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/config/app_theme.dart';
 import 'package:pfa/models/user.dart';
-import 'package:pfa/config/routes.dart';
 import 'package:pfa/providers/global_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
