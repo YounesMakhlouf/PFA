@@ -82,10 +82,10 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
     final gameService = ref.read(multipleChoiceGameServiceProvider);
 
     setState(() {
-      bool correct = gameService.checkAnswer(selectedOption);
+      bool? correct = gameService.checkAnswer(selectedOption);
 
       // If correct, move to the next screen after a delay
-      if (correct) {
+      if (correct == true || correct == null) {
         Future.delayed(const Duration(seconds: 1), () {
           _moveToNextScreen();
         });

@@ -92,7 +92,7 @@ class GameScreenWidget extends StatelessWidget {
     final Color errorColor = theme.colorScheme.error;
 
     if (isCorrect == null) {
-      return const SizedBox(height: 60);
+      return const SizedBox.shrink();
     }
 
     final Color feedbackColor = isCorrect ? successColor : errorColor;

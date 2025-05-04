@@ -128,7 +128,7 @@ class MemoryScreen extends Screen {
 
 class MultipleChoiceScreen extends Screen {
   final List<Option> options;
-  final Option correctAnswer;
+  final Option? correctAnswer;
 
   MultipleChoiceScreen({
     super.screenId,
@@ -147,7 +147,7 @@ class MultipleChoiceScreen extends Screen {
   @override
   bool checkAnswer(List<Option> selectedOptions) {
     if (selectedOptions.length != 1) return false;
-    return selectedOptions.first.optionId == correctAnswer.optionId;
+    return selectedOptions.first.optionId == correctAnswer?.optionId;
   }
 
   @override
@@ -156,7 +156,7 @@ class MultipleChoiceScreen extends Screen {
     return {
       ...baseJson,
       'screen_type': 'MultipleChoiceScreen',
-      'correct_option_id': correctAnswer.optionId,
+      'correct_option_id': correctAnswer?.optionId,
     };
   }
 

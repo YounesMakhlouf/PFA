@@ -163,17 +163,12 @@ class GameRepository {
         }
       }
 
-      if (correctAnswer == null && options.isNotEmpty) {
-        correctAnswer =
-            options.first; // Fallback if no correct answer is marked
-      }
-
       return MultipleChoiceScreen(
         screenId: screenId,
         screenNumber: screenData['screen_number'],
         instruction: screenData['instruction'],
         options: options,
-        correctAnswer: correctAnswer!,
+        correctAnswer: correctAnswer,
       );
     } catch (e, stackTrace) {
       _logger.error('Error in _getMultipleChoiceScreen', e, stackTrace);
@@ -280,7 +275,7 @@ class GameRepository {
                 'screen_id': screenId,
                 'label_text': option.labelText,
                 'picture_url': option.pictureUrl,
-                'is_correct': option.optionId == screen.correctAnswer.optionId,
+                'is_correct': option.optionId == screen.correctAnswer?.optionId,
                 'created_at': DateTime.now().toIso8601String(),
                 'updated_at': DateTime.now().toIso8601String(),
               });

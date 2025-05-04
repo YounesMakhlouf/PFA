@@ -97,9 +97,12 @@ class MultipleChoiceGameService {
     }
   }
 
-  bool checkAnswer(Option selectedOption) {
+  bool? checkAnswer(Option selectedOption) {
+    if(currentScreen!.correctAnswer?.optionId == null) {
+      return null;
+    }
     final bool correct =
-        selectedOption.optionId == currentScreen!.correctAnswer.optionId;
+        selectedOption.optionId == currentScreen!.correctAnswer?.optionId;
     isCorrect = correct;
     return correct;
   }
