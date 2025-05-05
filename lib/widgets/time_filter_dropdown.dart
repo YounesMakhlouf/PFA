@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 
@@ -7,10 +6,10 @@ class TimeFilterDropdown extends StatelessWidget {
   final ValueChanged<String?> onChanged;
 
   const TimeFilterDropdown({
+    super.key,
     required this.value,
     required this.onChanged,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
