@@ -8,7 +8,6 @@ class ChildStatsService {
   ChildStatsService({required ChildStatsRepository statsRepository})
       : _statsRepository = statsRepository;
 
-  ///
   Future<StatsSummary?> getStats({
     required String childUuid,
     String? category,

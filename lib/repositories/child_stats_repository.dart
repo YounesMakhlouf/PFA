@@ -32,8 +32,6 @@ class ChildStatsRepository {
         rpcFunctionName,
         params: params,
       );
-      print(params);
-      print(response);
 
       if (response == null || response is! List || response.isEmpty) {
         _logger.error("Supabase returned empty or invalid data", null);

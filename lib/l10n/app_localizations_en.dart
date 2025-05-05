@@ -46,6 +46,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get all => 'All';
   @override
   String get periodThisWeek => 'This week';
+  @override
+  String get statsError => 'No stats available, try again later';
 
 
   // Game instructions

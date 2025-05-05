@@ -33,11 +33,11 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get statsTitle => 'الاحصائيات';
   @override
-  String get globalStatsTitle => 'الإحصاءات العامة';
+  String get globalStatsTitle => 'الإحصائيات العامة';
   @override
-  String get categoryStatsTitle => 'الإحصاءات حسب الفئة';
+  String get categoryStatsTitle => 'الإحصائيات حسب الفئة';
   @override
-  String get accuracy => 'الدقة';
+  String get accuracy => 'معدل الاجابات الصحيحة';
   @override
   String get averageTime => 'متوسط الوقت';
   @override
@@ -46,7 +46,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get all => 'الكل';
   @override
   String get periodThisWeek => 'هذا الأسبوع';
-
+  @override
+  String get statsError => 'لا توجد إحصائيات متوفرة، حاول مرة أخرى لاحقا';
   // Game instructions
   @override
   String get chooseCorrectColor => 'اختر اللون الصحيح';

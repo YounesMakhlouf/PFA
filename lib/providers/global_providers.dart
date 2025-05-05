@@ -7,6 +7,9 @@ import 'package:pfa/repositories/child_repository.dart';
 import 'package:pfa/repositories/game_repository.dart';
 import 'package:pfa/repositories/game_session_repository.dart';
 
+import '../repositories/child_stats_repository.dart';
+import '../services/child_stats_service.dart';
+
 final loggingServiceProvider = Provider<LoggingService>((ref) {
   return LoggingService();
 });
@@ -56,4 +59,18 @@ final multipleChoiceGameServiceProvider =
   final logger = ref.watch(loggingServiceProvider);
   return MultipleChoiceGameService(
       gameRepository: gameRepository, logger: logger);
+});
+
+// stats providers
+final childStatsRepositoryProvider = Provider<ChildStatsRepository>((ref){
+  final supabaseService = ref.watch(supabaseServiceProvider);
+  final logger = ref.watch(loggingServiceProvider);
+  return ChildStatsRepository(supabaseService: supabaseService, logger: logger);
+});
+
+final childStatsServiceProvider = Provider<ChildStatsService>((ref) {
+  final childStatsRepository = ref.watch(childStatsRepositoryProvider);
+  return ChildStatsService(
+    statsRepository: childStatsRepository,
+  );
 });

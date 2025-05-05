@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 
-import '../models/CategoryOption.dart';
+import '../models/category_option.dart';
 import '../models/stats_summary.dart';
-import '../repositories/child_stats_repository.dart';
+import '../providers/global_providers.dart';
 import '../services/child_stats_service.dart';
-import '../services/logging_service.dart';
-import '../services/supabase_service.dart';
-import '../ui/accuracy_bar_chart.dart';
-import '../ui/big_stat_box.dart';
-import '../ui/category_filter_dropdown.dart';
-import '../ui/time_filter_dropdown.dart';
+import '../widgets/accuracy_bar_chart.dart';
+import '../widgets/big_stat_box.dart';
+import '../widgets/category_filter_dropdown.dart';
+import '../widgets/time_filter_dropdown.dart';
 import '../constants/const.dart' as constants;
 
-class StatsScreen extends StatefulWidget {
+class StatsScreen extends  ConsumerStatefulWidget  {
   final String childUuid;
   const StatsScreen({super.key, required this.childUuid});
   @override
-  State<StatsScreen> createState() => _StatsScreenState();
+  ConsumerState<StatsScreen> createState() => _StatsScreenState();
 }
 
-class _StatsScreenState extends State<StatsScreen> {
+class _StatsScreenState extends ConsumerState<StatsScreen>{
   late final ChildStatsService _statsService;
   // global
   StatsSummary? _stats;
@@ -50,12 +49,7 @@ class _StatsScreenState extends State<StatsScreen> {
   }
 
   void _initializeServices() {
-    _statsService = ChildStatsService(
-      statsRepository: ChildStatsRepository(
-        supabaseService: SupabaseService(),
-        logger: LoggingService(),
-      ),
-    );
+    _statsService = ref.read(childStatsServiceProvider);
   }
 
   Future<void>  _loadInitialData() async {
@@ -64,8 +58,9 @@ class _StatsScreenState extends State<StatsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String screenTitle = AppLocalizations.of(context).statsTitle;
     return Scaffold(
-      appBar: AppBar(title: const Text('Stats')),
+      appBar: AppBar(title: Text(screenTitle)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -93,10 +88,12 @@ class _StatsScreenState extends State<StatsScreen> {
         timeFilter: _timeFilter,
         category: _selectedCategory,
       );
-
+      if(_stats == null && !_loadingStats){
+        setState(() => _statsError = AppLocalizations.of(context).applicationError);
+      }
       setState(() => _stats = stats);
     } catch (e) {
-      setState(() => _statsError = 'Failed to load stats');
+      setState(() => _statsError = AppLocalizations.of(context).applicationError);
     } finally {
       setState(() => _loadingStats = false);
     }
@@ -110,7 +107,6 @@ class _StatsScreenState extends State<StatsScreen> {
 
     try {
       final Map<String, double> result = {};
-
       // Prime cache for all categories with 'all' time filter
       for (final category in constants.game_categories) {
         final stats = await _statsService.getStats(
@@ -127,15 +123,15 @@ class _StatsScreenState extends State<StatsScreen> {
 
       setState(() => _categoryAccuracies = sortedResult);
     } catch (e) {
-      setState(() => _chartError = 'Failed to load chart data');
+      setState(() => _chartError = AppLocalizations.of(context).statsError);
     } finally {
       setState(() => _loadingChart = false);
     }
   }
 
   Widget _buildStatsSection(BuildContext context) {
-    if (_stats == null && !_loadingStats) {
-      return _buildError('No  stats available');
+    if (_statsError != null) {
+      return _buildError(_statsError!);
     }
     final categoryOptions = [
       CategoryOption(value: 'ALL', label: AppLocalizations.of(context).all),
@@ -196,7 +192,7 @@ class _StatsScreenState extends State<StatsScreen> {
     }
 
     if (_categoryAccuracies == null || _categoryAccuracies!.isEmpty) {
-      return const Text('No chart data available');
+      return  Text(AppLocalizations.of(context).statsError);
     }
 
     return AccuracyBarChart(

@@ -58,6 +58,7 @@ abstract class AppLocalizations {
   String get hintsUsed;
   String get all;
   String get periodThisWeek;
+  String get statsError;
 
 
   // Game instructions

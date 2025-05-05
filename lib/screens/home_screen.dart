@@ -117,12 +117,17 @@ class _HomePageState extends ConsumerState<HomeScreen> {
   void _navigateToGame(
       BuildContext context, String routeName, dynamic arguments) {
     final navigator = Navigator.of(context);
-    SystemChrome.setPreferredOrientations(
-            [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight])
-        .then((_) {
-      if (!mounted) return;
+    if (routeName == AppRoutes.stats) {
       navigator.pushNamed(routeName, arguments: arguments);
-    });
+    } else {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]).then((_) {
+        if (!mounted) return;
+        navigator.pushNamed(routeName, arguments: arguments);
+      });
+    }
   }
 
   Widget _buildBody(
@@ -198,21 +203,5 @@ class _HomePageState extends ConsumerState<HomeScreen> {
         ),
       ],
     );
-  }
-
-  void _navigateToGame(
-      BuildContext context, String routeName, dynamic arguments) {
-    final navigator = Navigator.of(context);
-    if (routeName == AppRoutes.stats) {
-      navigator.pushNamed(routeName, arguments: arguments);
-    } else {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.landscapeLeft,
-        DeviceOrientation.landscapeRight,
-      ]).then((_) {
-        if (!mounted) return;
-        navigator.pushNamed(routeName, arguments: arguments);
-      });
-    }
   }
 }
