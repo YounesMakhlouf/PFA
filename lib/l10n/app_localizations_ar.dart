@@ -173,4 +173,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get logout => 'تسجيل الخروج';
   @override
   String get errorScreenRestartInstruction => 'يرجى إغلاق التطبيق وإعادة فتحه.';
+  @override
+  String get selectChildProfileTitle => 'اختر الملف الشخصي';
+  @override
+  String get whoIsPlayingPrompt => 'من يلعب؟';
+  @override
+  String get addChildProfileButton => 'إضافة ملف تعريف آخر';
+  @override
+  String get manageProfilesTooltip => 'إدارة الملفات الشخصية';
+  @override
+  String get switchChildProfileButton => 'تبديل الملف الشخصي';
+  @override
+  String get onlyOneProfileExists => 'يوجد ملف شخصي واحد فقط.';
 }

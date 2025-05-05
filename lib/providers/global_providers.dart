@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pfa/models/user.dart';
+import 'package:pfa/providers/active_child_notifier.dart';
 import 'package:pfa/services/multiple_choice_game_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:pfa/services/logging_service.dart';
@@ -59,6 +61,39 @@ final multipleChoiceGameServiceProvider =
   final logger = ref.watch(loggingServiceProvider);
   return MultipleChoiceGameService(
       gameRepository: gameRepository, logger: logger);
+});
+
+final initialChildProfilesProvider = FutureProvider<List<Child>>((ref) async {
+  final logger = ref.read(loggingServiceProvider);
+
+  final currentUserId = ref.watch(currentUserIdProvider);
+
+  if (currentUserId != null) {
+    logger.debug(
+        "initialChildProfilesProvider: User ID $currentUserId detected. Fetching profiles...");
+    final repo = ref.read(childRepositoryProvider);
+    try {
+      final profiles = await repo.getChildProfilesForParent();
+      logger.debug(
+          "initialChildProfilesProvider: Found ${profiles.length} profiles for user $currentUserId.");
+      return profiles;
+    } catch (e, stackTrace) {
+      logger.error(
+          "initialChildProfilesProvider: Error fetching profiles for user $currentUserId",
+          e,
+          stackTrace);
+      rethrow;
+    }
+  } else {
+    logger.debug(
+        "initialChildProfilesProvider: No user ID available. Returning empty profile list.");
+    return [];
+  }
+});
+
+final activeChildProvider =
+    StateNotifierProvider<ActiveChildNotifier, Child?>((ref) {
+  return ActiveChildNotifier(ref);
 });
 
 // stats providers
