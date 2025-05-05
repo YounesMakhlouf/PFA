@@ -49,7 +49,7 @@ class _HomePageState extends State<HomeScreen> {
         'iconData': Icons.bar_chart,
         'route': AppRoutes.stats,
         'args': {
-          'childUuid': '33333333-3333-3333-3333-333333333333'//TODO: get this from the app's global state
+          'childUuid': '72f918d8-c720-4a24-8434-dc2e67e59279'//TODO: get this from the app's global state
         },
       },
     ];

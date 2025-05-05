@@ -1,40 +1,38 @@
-import 'package:intl/intl.dart';
-import 'package:pfa/models/global_stats_summary.dart';
-import 'package:pfa/models/category_stats_summary.dart';
+import 'package:pfa/models/stats_summary.dart';
 import 'package:pfa/repositories/child_stats_repository.dart';
 
 class ChildStatsService {
   final ChildStatsRepository _statsRepository;
+  final Map<String, StatsSummary> _statsCache = {};
 
   ChildStatsService({required ChildStatsRepository statsRepository})
       : _statsRepository = statsRepository;
 
-  /// Unified global stats with time filter
-  Future<GlobalStatsSummary?> getGlobalStats({
+  ///
+  Future<StatsSummary?> getStats({
     required String childUuid,
-    required String timeFilter,
+    String? category,
+    String timeFilter = 'all',
   }) async {
-    final range = _getDateRange(timeFilter);
-    return _statsRepository.getGlobalStats(
-      childUuid: childUuid,
-      periodStart: range?['start'],
-      periodEnd: range?['end'],
-    );
-  }
+    final cacheKey = _generateCacheKey(category, timeFilter);
 
-  /// Unified category stats with time filter
-  Future<CategoryStatsSummary?> getCategoryStats({
-    required String childUuid,
-    required String category,
-    required String timeFilter,
-  }) async {
+    // Return cached value if available
+    if (_statsCache.containsKey(cacheKey)) {
+      return _statsCache[cacheKey];
+    }
+    // Fetch fresh data
     final range = _getDateRange(timeFilter);
-    return _statsRepository.getCategoryStats(
+    final stats = await _statsRepository.getStats(
       childUuid: childUuid,
       category: category,
       periodStart: range?['start'],
       periodEnd: range?['end'],
     );
+
+    if (stats != null) {
+      _statsCache[cacheKey] = stats;
+    }
+    return stats;
   }
 
   Map<String, DateTime>? _getDateRange(String timeFilter) {
@@ -51,5 +49,10 @@ class ChildStatsService {
         return null;
     }
   }
+
+  String _generateCacheKey(String? category, String timeFilter) {
+    return '${category ?? "ALL"}|$timeFilter';
+  }
 }
+
 

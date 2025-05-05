@@ -43,7 +43,7 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get hintsUsed => 'التلميحات المستخدمة';
   @override
-  String get periodAll => 'الكل';
+  String get all => 'الكل';
   @override
   String get periodThisWeek => 'هذا الأسبوع';
 

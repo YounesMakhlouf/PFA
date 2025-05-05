@@ -43,7 +43,7 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get hintsUsed => 'Indice utilisés';
   @override
-  String get periodAll => 'Tout';
+  String get all => 'Tout';
   @override
   String get periodThisWeek => 'Cette Semaine';
 

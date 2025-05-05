@@ -15,11 +15,8 @@ class AccuracyBarChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // sort categories by accuracy in descending order
-    final sortedEntries = categoryAccuracies.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
-    final sortedMap = Map.fromEntries(sortedEntries);
-    final categories = sortedMap.keys.toList();
-    final values = sortedMap.values.toList();
+    final categories = categoryAccuracies.keys.toList();
+    final values = categoryAccuracies.values.toList();
     return AspectRatio(
       aspectRatio: 1.5,
       child: BarChart(

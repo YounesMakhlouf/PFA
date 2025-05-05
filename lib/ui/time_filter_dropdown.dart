@@ -16,7 +16,7 @@ class TimeFilterDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     String all = AppLocalizations
         .of(context)
-        .periodAll;
+        .all;
     String week = AppLocalizations
         .of(context)
         .periodThisWeek;

@@ -56,7 +56,7 @@ abstract class AppLocalizations {
   String get accuracy;
   String get averageTime;
   String get hintsUsed;
-  String get periodAll;
+  String get all;
   String get periodThisWeek;
 
 

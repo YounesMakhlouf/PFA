@@ -43,7 +43,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get hintsUsed => 'Hints Used';
   @override
-  String get periodAll => 'All';
+  String get all => 'All';
   @override
   String get periodThisWeek => 'This week';
 

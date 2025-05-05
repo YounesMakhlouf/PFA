@@ -3,8 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 
 import '../models/CategoryOption.dart';
-import '../models/category_stats_summary.dart';
-import '../models/global_stats_summary.dart';
+import '../models/stats_summary.dart';
 import '../repositories/child_stats_repository.dart';
 import '../services/child_stats_service.dart';
 import '../services/logging_service.dart';
@@ -25,21 +24,18 @@ class StatsScreen extends StatefulWidget {
 class _StatsScreenState extends State<StatsScreen> {
   late final ChildStatsService _statsService;
   // global
-  GlobalStatsSummary? _globalStats;
-  bool _loadingGlobal = true;
-  String? _globalError;
-  // category
-  CategoryStatsSummary? _categoryStats;
-  bool _loadingCategory = true;
-  String? _categoryError;
+  StatsSummary? _stats;
+  bool _loadingStats = true;
+  String? _statsError;
+
   // chart
   Map<String, double>? _categoryAccuracies;
   bool _loadingChart = true;
   String? _chartError;
+
   // Time filter states
-  String _globalTimeFilter = 'all';
-  String _categoryTimeFilter = 'week';
-  String _selectedCategory = 'NUMBERS';
+  String _timeFilter = 'all';
+  String _selectedCategory = 'ALL';
 
   @override
   void initState() {
@@ -63,7 +59,7 @@ class _StatsScreenState extends State<StatsScreen> {
   }
 
   Future<void>  _loadInitialData() async {
-    await Future.wait([_loadGlobalStats(), _loadCategoryStats(),_loadCategoryChartData()]);
+    await Future.wait([_loadStats(),_loadCategoryChartData()]);
   }
 
   @override
@@ -74,9 +70,7 @@ class _StatsScreenState extends State<StatsScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            _buildGlobalStatsSection(),
-            const SizedBox(height: 24),
-            _buildCategoryStatsSection(context),
+            _buildStatsSection(context),
             const SizedBox(height: 24),
             _buildCategoryChartSection()
 
@@ -87,46 +81,27 @@ class _StatsScreenState extends State<StatsScreen> {
   }
 
   //TODO: refactoring: move helper functions to viewModel
-  Future<void> _loadGlobalStats() async {
+  Future<void> _loadStats() async {
     setState(() {
-      _loadingGlobal = true;
-      _globalError = null;
+      _loadingStats = true;
+      _statsError = null;
     });
 
     try {
-      final stats = await _statsService.getGlobalStats(
+      final stats = await _statsService.getStats(
         childUuid: widget.childUuid,
-        timeFilter: _globalTimeFilter,
-      );
-
-      setState(() => _globalStats = stats);
-    } catch (e) {
-      setState(() => _globalError = 'Failed to load global stats');
-    } finally {
-      setState(() => _loadingGlobal = false);
-    }
-  }
-
-  Future<void> _loadCategoryStats() async {
-    setState(() {
-      _loadingCategory = true;
-      _categoryError = null;
-    });
-
-    try {
-      final stats = await _statsService.getCategoryStats(
-        childUuid: widget.childUuid,
+        timeFilter: _timeFilter,
         category: _selectedCategory,
-        timeFilter: _categoryTimeFilter,
       );
 
-      setState(() => _categoryStats = stats);
+      setState(() => _stats = stats);
     } catch (e) {
-      setState(() => _categoryError = 'Failed to load category stats');
+      setState(() => _statsError = 'Failed to load stats');
     } finally {
-      setState(() => _loadingCategory = false);
+      setState(() => _loadingStats = false);
     }
   }
+
   Future<void> _loadCategoryChartData() async {
     setState(() {
       _loadingChart = true;
@@ -136,64 +111,34 @@ class _StatsScreenState extends State<StatsScreen> {
     try {
       final Map<String, double> result = {};
 
+      // Prime cache for all categories with 'all' time filter
       for (final category in constants.game_categories) {
-        final stats = await _statsService.getCategoryStats(
+        final stats = await _statsService.getStats(
           childUuid: widget.childUuid,
           category: category,
-          timeFilter: 'all',
+          timeFilter: 'all', // Explicitly use 'all' filter
         );
         result[category] = stats?.accuracy ?? 0.0;
       }
-      setState(() => _categoryAccuracies = result);
+
+      final sortedResult = Map.fromEntries(
+          result.entries.toList()..sort((a, b) => b.value.compareTo(a.value))
+      );
+
+      setState(() => _categoryAccuracies = sortedResult);
     } catch (e) {
       setState(() => _chartError = 'Failed to load chart data');
     } finally {
       setState(() => _loadingChart = false);
     }
   }
-  Widget _buildGlobalStatsSection() {
-    if (_globalError != null) return _buildError(_globalError!);
-    if (_globalStats == null && !_loadingGlobal) {
-      return _buildError('No global stats available');
-    }
-    return Stack(
-      children: [
-        Opacity(
-          opacity: _loadingGlobal ? 0.5 : 1.0,
-          child: AbsorbPointer(
-            absorbing: _loadingGlobal,
-            child: StatsContainer(
-              title: AppLocalizations.of(context).globalStatsTitle,
-              headerTrailing: TimeFilterDropdown(
-                value: _globalTimeFilter,
-                onChanged: _handleGlobalTimeFilterChange,
-              ),
-              accuracy: _globalStats?.accuracy != null
-                  ? '${_globalStats!.accuracy.toStringAsFixed(1)}%'
-                  : '--%',
-              avgTime: _globalStats?.avgTime != null
-                  ? _formatMilliseconds(_globalStats!.avgTime.toInt())
-                  : '--:--',
-              hintsUsed: _globalStats?.hintUsageRatio != null
-                  ? '${_globalStats!.hintUsageRatio.toStringAsFixed(1)}%'
-                  : '--%',
-            ),
-          ),
-        ),
-        if (_loadingGlobal)
-          const Positioned.fill(
-            child: Center(child: CircularProgressIndicator()),
-          ),
-      ],
-    );
-  }
 
-  Widget _buildCategoryStatsSection(BuildContext context) {
-    if (_categoryError != null) return _buildError(_categoryError!);
-    if (_categoryStats == null && !_loadingCategory) {
-      return _buildError('No category stats available');
+  Widget _buildStatsSection(BuildContext context) {
+    if (_stats == null && !_loadingStats) {
+      return _buildError('No  stats available');
     }
     final categoryOptions = [
+      CategoryOption(value: 'ALL', label: AppLocalizations.of(context).all),
       CategoryOption(value: 'NUMBERS', label: AppLocalizations.of(context).numbers),
       CategoryOption(value: 'COLORS_SHAPES', label: AppLocalizations.of(context).colorsAndShapes),
       CategoryOption(value: 'EMOTIONS', label: AppLocalizations.of(context).emotions),
@@ -205,16 +150,16 @@ class _StatsScreenState extends State<StatsScreen> {
     return Stack(
       children: [
         Opacity(
-          opacity: _loadingCategory ? 0.5 : 1.0,
+          opacity: _loadingStats? 0.5 : 1.0,
           child: AbsorbPointer(
-            absorbing: _loadingCategory,
+            absorbing: _loadingStats,
             child: StatsContainer(
               title: AppLocalizations.of(context).categoryStatsTitle,
               headerTrailing: Row(
                 children: [
                   TimeFilterDropdown(
-                    value: _categoryTimeFilter,
-                    onChanged: _handleCategoryTimeFilterChange,
+                    value: _timeFilter,
+                    onChanged: _handleTimeFilterChange,
                   ),
                   const SizedBox(width: 16),
                   CategoryDropdown(
@@ -224,25 +169,26 @@ class _StatsScreenState extends State<StatsScreen> {
                   ),
                 ],
               ),
-              accuracy: _categoryStats?.accuracy != null
-                  ? '${_categoryStats!.accuracy.toStringAsFixed(1)}%'
+              accuracy: _stats?.accuracy != null
+                  ? '${_stats!.accuracy.toStringAsFixed(1)}%'
                   : '--%',
-              avgTime: _categoryStats?.avgTime != null
-                  ? _formatMilliseconds(_categoryStats!.avgTime.toInt())
+              avgTime: _stats?.avgTime != null
+                  ? _formatMilliseconds(_stats!.avgTime.toInt())
                   : '--:--',
-              hintsUsed: _categoryStats?.hintUsageRatio != null
-                  ? '${_categoryStats!.hintUsageRatio.toStringAsFixed(1)}%'
+              hintsUsed: _stats?.hintUsageRatio != null
+                  ? '${_stats!.hintUsageRatio.toStringAsFixed(1)}%'
                   : '-.-',
             ),
           ),
         ),
-        if (_loadingCategory)
+        if (_loadingStats)
           const Positioned.fill(
             child: Center(child: CircularProgressIndicator()),
           ),
       ],
     );
   }
+
   Widget _buildCategoryChartSection() {
     if (_chartError != null) return _buildError(_chartError!);
     if (_loadingChart) {
@@ -281,22 +227,17 @@ class _StatsScreenState extends State<StatsScreen> {
     return '$minutes:$seconds';
   }
 
-  void _handleGlobalTimeFilterChange(String? value) {
-    if (value == null || value == _globalTimeFilter) return;
-    setState(() => _globalTimeFilter = value);
-    _loadGlobalStats();
+  void _handleTimeFilterChange(String? value) {
+    if (value == null || value == _timeFilter) return;
+    setState(() => _timeFilter = value);
+    _loadStats();
   }
 
-  void _handleCategoryTimeFilterChange(String? value) {
-    if (value == null || value == _categoryTimeFilter) return;
-    setState(() => _categoryTimeFilter = value);
-    _loadCategoryStats();
-  }
 
   void _handleCategoryChange(String? value) {
-    if (value == null || value == _selectedCategory) return;
+    if (value == null) return;
     setState(() => _selectedCategory = value);
-    _loadCategoryStats();
+    _loadStats();
   }
 
 
