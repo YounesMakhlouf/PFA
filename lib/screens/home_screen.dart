@@ -4,9 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/config/app_theme.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/config/routes.dart';
-import 'package:pfa/models/user.dart';
 import 'package:pfa/providers/global_providers.dart';
-import 'package:pfa/screens/error_screen.dart';
 import 'package:pfa/widgets/game_card.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -17,9 +15,6 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomeScreen> {
-  bool _isProfileCheckComplete = false;
-  String? _loadingError;
-
   @override
   void initState() {
     super.initState();
@@ -28,44 +23,7 @@ class _HomePageState extends ConsumerState<HomeScreen> {
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown,
       ]);
-      _checkChildProfilesAndNavigate();
     });
-  }
-
-  Future<void> _checkChildProfilesAndNavigate() async {
-    final logger = ref.read(loggingServiceProvider);
-    final childRepository = ref.read(childRepositoryProvider);
-    final navigator = Navigator.of(context);
-
-    logger.info("HomeScreen: Checking for child profiles...");
-    try {
-      List<Child> profiles = await childRepository.getChildProfilesForParent();
-      if (!mounted) return;
-      if (profiles.isEmpty) {
-        logger.info(
-            "HomeScreen: No child profiles found. Navigating to CreateChildProfileScreen.");
-        navigator.pushNamed(AppRoutes.createChildProfile);
-        return;
-      } else {
-        logger.info("HomeScreen: ${profiles.length} child profile(s) found.");
-        if (profiles.length > 1) {
-          logger.warning(
-              "HomeScreen: Multiple profiles exist, but selection screen not implemented. Showing home.");
-          // TODO: Implement active child selection logic
-        }
-        setState(() {
-          _isProfileCheckComplete = true;
-        });
-      }
-    } catch (e, stackTrace) {
-      logger.error("HomeScreen: Error fetching child profiles", e, stackTrace);
-      if (mounted) {
-        setState(() {
-          _loadingError = e.toString();
-          _isProfileCheckComplete = true;
-        });
-      }
-    }
   }
 
   Future<void> _handleLogout() async {
@@ -92,26 +50,76 @@ class _HomePageState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final logger = ref.read(loggingServiceProvider);
+
+    final activeChild = ref.watch(activeChildProvider);
+    logger.debug(
+        "HomeScreen build: Watched active child is ${activeChild?.childId ?? 'null'}");
+
+    if (activeChild == null) {
+      logger.warning(
+          "HomeScreen build: Active child is null. Showing loading. Check AuthGate logic.");
+      return Scaffold(body: const Center(child: CircularProgressIndicator()));
+    }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.learningGames),
-        backgroundColor: AppColors.background,
-        foregroundColor: AppColors.textPrimary,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: l10n.logout,
-            onPressed: _handleLogout,
-          ),
-        ],
-      ),
-      backgroundColor: theme.scaffoldBackgroundColor,
-      body: SafeArea(
-        child: _buildBody(context, l10n, theme),
-      ),
-    );
+        appBar: AppBar(
+          title: Text(activeChild.firstName),
+          backgroundColor: AppColors.background,
+          foregroundColor: AppColors.textPrimary,
+          elevation: 0,
+          actions: [
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.account_circle_outlined),
+              tooltip: l10n.manageProfilesTooltip,
+              onSelected: (value) {
+                if (value == 'add') {
+                  Navigator.pushNamed(context, AppRoutes.createChildProfile);
+                } else if (value == 'switch') {
+                  final profiles =
+                      ref.read(initialChildProfilesProvider).valueOrNull ?? [];
+                  if (profiles.length > 1) {
+                    logger.info("Navigating to SelectChildProfileScreen");
+                    Navigator.pushNamed(context, AppRoutes.selectChildProfile,
+                        arguments: {"profiles": profiles});
+                  } else {
+                    logger.info(
+                        "Switch profile selected, but only one profile exists.");
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(l10n.onlyOneProfileExists)));
+                  }
+                }
+              },
+              itemBuilder: (BuildContext context) {
+                final profilesCount = ref
+                        .read(initialChildProfilesProvider)
+                        .valueOrNull
+                        ?.length ??
+                    0;
+                return <PopupMenuEntry<String>>[
+                  PopupMenuItem<String>(
+                    value: 'add',
+                    child: Text(l10n.addChildProfileButton),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'switch',
+                    enabled: profilesCount > 1, // Disable if only one profile
+                    child: Text(l10n.switchChildProfileButton),
+                  ),
+                ];
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.logout),
+              tooltip: l10n.logout,
+              onPressed: _handleLogout,
+            ),
+          ],
+        ),
+        backgroundColor: theme.scaffoldBackgroundColor,
+        body: SafeArea(
+          child: _buildGameGrid(context, l10n, theme),
+        ));
   }
 
   void _navigateToGame(
@@ -125,17 +133,8 @@ class _HomePageState extends ConsumerState<HomeScreen> {
     });
   }
 
-  Widget _buildBody(
+  Widget _buildGameGrid(
       BuildContext context, AppLocalizations l10n, ThemeData theme) {
-    if (_loadingError != null) {
-      return ErrorScreen(errorMessage: _loadingError!);
-    }
-
-    if (!_isProfileCheckComplete) {
-      return Center(
-          child: CircularProgressIndicator(color: theme.colorScheme.primary));
-    }
-
     final List<Map<String, dynamic>> gameData = [
       {
         'title': l10n.colorsAndShapes,

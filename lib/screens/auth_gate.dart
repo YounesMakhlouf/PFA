@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/providers/global_providers.dart';
+import 'package:pfa/screens/create_child_profile_screen.dart';
+import 'package:pfa/screens/error_screen.dart';
 import 'package:pfa/screens/home_screen.dart';
 import 'package:pfa/screens/welcome_screen.dart';
 
@@ -18,14 +20,60 @@ class AuthGate extends ConsumerWidget {
         final session = authState.session;
 
         if (session != null) {
-          // User is logged in
           logger.debug(
-              "AuthGate: Session found (User ID: ${session.user.id}). Navigating to HomeScreen.");
-          return const HomeScreen();
+              "AuthGate: Session found (User ID: ${session.user.id}).  Checking initial profiles...");
+          final profilesAsync = ref.watch(initialChildProfilesProvider);
+          return profilesAsync.when(loading: () {
+            logger.debug("AuthGate: Loading initial profiles...");
+            return const Scaffold(
+                body: Center(child: CircularProgressIndicator()));
+          }, error: (err, st) {
+            logger.error("AuthGate: Error loading initial profiles", err, st);
+            return ErrorScreen(
+                errorMessage:
+                    "Error loading profile data: $err"); // TODO: Localize
+          }, data: (profiles) {
+            logger.debug(
+                "AuthGate: Profiles loaded (${profiles.length}). Deciding screen...");
+            if (profiles.isEmpty) {
+              logger.debug(
+                  "AuthGate: No profiles, showing CreateChildProfileScreen.");
+              return const CreateChildProfileScreen();
+            } else if (profiles.length == 1) {
+              logger.debug(
+                  "AuthGate: One profile, setting active and showing HomeScreen.");
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (ref.read(activeChildProvider) == null ||
+                    ref.read(activeChildProvider)?.childId !=
+                        profiles.first.childId) {
+                  logger.info(
+                      "AuthGate/PostFrame: Setting single profile active: ${profiles.first.childId}");
+                  ref.read(activeChildProvider.notifier).set(profiles.first);
+                }
+              });
+              return const HomeScreen();
+            } else {
+              logger.debug(
+                  "AuthGate: Multiple profiles. TODO: Show SelectChildProfileScreen.");
+              // TODO: Replace with actual selection screen. Temporary fallback: set first and go home
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (ref.read(activeChildProvider) == null) {
+                  logger.info(
+                      "AuthGate/PostFrame: Setting first of multiple profiles active: ${profiles.first.childId}");
+                  ref.read(activeChildProvider.notifier).set(profiles.first);
+                }
+              });
+              return const HomeScreen();
+            }
+          });
         } else {
-          // User is logged out or session is null
           logger.debug(
               "AuthGate: No session found. Navigating to WelcomeScreen.");
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (ref.read(activeChildProvider) != null) {
+              ref.read(activeChildProvider.notifier).set(null);
+            }
+          });
           return const WelcomeScreen();
         }
       },

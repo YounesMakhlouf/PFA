@@ -155,4 +155,16 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorScreenRestartInstruction =>
       'Please close and reopen the application.';
+  @override
+  String get selectChildProfileTitle => 'Select Profile';
+  @override
+  String get whoIsPlayingPrompt => 'Who is playing?';
+  @override
+  String get addChildProfileButton => 'Add Another Profile';
+  @override
+  String get manageProfilesTooltip => 'Manage Profiles';
+  @override
+  String get switchChildProfileButton => 'Switch Profile';
+  @override
+  String get onlyOneProfileExists => 'Only one profile exists.';
 }
