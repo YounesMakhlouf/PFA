@@ -94,6 +94,42 @@ abstract class AppLocalizations {
   String get selectableOption;
   String get selected;
   String get selectCorrectOption;
+
+  // Authentication
+  String get signIn;
+  String get signUp;
+  String get enterEmail;
+  String get validEmailError;
+  String get enterPassword;
+  String get passwordLengthError;
+  String get forgotPassword;
+  String get dontHaveAccount;
+  String get haveAccount;
+  String get sendPasswordReset;
+  String get passwordResetSent;
+  String get backToSignIn;
+  String get unexpectedError;
+  String get requiredFieldError;
+  String get confirmPasswordError;
+  String get confirmPassword;
+
+  // Create Child Profile Screen
+  String get createChildProfileTitle;
+  String get selectAvatarPrompt;
+  String get firstNameLabel;
+  String get enterFirstNameHint;
+  String get errorFirstNameRequired;
+  String get lastNameLabelOptional;
+  String get enterLastNameHintOptional;
+  String get birthdateLabelOptional;
+  String get selectDateButton;
+  String get specialConditionsLabelOptional;
+  String get createProfileButton;
+  String profileCreatedSuccess(String firstName);
+  String get errorCreatingProfile;
+  String get errorScreenRestartInstruction;
+
+  String get logout;
 }
 
 class _AppLocalizationsDelegate

@@ -5,7 +5,7 @@ import 'package:pfa/services/logging_service.dart';
 
 class MultipleChoiceGameService {
   final GameRepository _gameRepository;
-  final LoggingService _logger = LoggingService();
+  final LoggingService _logger;
 
   Game? game;
   Level? currentLevel;
@@ -16,8 +16,10 @@ class MultipleChoiceGameService {
   bool isLoading = true;
   String? errorMessage;
 
-  MultipleChoiceGameService({required GameRepository gameRepository})
-      : _gameRepository = gameRepository;
+  MultipleChoiceGameService(
+      {required GameRepository gameRepository, required LoggingService logger})
+      : _gameRepository = gameRepository,
+        _logger = logger;
 
   Future<void> loadGameData(String gameId) async {
     try {
@@ -57,6 +59,18 @@ class MultipleChoiceGameService {
     }
   }
 
+  void _setCurrentScreen(Screen screen) {
+    if (screen is MultipleChoiceScreen) {
+      currentScreen = screen;
+      errorMessage = null;
+    } else {
+      currentScreen = null;
+      errorMessage = 'Invalid screen type encountered';
+      _logger.warning(
+          'Attempted to set invalid screen type: ${screen.runtimeType}');
+    }
+  }
+
   void moveToNextScreen() {
     // Reset feedback
     isCorrect = null;
@@ -65,33 +79,21 @@ class MultipleChoiceGameService {
     if (currentScreenIndex < currentLevel!.screens.length - 1) {
       currentScreenIndex++;
       final screen = currentLevel!.screens[currentScreenIndex];
-      if (screen is MultipleChoiceScreen) {
-        currentScreen = screen;
-      } else {
-        errorMessage = 'Invalid screen type';
-      }
+      _setCurrentScreen(screen);
     } else if (currentLevelIndex < game!.levels.length - 1) {
       // Move to the next level
       currentLevelIndex++;
       currentScreenIndex = 0;
       currentLevel = game!.levels[currentLevelIndex];
       final screen = currentLevel!.screens[currentScreenIndex];
-      if (screen is MultipleChoiceScreen) {
-        currentScreen = screen;
-      } else {
-        errorMessage = 'Invalid screen type';
-      }
+      _setCurrentScreen(screen);
     } else {
       // Game completed, restart
       currentLevelIndex = 0;
       currentScreenIndex = 0;
       currentLevel = game!.levels[currentLevelIndex];
       final screen = currentLevel!.screens[currentScreenIndex];
-      if (screen is MultipleChoiceScreen) {
-        currentScreen = screen;
-      } else {
-        errorMessage = 'Invalid screen type';
-      }
+      _setCurrentScreen(screen);
     }
   }
 
@@ -110,9 +112,7 @@ class MultipleChoiceGameService {
       currentLevel = game!.levels[currentLevelIndex];
       if (currentLevel!.screens.isNotEmpty) {
         final screen = currentLevel!.screens[currentScreenIndex];
-        if (screen is MultipleChoiceScreen) {
-          currentScreen = screen;
-        }
+        _setCurrentScreen(screen);
       }
     }
   }

@@ -3,25 +3,18 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:pfa/services/logging_service.dart';
 
 class SupabaseService {
-  static final SupabaseService _instance = SupabaseService._internal();
-  late final SupabaseClient _client;
-  bool _initialized = false;
-  final LoggingService _logger = LoggingService();
-
-  // Singleton pattern
-  factory SupabaseService() {
-    return _instance;
-  }
-
-  SupabaseService._internal();
+  final LoggingService _logger;
+  bool _initAttempted = false;
+  SupabaseService(this._logger);
 
   Future<void> initialize() async {
-    if (_initialized) return;
-
+    if (_initAttempted) {
+      _logger.debug('Initialization attempt skipped (already attempted).');
+      return;
+    }
+    _initAttempted = true;
     try {
-      _logger.initialize();
-      _logger.info('Initializing SupabaseService');
-
+      _logger.info('Initializing Supabase global instance...');
       await dotenv.load();
 
       final supabaseUrl = dotenv.env['SUPABASE_URL'];
@@ -40,34 +33,36 @@ class SupabaseService {
         anonKey: supabaseAnonKey,
       );
 
-      _client = Supabase.instance.client;
-      _initialized = true;
-      _logger.info('SupabaseService initialized successfully');
+      _logger.info('Supabase global instance initialized successfully.');
     } catch (e, stackTrace) {
-      _logger.error('Failed to initialize SupabaseService', e, stackTrace);
-      rethrow;
+      _logger.error('Error during Supabase.initialize() call', e, stackTrace);
+      if (!e.toString().contains("already been initialized")) {
+        rethrow;
+      } else {
+        _logger.warning("Supabase was already initialized.");
+      }
     }
   }
 
   SupabaseClient get client {
-    if (!_initialized) {
-      _logger.error('SupabaseService accessed before initialization');
-      throw Exception('SupabaseService must be initialized before use');
+    try {
+      return Supabase.instance.client;
+    } catch (e) {
+      _logger.error(
+          'Supabase.instance.client accessed before Supabase was successfully initialized.',
+          e);
+      throw Exception(
+          'Supabase client is not available. Ensure initialization succeeded.');
     }
-    return _client;
   }
 
   String getPublicUrl({
     required String bucketId,
     required String filePath,
   }) {
-    if (!_initialized) {
-      _logger.error('SupabaseService accessed before initialization');
-      throw Exception('SupabaseService must be initialized before use');
-    }
     try {
       // Construct the public URL using the client's storage methods
-      final url = _client.storage.from(bucketId).getPublicUrl(filePath);
+      final url = client.storage.from(bucketId).getPublicUrl(filePath);
       _logger.debug('Generated public URL for $bucketId/$filePath: $url');
       return url;
     } catch (e, stackTrace) {
@@ -114,7 +109,8 @@ class SupabaseService {
 
   Future<void> signOut() async {
     try {
-      _logger.info('Signing out user');
+      final userId = currentUser?.id;
+      _logger.info('Signing out user: $userId');
       await client.auth.signOut();
       _logger.info('User signed out successfully');
     } catch (e, stackTrace) {

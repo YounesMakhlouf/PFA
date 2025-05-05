@@ -105,4 +105,73 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selected => 'Selected';
   @override
   String get selectCorrectOption => 'Select the correct option';
+
+  // Authentication
+  @override
+  String get signIn => 'Sign In';
+  @override
+  String get signUp => 'Sign Up';
+  @override
+  String get enterEmail => 'Enter your email';
+  @override
+  String get validEmailError => 'Please enter a valid email address';
+  @override
+  String get enterPassword => 'Enter your password';
+  @override
+  String get passwordLengthError =>
+      'Please enter a password that is at least 6 characters long';
+  @override
+  String get forgotPassword => 'Forgot your password?';
+  @override
+  String get dontHaveAccount => 'Don\'t have an account? Sign up';
+  @override
+  String get haveAccount => 'Already have an account? Sign in';
+  @override
+  String get sendPasswordReset => 'Send password reset email';
+  @override
+  String get passwordResetSent => 'Password reset email has been sent';
+  @override
+  String get backToSignIn => 'Back to sign in';
+  @override
+  String get unexpectedError => 'An unexpected error occurred';
+  @override
+  String get requiredFieldError => 'This field is required';
+  @override
+  String get confirmPasswordError => 'Passwords do not match';
+  @override
+  String get confirmPassword => 'Confirm Password';
+
+  @override
+  String get createChildProfileTitle => 'Create Child Profile';
+  @override
+  String get selectAvatarPrompt => 'Choose an Avatar';
+  @override
+  String get firstNameLabel => 'First Name';
+  @override
+  String get enterFirstNameHint => 'Enter first name';
+  @override
+  String get errorFirstNameRequired => 'Please enter a first name';
+  @override
+  String get lastNameLabelOptional => 'Last Name (Optional)';
+  @override
+  String get enterLastNameHintOptional => 'Enter last name (optional)';
+  @override
+  String get birthdateLabelOptional => 'Birthdate (Optional)';
+  @override
+  String get selectDateButton => 'Select Date';
+  @override
+  String get specialConditionsLabelOptional => 'Special Conditions (Optional)';
+  @override
+  String get createProfileButton => 'Create Profile';
+  @override
+  String profileCreatedSuccess(String firstName) =>
+      'Profile created for $firstName!';
+  @override
+  String get errorCreatingProfile =>
+      'Could not create profile. Please try again.';
+  @override
+  String get logout => 'Logout';
+  @override
+  String get errorScreenRestartInstruction =>
+      'Please close and reopen the application.';
 }

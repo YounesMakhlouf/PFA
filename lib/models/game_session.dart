@@ -1,128 +1,122 @@
-import 'package:uuid/uuid.dart';
-import 'package:pfa/models/game.dart';
-import 'package:pfa/models/screen.dart';
-import 'package:pfa/models/user.dart';
-
 class GameSession {
   final String sessionId;
+  final String childId;
+  final String gameId;
+  final String levelId;
   final DateTime startTime;
-  DateTime? endTime;
-  String? overallResult;
-  final Child child;
-  final Game game;
-  final List<ScreenAttempt> attempts;
+  final DateTime? endTime;
+  final bool completed;
+  final int totalAttempts;
+  final int correctAttempts;
+  final int hintsUsed;
+  final String? overallResult;
 
   GameSession({
-    String? sessionId,
-    DateTime? startTime,
+    required this.sessionId,
+    required this.childId,
+    required this.gameId,
+    required this.levelId,
+    required this.startTime,
     this.endTime,
+    required this.completed,
+    required this.totalAttempts,
+    required this.correctAttempts,
+    required this.hintsUsed,
     this.overallResult,
-    required this.child,
-    required this.game,
-    List<ScreenAttempt>? attempts,
-  })  : sessionId = sessionId ?? const Uuid().v4(),
-        startTime = startTime ?? DateTime.now(),
-        attempts = attempts ?? [];
+  });
 
-  Map<String, dynamic> toJson() {
-    return {
-      'session_id': sessionId,
-      'start_time': startTime.toIso8601String(),
-      'end_time': endTime?.toIso8601String(),
-      'overall_result': overallResult,
-      'child_id': child.userId,
-      'game_id': game.gameId,
-    };
-  }
+  factory GameSession.fromJson(Map<String, dynamic> json) {
+    DateTime? parseOptionalDateTime(String? dateStr) {
+      return dateStr == null ? null : DateTime.tryParse(dateStr)?.toLocal();
+    }
 
-  factory GameSession.fromJson(Map<String, dynamic> json,
-      {required Child child,
-      required Game game,
-      List<ScreenAttempt>? attempts}) {
+    DateTime parseRequiredDateTime(String? dateStr) {
+      if (dateStr == null) {
+        return DateTime.now();
+      }
+      return DateTime.parse(dateStr).toLocal();
+    }
+
     return GameSession(
-      sessionId: json['session_id'],
-      startTime: DateTime.parse(json['start_time']),
-      endTime:
-          json['end_time'] != null ? DateTime.parse(json['end_time']) : null,
-      overallResult: json['overall_result'],
-      child: child,
-      game: game,
-      attempts: attempts ?? [],
+      sessionId: json['session_id'] as String,
+      childId: json['child_id'] as String,
+      gameId: json['game_id'] as String,
+      levelId: json['level_id'] as String,
+      startTime: parseRequiredDateTime(json['start_time'] as String?),
+      endTime: parseOptionalDateTime(json['end_time'] as String?),
+      completed: json['completed'] as bool? ?? (json['end_time'] != null),
+      totalAttempts: json['total_attempts'] as int? ?? 0,
+      correctAttempts: json['correct_attempts'] as int? ?? 0,
+      hintsUsed: json['hints_used'] as int? ?? 0,
+      overallResult: json['overall_result'] as String?,
     );
   }
 
-  /// Calculates the duration of the session
-  Duration get duration {
+  Duration? get duration {
     if (endTime == null) {
-      return DateTime.now().difference(startTime);
+      return null;
     }
     return endTime!.difference(startTime);
-  }
-
-  void addAttempt(ScreenAttempt attempt) {
-    attempts.add(attempt);
-  }
-
-  /// Ends the session and calculates the overall result
-  void endSession(String result) {
-    endTime = DateTime.now();
-    overallResult = result;
-  }
-
-  double get successRate {
-    if (attempts.isEmpty) return 0.0;
-    int correctAttempts = attempts.where((attempt) => attempt.isCorrect).length;
-    return correctAttempts / attempts.length;
   }
 }
 
 class ScreenAttempt {
   final String attemptId;
+  final String sessionId;
+  final String screenId;
+  final List<String>? selectedOptionIds;
   final DateTime timestamp;
   final bool isCorrect;
-  final int timeTakenMs;
+  final int? timeTakenMs;
   final int hintsUsed;
-  final Screen screen;
-  final Option? selectedOption;
-  final String? sessionId;
 
   ScreenAttempt({
-    String? attemptId,
-    DateTime? timestamp,
+    required this.attemptId,
+    required this.sessionId,
+    required this.screenId,
+    this.selectedOptionIds,
+    required this.timestamp,
     required this.isCorrect,
-    required this.timeTakenMs,
-    this.hintsUsed = 0,
-    required this.screen,
-    this.selectedOption,
-    this.sessionId,
-  })  : attemptId = attemptId ?? const Uuid().v4(),
-        timestamp = timestamp ?? DateTime.now();
+    this.timeTakenMs,
+    required this.hintsUsed,
+  });
 
   Map<String, dynamic> toJson() {
     return {
-      'attempt_id': attemptId,
-      'timestamp': timestamp.toIso8601String(),
+      'session_id': sessionId,
+      'screen_id': screenId,
+      'selected_option_ids': selectedOptionIds,
+      'timestamp': timestamp.toUtc().toIso8601String(),
       'is_correct': isCorrect,
       'time_taken_ms': timeTakenMs,
       'hints_used': hintsUsed,
-      'screen_id': screen.screenId,
-      'selected_option_ids':
-          selectedOption != null ? [selectedOption!.optionId] : [],
-      'session_id': sessionId,
     };
   }
 
-  factory ScreenAttempt.fromJson(Map<String, dynamic> json,
-      {required Screen screen, Option? selectedOption}) {
+  factory ScreenAttempt.fromJson(Map<String, dynamic> json) {
+    List<String>? parseSelectedIds(dynamic data) {
+      if (data is List) {
+        return data.map((item) => item?.toString()).nonNulls.toList();
+      }
+      return null;
+    }
+
+    DateTime parseRequiredDateTime(String? dateStr) {
+      if (dateStr == null) {
+        return DateTime.now();
+      }
+      return DateTime.parse(dateStr).toLocal();
+    }
+
     return ScreenAttempt(
-      attemptId: json['attempt_id'],
-      timestamp: DateTime.parse(json['timestamp']),
-      isCorrect: json['is_correct'],
-      timeTakenMs: json['time_taken_ms'],
-      hintsUsed: json['hints_used'] ?? 0,
-      screen: screen,
-      selectedOption: selectedOption,
-      sessionId: json['session_id'],
+      attemptId: json['attempt_id'] as String,
+      sessionId: json['session_id'] as String,
+      screenId: json['screen_id'] as String,
+      selectedOptionIds: parseSelectedIds(json['selected_option_ids']),
+      timestamp: parseRequiredDateTime(json['timestamp'] as String?),
+      isCorrect: json['is_correct'] as bool? ?? false,
+      timeTakenMs: json['time_taken_ms'] as int?,
+      hintsUsed: json['hints_used'] as int? ?? 0,
     );
   }
 }
