@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/models/screen.dart';
-import 'package:pfa/services/supabase_service.dart';
+import 'package:pfa/providers/global_providers.dart';
 
-class OptionWidget extends StatelessWidget {
+class OptionWidget extends ConsumerWidget {
   final Option option;
   final VoidCallback onTap;
   final Color? gameThemeColor;
@@ -20,48 +21,58 @@ class OptionWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final logger = ref.read(loggingServiceProvider);
     final bool hasImagePath =
         option.pictureUrl != null && option.pictureUrl!.isNotEmpty;
-
-    final supabaseService = SupabaseService();
 
     String? fullImageUrl;
     if (hasImagePath) {
       try {
+        final supabaseService = ref.read(supabaseServiceProvider);
         fullImageUrl = supabaseService.getPublicUrl(
           bucketId: 'game-assets',
           filePath: option.pictureUrl!,
         );
-      } catch (e) {
-        rethrow;
+      } catch (e, stackTrace) {
+        logger.error(
+            'Failed to get public URL for ${option.pictureUrl}', e, stackTrace);
       }
     }
+
     Widget content;
-    final Color defaultButtonColor =
-        gameThemeColor ?? Theme.of(context).primaryColor;
-    final BorderRadius borderRadius = BorderRadius.circular(12);
+    final Color effectiveButtonColor =
+        gameThemeColor ?? theme.colorScheme.primary;
+    final BorderRadius borderRadius =
+        theme.cardTheme.shape is RoundedRectangleBorder
+            ? (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius
+                as BorderRadius
+            : BorderRadius.circular(10);
 
     if (fullImageUrl != null) {
-      content = _buildImageOption(context, fullImageUrl, borderRadius);
+      content = _buildImageOption(context, fullImageUrl, borderRadius, theme);
     } else {
-      content = _buildTextButtonOption(
-          context, option.labelText ?? '', defaultButtonColor, borderRadius);
+      content = _buildTextButtonOption(context, option.labelText ?? '',
+          effectiveButtonColor, borderRadius, theme);
     }
 
     // Add selection/disabled visual cues
     BoxDecoration decoration = BoxDecoration(
       borderRadius: borderRadius,
       border: isSelected
-          ? Border.all(color: Theme.of(context).primaryColorLight, width: 3)
+          ? Border.all(color: theme.colorScheme.secondary, width: 3)
           : null,
-      boxShadow: const [
-        BoxShadow(
-          color: Colors.black12,
-          blurRadius: 4,
-          offset: Offset(0, 2),
-        ),
-      ],
+      boxShadow:
+          theme.cardTheme.elevation != null && theme.cardTheme.elevation! > 0
+              ? const [
+                  BoxShadow(
+                    color: Color.fromRGBO(0, 0, 0, 0.25),
+                    blurRadius: 4,
+                    offset: Offset(0, 4),
+                  ),
+                ]
+              : null,
     );
 
     // Use Semantics for accessibility
@@ -82,9 +93,8 @@ class OptionWidget extends StatelessWidget {
               child: InkWell(
                 onTap: isDisabled ? null : onTap,
                 borderRadius: borderRadius,
-                splashColor: defaultButtonColor.withAlpha((0.3 * 255).round()),
-                highlightColor:
-                    defaultButtonColor.withAlpha((0.1 * 255).round()),
+                splashColor: theme.splashColor,
+                highlightColor: theme.highlightColor,
                 child: content,
               ),
             ),
@@ -94,12 +104,15 @@ class OptionWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildImageOption(
-      BuildContext context, String imageUrl, BorderRadius borderRadius) {
+  Widget _buildImageOption(BuildContext context, String imageUrl,
+      BorderRadius borderRadius, ThemeData theme) {
     return Container(
       width: 100,
       height: 100,
-      decoration: BoxDecoration(borderRadius: borderRadius),
+      decoration: BoxDecoration(
+        borderRadius: borderRadius,
+        color: theme.cardTheme.color,
+      ),
       child: ClipRRect(
         borderRadius: borderRadius,
         child: Image.network(
@@ -113,20 +126,16 @@ class OptionWidget extends StatelessWidget {
                     ? loadingProgress.cumulativeBytesLoaded /
                         loadingProgress.expectedTotalBytes!
                     : null,
-                color: gameThemeColor ?? Theme.of(context).primaryColor,
-                strokeWidth: 2.0, // Smaller indicator
+                color: theme.colorScheme.primary,
               ),
             );
           },
           errorBuilder: (context, error, stackTrace) {
-            return Container(
-              color: Colors.grey[200],
-              child: Center(
-                child: Icon(
-                  Icons.broken_image_outlined,
-                  color: Colors.grey[500],
-                  size: 40,
-                ),
+            return Center(
+              child: Icon(
+                Icons.broken_image_outlined,
+                color: theme.colorScheme.error,
+                size: 40,
               ),
             );
           },
@@ -136,22 +145,27 @@ class OptionWidget extends StatelessWidget {
   }
 
   Widget _buildTextButtonOption(BuildContext context, String text,
-      Color backgroundColor, BorderRadius borderRadius) {
+      Color buttonColor, BorderRadius borderRadius, ThemeData theme) {
     return Container(
-      constraints: const BoxConstraints(minWidth: 100),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      width: 100,
+      height: 100,
       decoration: BoxDecoration(
-        color: backgroundColor,
         borderRadius: borderRadius,
+        color: theme.cardTheme.color,
       ),
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            color: backgroundColor.computeLuminance() > 0.5
-                ? Colors.black
-                : Colors.white,
-            fontWeight: FontWeight.bold),
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            text,
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: theme.colorScheme.onSurface,
+            ),
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+          ),
+        ),
       ),
     );
   }

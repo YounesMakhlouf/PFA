@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pfa/config/app_theme.dart';
 
 class GameCardWidget extends StatelessWidget {
   final String title;
@@ -25,9 +26,15 @@ class GameCardWidget extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
 
-    final effectiveBackgroundColor =
-        backgroundColor ?? theme.cardTheme.color ?? colorScheme.secondary;
-    final effectiveForegroundColor = foregroundColor ?? colorScheme.onSecondary;
+    final Color effectiveBackgroundColor = backgroundColor ??
+        theme.cardTheme.color ??
+        colorScheme.primaryContainer;
+    final Color defaultForegroundColor =
+        effectiveBackgroundColor.computeLuminance() > 0.5
+            ? AppColors.textPrimary // Dark text on light background
+            : AppColors.textLight; // Light text on dark background
+    final Color effectiveForegroundColor =
+        foregroundColor ?? defaultForegroundColor;
 
     Widget cardContent;
     if (imagePath != null && imagePath!.isNotEmpty) {
@@ -39,7 +46,7 @@ class GameCardWidget extends StatelessWidget {
           return Icon(
             Icons.broken_image_outlined,
             size: 50,
-            color: effectiveForegroundColor.withAlpha((0.7 * 255).round()),
+            color: colorScheme.error.withAlpha((0.7 * 255).round()),
           );
         },
       );
@@ -54,23 +61,28 @@ class GameCardWidget extends StatelessWidget {
       cardContent = Icon(
         Icons.category, // Generic category icon
         size: 60,
-        color: effectiveForegroundColor.withAlpha((0.7 * 255).round()),
+        color: theme.iconTheme.color?.withAlpha((0.7 * 255).round()) ??
+            effectiveForegroundColor.withAlpha((0.7 * 255).round()),
       );
     }
 
     return Opacity(
-      opacity: isEnabled ? 1.0 : 0.6,
+      opacity: isEnabled ? 1.0 : 0.5,
       child: Card(
-        elevation: isEnabled ? (theme.cardTheme.elevation ?? 4) : 1,
+        elevation: isEnabled ? (theme.cardTheme.elevation ?? 2) : 0.5,
         shape: theme.cardTheme.shape ??
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         clipBehavior: theme.cardTheme.clipBehavior ?? Clip.antiAlias,
         color: effectiveBackgroundColor,
+        margin: theme.cardTheme.margin ?? const EdgeInsets.all(4.0),
         child: InkWell(
           onTap: isEnabled ? onTap : null,
-          splashColor: effectiveForegroundColor.withAlpha((0.1 * 255).round()),
-          highlightColor:
-              effectiveForegroundColor.withAlpha((0.05 * 255).round()),
+          splashColor: theme.splashColor,
+          highlightColor: theme.highlightColor,
+          borderRadius: theme.cardTheme.shape is RoundedRectangleBorder
+              ? (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius
+                  as BorderRadius
+              : BorderRadius.circular(10),
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(

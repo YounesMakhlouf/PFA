@@ -3,12 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:pfa/models/screen.dart';
 import 'package:pfa/screens/game_screen.dart';
 import 'package:pfa/l10n/app_localizations.dart';
-import 'package:pfa/repositories/game_repository.dart';
-import 'package:pfa/services/supabase_service.dart';
-import 'package:pfa/services/logging_service.dart';
-import 'package:pfa/services/multiple_choice_game_service.dart';
+import 'package:pfa/providers/global_providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MultipleChoiceGame extends StatefulWidget {
+class MultipleChoiceGame extends ConsumerStatefulWidget {
   final String gameId;
 
   const MultipleChoiceGame({
@@ -17,12 +15,10 @@ class MultipleChoiceGame extends StatefulWidget {
   });
 
   @override
-  State<MultipleChoiceGame> createState() => _MultipleChoiceGameState();
+  ConsumerState<MultipleChoiceGame> createState() => _MultipleChoiceGameState();
 }
 
-class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
-  final _logger = LoggingService();
-  late final MultipleChoiceGameService _gameService;
+class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
   bool _isLoading = true;
   String? _errorMessage;
 
@@ -35,8 +31,6 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
       DeviceOrientation.landscapeRight,
     ]);
 
-    final gameRepository = GameRepository(supabaseService: SupabaseService());
-    _gameService = MultipleChoiceGameService(gameRepository: gameRepository);
     _loadGameData();
   }
 
@@ -50,20 +44,23 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
   }
 
   Future<void> _loadGameData() async {
+    final logger = ref.read(loggingServiceProvider);
+    final gameService = ref.read(multipleChoiceGameServiceProvider);
+
     try {
       setState(() {
         _isLoading = true;
         _errorMessage = null;
       });
 
-      await _gameService.loadGameData(widget.gameId);
+      await gameService.loadGameData(widget.gameId);
 
       setState(() {
-        _isLoading = _gameService.isLoading;
-        _errorMessage = _gameService.errorMessage;
+        _isLoading = gameService.isLoading;
+        _errorMessage = gameService.errorMessage;
       });
     } catch (e, stackTrace) {
-      _logger.error('Error loading game data', e, stackTrace);
+      logger.error('Error loading game data', e, stackTrace);
       setState(() {
         _isLoading = false;
         _errorMessage = 'Failed to load game: ${e.toString()}';
@@ -72,16 +69,20 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
   }
 
   void _moveToNextScreen() {
+    final gameService = ref.read(multipleChoiceGameServiceProvider);
+
     setState(() {
-      _gameService.moveToNextScreen();
-      _errorMessage = _gameService.errorMessage;
+      gameService.moveToNextScreen();
+      _errorMessage = gameService.errorMessage;
     });
   }
 
   // Check if the selected option is correct
   void _checkAnswer(Option selectedOption) {
+    final gameService = ref.read(multipleChoiceGameServiceProvider);
+
     setState(() {
-      bool correct = _gameService.checkAnswer(selectedOption);
+      bool correct = gameService.checkAnswer(selectedOption);
 
       // If correct, move to the next screen after a delay
       if (correct) {
@@ -94,75 +95,86 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
 
   @override
   Widget build(BuildContext context) {
+    final gameService = ref.read(multipleChoiceGameServiceProvider);
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    final TextTheme textTheme = theme.textTheme;
+    final l10n = AppLocalizations.of(context);
+
     if (_isLoading) {
       return Scaffold(
         body: Center(
           child: CircularProgressIndicator(
-            color: Colors.blue,
+            color: colorScheme.primary,
           ),
         ),
       );
     }
 
     if (_errorMessage != null ||
-        _gameService.game == null ||
-        _gameService.currentScreen == null) {
+        gameService.game == null ||
+        gameService.currentScreen == null) {
       return Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: Text(l10n.applicationError),
+          backgroundColor: colorScheme.error,
+          foregroundColor: colorScheme.onError,
+          elevation: 0,
+        ),
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.error_outline,
-                color: Colors.red,
-                size: 60,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                _errorMessage ?? 'Unknown error',
-                style: const TextStyle(fontSize: 18),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(AppLocalizations.of(context).goBack),
-              ),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  color: colorScheme.error,
+                  size: 60,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  _errorMessage ?? l10n.unexpectedError,
+                  style:
+                      textTheme.titleMedium?.copyWith(color: colorScheme.error),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(AppLocalizations.of(context).goBack),
+                ),
+              ],
+            ),
           ),
         ),
       );
     }
+    final gameThemeColor = gameService.game!.themeColor;
+    final appBarForegroundColor = colorScheme.onPrimary;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_gameService.game!.name),
-        backgroundColor:
-            _gameService.game!.themeColor.withAlpha((0.8 * 255).round()),
-        elevation: 0,
+        title: Text(gameService.game!.name),
+        backgroundColor: gameThemeColor.withAlpha((0.9 * 255).round()),
+        foregroundColor: appBarForegroundColor,
+        elevation: theme.appBarTheme.elevation,
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              _gameService.game!.themeColor.withAlpha((0.3 * 255).round()),
-              Colors.white,
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: GameScreenWidget(
-            game: _gameService.game!,
-            currentScreen: _gameService.currentScreen!,
-            currentLevel: _gameService.currentLevel!.levelNumber,
-            currentScreenNumber: _gameService.currentScreen!.screenNumber,
-            isCorrect: _gameService.isCorrect,
-            onOptionSelected: _checkAnswer,
-          ),
+      body: SafeArea(
+        child: GameScreenWidget(
+          game: gameService.game!,
+          currentScreen: gameService.currentScreen!,
+          currentLevel: gameService.currentLevel!.levelNumber,
+          currentScreenNumber: gameService.currentScreen!.screenNumber,
+          isCorrect: gameService.isCorrect,
+          onOptionSelected: _checkAnswer,
         ),
       ),
     );
