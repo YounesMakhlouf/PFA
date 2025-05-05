@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:pfa/config/app_theme.dart';
 
 import '../l10n/app_localizations.dart';
 
@@ -23,7 +24,7 @@ class AccuracyBarChart extends StatelessWidget {
         BarChartData(
           borderData: FlBorderData(
             show: true,
-            border: Border.all(color: Colors.grey, width: 1),
+            border: Border.all(color:AppColors.disabled, width: 1),
           ),
           gridData: FlGridData(
             show: true,
@@ -35,7 +36,7 @@ class AccuracyBarChart extends StatelessWidget {
           barTouchData: BarTouchData(enabled: true),
           titlesData: FlTitlesData(
             leftTitles: AxisTitles(
-              sideTitles: SideTitles(showTitles: true, reservedSize: 34),
+              sideTitles: SideTitles(showTitles: true, reservedSize: 44),
             ),
             rightTitles: AxisTitles(
               sideTitles: SideTitles(showTitles: false),
@@ -76,7 +77,7 @@ class AccuracyBarChart extends StatelessWidget {
                 BarChartRodData(
                   toY: values[i] > 0 ? values[i] : 0.5,
                   width: 30,
-                  color: values[i] > 50 ? Colors.green : Colors.red,
+                  color: values[i] > 50 ? AppColors.success : AppColors.error,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ],

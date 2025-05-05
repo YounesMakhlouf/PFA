@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pfa/config/app_theme.dart';
 import '../l10n/app_localizations.dart';
 
 class TimeFilterDropdown extends StatelessWidget {
@@ -7,10 +7,10 @@ class TimeFilterDropdown extends StatelessWidget {
   final ValueChanged<String?> onChanged;
 
   const TimeFilterDropdown({
+    super.key,
     required this.value,
     required this.onChanged,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +23,10 @@ class TimeFilterDropdown extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: Colors.grey.shade200, // Background color
+        color: AppColors.lightGrey,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: Colors.grey.shade200, // Border color
+          color: AppColors.lightGrey,
           width: 1.0,
         ),
       ),
@@ -34,13 +34,13 @@ class TimeFilterDropdown extends StatelessWidget {
         child: DropdownButton<String>(
           value: value,
           items: [
-            DropdownMenuItem(value: 'all', child: Text(all)),
-            DropdownMenuItem(value: 'week', child: Text(week)),
+            DropdownMenuItem(value: 'all', child: Text(all, style: Theme.of(context).textTheme.bodyLarge)),
+            DropdownMenuItem(value: 'week', child: Text(week,style: Theme.of(context).textTheme.bodyLarge)),
           ],
           onChanged: onChanged,
           icon: const Icon(Icons.arrow_drop_down_rounded),
           borderRadius: BorderRadius.circular(8),
-          dropdownColor: Colors.white, // Dropdown menu background color
+          dropdownColor: AppColors.lightGrey,
         ),
       ),
     );

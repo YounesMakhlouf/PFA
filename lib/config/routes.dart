@@ -39,7 +39,9 @@ class AppRoutes {
         final childUuid = args?['childUuid'] as String?;
 
         if (childUuid == null) {
-          return const Scaffold(body: Center(child: Text("Error: Child UUID missing")));
+          return ErrorScreen(
+              errorMessage: "Child identifier is missing"
+          );
         }
 
         return StatsScreen(childUuid: childUuid);

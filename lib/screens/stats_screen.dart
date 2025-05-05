@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/l10n/app_localizations.dart';
+import 'package:pfa/screens/error_screen.dart';
 
 import '../models/category_option.dart';
 import '../models/stats_summary.dart';
@@ -11,7 +12,7 @@ import '../widgets/accuracy_bar_chart.dart';
 import '../widgets/big_stat_box.dart';
 import '../widgets/category_filter_dropdown.dart';
 import '../widgets/time_filter_dropdown.dart';
-import '../constants/const.dart' as constants;
+import '../models/game.dart' as game;
 
 class StatsScreen extends  ConsumerStatefulWidget  {
   final String childUuid;
@@ -108,13 +109,13 @@ class _StatsScreenState extends ConsumerState<StatsScreen>{
     try {
       final Map<String, double> result = {};
       // Prime cache for all categories with 'all' time filter
-      for (final category in constants.game_categories) {
+      for (var category in game.GameCategory.values) {
         final stats = await _statsService.getStats(
           childUuid: widget.childUuid,
-          category: category,
+          category: category.name,
           timeFilter: 'all', // Explicitly use 'all' filter
         );
-        result[category] = stats?.accuracy ?? 0.0;
+        result[category.name] = stats?.accuracy ?? 0.0;
       }
 
       final sortedResult = Map.fromEntries(
@@ -131,7 +132,7 @@ class _StatsScreenState extends ConsumerState<StatsScreen>{
 
   Widget _buildStatsSection(BuildContext context) {
     if (_statsError != null) {
-      return _buildError(_statsError!);
+      return ErrorScreen(errorMessage: _chartError!) ;
     }
     final categoryOptions = [
       CategoryOption(value: 'ALL', label: AppLocalizations.of(context).all),
@@ -186,7 +187,7 @@ class _StatsScreenState extends ConsumerState<StatsScreen>{
   }
 
   Widget _buildCategoryChartSection() {
-    if (_chartError != null) return _buildError(_chartError!);
+    if (_chartError != null) return ErrorScreen(errorMessage: _chartError!);
     if (_loadingChart) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -198,21 +199,6 @@ class _StatsScreenState extends ConsumerState<StatsScreen>{
     return AccuracyBarChart(
         categoryAccuracies: _categoryAccuracies!,
         context: context,
-    );
-  }
-
-  Widget _buildError(String message) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.red.shade50,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        message,
-        style: TextStyle(color: Colors.red.shade700),
-        textAlign: TextAlign.center,
-      ),
     );
   }
 

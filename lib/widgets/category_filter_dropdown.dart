@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pfa/config/app_theme.dart';
 import 'package:pfa/models/category_option.dart';
 
 class CategoryDropdown extends StatelessWidget {
@@ -18,10 +19,10 @@ class CategoryDropdown extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: Colors.grey.shade200, // Background color
+        color: AppColors.lightGrey,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: Colors.grey.shade200, // Border color
+          color: AppColors.lightGrey,
           width: 1.0,
         ),
       ),
@@ -31,12 +32,13 @@ class CategoryDropdown extends StatelessWidget {
             items: categories.map((category) {
               return DropdownMenuItem<String>(
                 value: category.value,
-                child: Text(category.label),
+                child: Text(category.label,style: Theme.of(context).textTheme.bodyLarge),
               );
             }).toList(),
             onChanged: onChanged,
             underline: Container(),
             icon: const Icon(Icons.arrow_drop_down_rounded),
+            dropdownColor: AppColors.lightGrey,
           )
       ),
     );

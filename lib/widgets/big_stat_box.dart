@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pfa/config/app_theme.dart';
 import 'package:pfa/widgets/small_stat_box.dart';
 import '../l10n/app_localizations.dart';
 
@@ -24,17 +25,16 @@ class StatsContainer extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 24),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white60,
-        border: Border.all(color: Colors.grey.shade300),
+        color: AppColors.statBoxBackground,
+        border: Border.all(color: AppColors.lightGrey),
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [/*...*/],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Text(title, style: Theme.of(context).textTheme.titleLarge),
+              Text(title, style: Theme.of(context).textTheme.titleMedium),
             ]
           ),
           Row(
@@ -75,10 +75,10 @@ class StatsContainer extends StatelessWidget {
 
   /// Colors the text based on value
   TextStyle _statTextStyle({required double? value, required bool higherIsBetter}) {
-    if (value == null) return const TextStyle(color: Colors.black54);
+    if (value == null) return const TextStyle(color: AppColors.textPrimary);
     final color = (higherIsBetter ? value > 50 : value < 50)
-        ? Colors.green
-        : Colors.red;
+        ? AppColors.success
+        : AppColors.error;
     return TextStyle(color: color, fontWeight: FontWeight.bold);
   }
 }

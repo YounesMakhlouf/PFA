@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pfa/config/app_theme.dart';
 
 class StatItem extends StatelessWidget {
   final String title;
@@ -20,7 +21,7 @@ class StatItem extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         constraints: const BoxConstraints(minHeight: 80),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
+          border: Border.all(color: AppColors.disabled),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Column(
