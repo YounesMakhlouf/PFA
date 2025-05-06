@@ -39,7 +39,7 @@ void main() {
       final json = {
         'game_id': 'game-uuid-456',
         'name': 'Number Puzzle',
-        'image_path': 'puzzles/numbers.jpg',
+        'picture_url': 'puzzles/numbers.jpg',
         'description': 'Solve the number sequence.',
         'category': 'NUMBERS',
         'type': 'PUZZLE',
