@@ -185,4 +185,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get switchChildProfileButton => 'تبديل الملف الشخصي';
   @override
   String get onlyOneProfileExists => 'يوجد ملف شخصي واحد فقط.';
+
+  @override
+  String get loading => 'جار التحميل...';
+  @override
+  String get gameOver => 'انتهت اللعبة!';
+  @override
+  String get congratulationsAllLevelsComplete =>
+      'تهانينا! لقد أكملت جميع المستويات!';
+  @override
+  String get playAgain => 'العب مرة أخرى';
+  @override
+  String get backToGames => 'العودة إلى الألعاب';
 }

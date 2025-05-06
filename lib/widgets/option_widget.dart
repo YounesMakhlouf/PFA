@@ -25,7 +25,7 @@ class OptionWidget extends ConsumerWidget {
     final theme = Theme.of(context);
     final logger = ref.read(loggingServiceProvider);
     final bool hasImagePath =
-        option.pictureUrl != null && option.pictureUrl!.isNotEmpty;
+        option.picturePath != null && option.picturePath!.isNotEmpty;
 
     String? fullImageUrl;
     if (hasImagePath) {
@@ -33,11 +33,11 @@ class OptionWidget extends ConsumerWidget {
         final supabaseService = ref.read(supabaseServiceProvider);
         fullImageUrl = supabaseService.getPublicUrl(
           bucketId: 'game-assets',
-          filePath: option.pictureUrl!,
+          filePath: option.picturePath!,
         );
       } catch (e, stackTrace) {
-        logger.error(
-            'Failed to get public URL for ${option.pictureUrl}', e, stackTrace);
+        logger.error('Failed to get public URL for ${option.picturePath}', e,
+            stackTrace);
       }
     }
 

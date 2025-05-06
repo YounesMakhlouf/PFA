@@ -60,7 +60,6 @@ abstract class AppLocalizations {
   String get periodThisWeek;
   String get statsError;
 
-
   // Game instructions
   String get chooseCorrectColor;
 
@@ -136,6 +135,12 @@ abstract class AppLocalizations {
   String get switchChildProfileButton;
   String get onlyOneProfileExists;
   String get logout;
+
+  String get loading;
+  String get gameOver;
+  String get congratulationsAllLevelsComplete;
+  String get playAgain;
+  String get backToGames;
 }
 
 class _AppLocalizationsDelegate

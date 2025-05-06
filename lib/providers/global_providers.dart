@@ -1,7 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/models/user.dart';
 import 'package:pfa/providers/active_child_notifier.dart';
-import 'package:pfa/services/multiple_choice_game_service.dart';
+import 'package:pfa/viewmodels/game_state.dart';
+import 'package:pfa/viewmodels/game_viewmodel.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:pfa/services/logging_service.dart';
 import 'package:pfa/services/supabase_service.dart';
@@ -55,14 +56,6 @@ final gameRepositoryProvider = Provider<GameRepository>((ref) {
   return GameRepository(supabaseService: supabaseService, logger: logger);
 });
 
-final multipleChoiceGameServiceProvider =
-    Provider<MultipleChoiceGameService>((ref) {
-  final gameRepository = ref.watch(gameRepositoryProvider);
-  final logger = ref.watch(loggingServiceProvider);
-  return MultipleChoiceGameService(
-      gameRepository: gameRepository, logger: logger);
-});
-
 final initialChildProfilesProvider = FutureProvider<List<Child>>((ref) async {
   final logger = ref.read(loggingServiceProvider);
 
@@ -97,7 +90,7 @@ final activeChildProvider =
 });
 
 // stats providers
-final childStatsRepositoryProvider = Provider<ChildStatsRepository>((ref){
+final childStatsRepositoryProvider = Provider<ChildStatsRepository>((ref) {
   final supabaseService = ref.watch(supabaseServiceProvider);
   final logger = ref.watch(loggingServiceProvider);
   return ChildStatsRepository(supabaseService: supabaseService, logger: logger);
@@ -109,3 +102,29 @@ final childStatsServiceProvider = Provider<ChildStatsService>((ref) {
     statsRepository: childStatsRepository,
   );
 });
+
+final gameViewModelProvider = StateNotifierProvider.family<GameViewModel,
+    GameState, String /* gameId */ >(
+  (ref, gameId) {
+    final gameRepo = ref.read(gameRepositoryProvider);
+    final sessionRepo = ref.read(gameSessionRepositoryProvider);
+    final logger = ref.read(loggingServiceProvider);
+
+    final activeChild = ref.watch(activeChildProvider);
+
+    if (activeChild == null) {
+      logger.error(
+          "GameViewModelProvider: Attempted to create GameViewModel for game '$gameId' but no active child is set. This indicates a UI flow error.");
+      throw StateError(
+          "Cannot initialize GameViewModel: No active child selected. Please select a child profile first.");
+    }
+
+    return GameViewModel(
+      gameId,
+      activeChild.childId,
+      gameRepo,
+      logger,
+      sessionRepo,
+    );
+  },
+);

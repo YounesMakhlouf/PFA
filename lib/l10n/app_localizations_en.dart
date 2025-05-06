@@ -49,7 +49,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get statsError => 'No stats available, try again later';
 
-
   // Game instructions
   @override
   String get chooseCorrectColor => 'Choose the correct color';
@@ -188,4 +187,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get switchChildProfileButton => 'Switch Profile';
   @override
   String get onlyOneProfileExists => 'Only one profile exists.';
+
+  @override
+  String get loading => 'Loading...';
+  @override
+  String get gameOver => 'Game Over!';
+  @override
+  String get congratulationsAllLevelsComplete =>
+      'Congratulations! You\'ve completed all levels!';
+  @override
+  String get playAgain => 'Play Again';
+  @override
+  String get backToGames => 'Back to Games';
 }

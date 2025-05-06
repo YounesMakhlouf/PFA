@@ -191,4 +191,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get switchChildProfileButton => 'Changer de profil';
   @override
   String get onlyOneProfileExists => 'Un seul profil existe.';
+
+  @override
+  String get loading => 'Chargement...';
+  @override
+  String get gameOver => 'Partie terminée !';
+  @override
+  String get congratulationsAllLevelsComplete =>
+      'Félicitations ! Vous avez terminé tous les niveaux !';
+  @override
+  String get playAgain => 'Rejouer';
+  @override
+  String get backToGames => 'Retour aux jeux';
 }

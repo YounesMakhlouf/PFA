@@ -1,130 +1,157 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pfa/models/game.dart';
+import 'package:pfa/models/level.dart';
 import 'package:pfa/models/screen.dart';
 
 void main() {
-  group('Game', () {
-    test('should create a Game with all required fields', () {
-      final level = Level(
-        levelNumber: 1,
-        screens: [],
-      );
-
+  // --- Game Tests ---
+  group('Game Model', () {
+    test('should create a Game with all required fields and new properties',
+        () {
       final game = Game(
-        name: 'Colors Game',
-        pictureUrl: 'assets/images/colors_game.png',
-        instruction: 'Choose the correct color',
+        gameId: 'test-game-id-123',
+        name: 'Colors Adventure',
+        pictureUrl: 'game_assets/images/colors_adventure.png',
+        description: 'Explore the world of colors!',
         category: GameCategory.COLORS_SHAPES,
         type: GameType.MULTIPLE_CHOICE,
-        levels: [level],
+        themeColorCode: '#FF5733',
+        iconName: 'palette_icon',
+        educatorId: 'educator-abc',
+        createdAt: DateTime(2023, 1, 1),
+        updatedAt: DateTime(2023, 1, 2),
       );
 
-      expect(game.gameId, isNotEmpty);
-      expect(game.name, 'Colors Game');
-      expect(game.pictureUrl, 'assets/images/colors_game.png');
-      expect(game.instruction, 'Choose the correct color');
+      expect(game.gameId, 'test-game-id-123');
+      expect(game.name, 'Colors Adventure');
+      expect(game.pictureUrl, 'game_assets/images/colors_adventure.png');
+      expect(game.description, 'Explore the world of colors!');
       expect(game.category, GameCategory.COLORS_SHAPES);
       expect(game.type, GameType.MULTIPLE_CHOICE);
-      expect(game.levels.length, 1);
-      expect(game.themeColor, GameCategory.COLORS_SHAPES.themeColor);
-      expect(game.icon, GameCategory.COLORS_SHAPES.icon);
+      expect(game.themeColorCode, '#FF5733');
+      expect(game.iconName, 'palette_icon');
+      expect(game.educatorId, 'educator-abc');
+      expect(game.createdAt, DateTime(2023, 1, 1));
+      expect(game.updatedAt, DateTime(2023, 1, 2));
     });
 
-    test('should create a Game with a different type and category', () {
-      final level = Level(levelNumber: 1, screens: []);
-      final game = Game(
-        name: 'Memory Game',
-        pictureUrl: 'assets/images/memory_game.png',
-        instruction: 'Match the pairs',
-        category: GameCategory.LOGICAL_THINKING,
-        type: GameType.MEMORY_MATCH,
-        levels: [level],
-      );
+    test('fromJson should correctly parse Game data from map', () {
+      final json = {
+        'game_id': 'game-uuid-456',
+        'name': 'Number Puzzle',
+        'image_path': 'puzzles/numbers.jpg',
+        'description': 'Solve the number sequence.',
+        'category': 'NUMBERS',
+        'type': 'PUZZLE',
+        'theme_color': '#8A2BE2',
+        'icon_name': 'numbers_puzzle_icon',
+        'educator_id': null,
+        'created_at': '2023-03-15T10:00:00Z',
+        'updated_at': '2023-03-16T11:00:00Z',
+      };
+      final game = Game.fromJson(json);
 
-      expect(game.name, 'Memory Game');
-      expect(game.category, GameCategory.LOGICAL_THINKING);
-      expect(game.type, GameType.MEMORY_MATCH);
-      expect(game.themeColor, GameCategory.LOGICAL_THINKING.themeColor);
-      expect(game.icon, GameCategory.LOGICAL_THINKING.icon);
+      expect(game.gameId, 'game-uuid-456');
+      expect(game.name, 'Number Puzzle');
+      expect(game.pictureUrl, 'puzzles/numbers.jpg');
+      expect(game.description, 'Solve the number sequence.');
+      expect(game.category, GameCategory.NUMBERS);
+      expect(game.type, GameType.PUZZLE);
+      expect(game.themeColorCode, '#8A2BE2');
+      expect(game.iconName, 'numbers_puzzle_icon');
+      expect(game.educatorId, isNull);
+      expect(game.createdAt, DateTime.parse('2023-03-15T10:00:00Z').toLocal());
+      expect(game.updatedAt, DateTime.parse('2023-03-16T11:00:00Z').toLocal());
+    });
+
+    test('fromJson should handle null or missing optional fields gracefully',
+        () {
+      final json = {
+        'game_id': 'game-minimal-789',
+        'name': 'Minimal Game',
+        'category': 'EDUCATION',
+        'type': 'STORY',
+        // imagePath, description, themeColorCode, iconName, educatorId, timestamps are missing
+      };
+      final game = Game.fromJson(json);
+
+      expect(game.gameId, 'game-minimal-789');
+      expect(game.name, 'Minimal Game');
+      expect(game.category, GameCategory.EDUCATION);
+      expect(game.type, GameType.STORY);
+      expect(game.pictureUrl, isNull);
+      expect(game.description, isNull);
+      expect(game.themeColorCode, isNull);
+      expect(game.iconName, isNull);
+      expect(game.educatorId, isNull);
+      expect(game.createdAt, isNull);
+      expect(game.updatedAt, isNull);
+    });
+
+    test('fromJson should use fallback for unknown enum values', () {
+      final json = {
+        'game_id': 'game-unknown-enum',
+        'name': 'Unknown Game',
+        'category': 'INVALID_CATEGORY',
+        'type': 'INVALID_TYPE',
+      };
+      final game = Game.fromJson(json);
+
+      expect(game.category, GameCategory.UNKNOWN);
+      expect(game.type, GameType.UNKNOWN);
     });
   });
 
-  group('Level', () {
+  // --- Level Tests ---
+  group('Level Model', () {
     test('should create a Level with all required fields', () {
       final level = Level(
+        levelId: 'level-id-abc',
+        gameId: 'game-id-123',
         levelNumber: 1,
-        screens: [],
       );
 
-      expect(level.levelId, isNotEmpty);
+      expect(level.levelId, 'level-id-abc');
+      expect(level.gameId, 'game-id-123');
       expect(level.levelNumber, 1);
-      expect(level.screens, isEmpty);
     });
 
-    test('getScreens should return an empty list if no screens', () {
-      final level = Level(levelNumber: 1, screens: []);
-      expect(level.getScreens(), isEmpty);
+    test('fromJson should correctly parse Level data from map', () {
+      final json = {
+        'level_id': 'level-uuid-xyz',
+        'game_id': 'game-uuid-456',
+        'level_number': 2,
+      };
+      final level = Level.fromJson(json);
+
+      expect(level.levelId, 'level-uuid-xyz');
+      expect(level.gameId, 'game-uuid-456');
+      expect(level.levelNumber, 2);
     });
 
-    test('getScreens should return all screens', () {
-      final screen1 = Screen(screenNumber: 1);
-      final screen2 = Screen(screenNumber: 2);
+    // --- GameCategory & GameType Enum/Extension Tests ---
+    group('Game Enums and Extensions', () {
+      test('GameCategory should have correct enum values and UNKNOWN fallback',
+          () {
+        expect(GameCategory.values.length, 9);
+        expect(GameCategory.values, contains(GameCategory.LOGICAL_THINKING));
+        expect(GameCategory.values, contains(GameCategory.UNKNOWN));
+        expect(GameCategoryExtension.fromString('COLORS_SHAPES'),
+            GameCategory.COLORS_SHAPES);
+        expect(
+            GameCategoryExtension.fromString('INVALID'), GameCategory.UNKNOWN);
+        expect(GameCategoryExtension.fromString(null), GameCategory.UNKNOWN);
+      });
 
-      final level = Level(
-        levelNumber: 1,
-        screens: [screen1, screen2],
-      );
-
-      final screens = level.getScreens();
-      expect(screens.length, 2);
-      expect(screens[0], screen1);
-      expect(screens[1], screen2);
-    });
-  });
-
-  group('GameCategory', () {
-    test('should have correct enum values', () {
-      expect(GameCategory.values.length, 8);
-      expect(GameCategory.values, contains(GameCategory.LOGICAL_THINKING));
-      expect(GameCategory.values, contains(GameCategory.EDUCATION));
-      expect(GameCategory.values, contains(GameCategory.RELAXATION));
-      expect(GameCategory.values, contains(GameCategory.EMOTIONS));
-      expect(GameCategory.values, contains(GameCategory.NUMBERS));
-      expect(GameCategory.values, contains(GameCategory.COLORS_SHAPES));
-      expect(GameCategory.values, contains(GameCategory.ANIMALS));
-      expect(GameCategory.values, contains(GameCategory.FRUITS_VEGETABLES));
-    });
-
-    test('should return correct theme color for each category', () {
-      expect(GameCategory.LOGICAL_THINKING.themeColor, isNotNull);
-      expect(GameCategory.EDUCATION.themeColor, isNotNull);
-      expect(GameCategory.RELAXATION.themeColor, isNotNull);
-      expect(GameCategory.EMOTIONS.themeColor, isNotNull);
-      expect(GameCategory.NUMBERS.themeColor, isNotNull);
-      expect(GameCategory.COLORS_SHAPES.themeColor, isNotNull);
-      expect(GameCategory.ANIMALS.themeColor, isNotNull);
-      expect(GameCategory.FRUITS_VEGETABLES.themeColor, isNotNull);
-    });
-
-    test('should return correct icon for each category', () {
-      expect(GameCategory.LOGICAL_THINKING.icon, isNotNull);
-      expect(GameCategory.EDUCATION.icon, isNotNull);
-      expect(GameCategory.RELAXATION.icon, isNotNull);
-      expect(GameCategory.EMOTIONS.icon, isNotNull);
-      expect(GameCategory.NUMBERS.icon, isNotNull);
-      expect(GameCategory.COLORS_SHAPES.icon, isNotNull);
-      expect(GameCategory.ANIMALS.icon, isNotNull);
-      expect(GameCategory.FRUITS_VEGETABLES.icon, isNotNull);
-    });
-
-    test('should have unique theme colors for different categories', () {
-      final colors = GameCategory.values.map((c) => c.themeColor).toSet();
-      expect(colors.length, greaterThan(1));
-    });
-
-    test('should have unique icons for different categories', () {
-      final icons = GameCategory.values.map((c) => c.icon).toSet();
-      expect(icons.length, greaterThan(1));
+      test('GameType should have correct enum values and UNKNOWN fallback', () {
+        expect(GameType.values.length, 6);
+        expect(GameType.values, contains(GameType.MULTIPLE_CHOICE));
+        expect(GameType.values, contains(GameType.UNKNOWN));
+        expect(GameTypeExtension.fromString('MEMORY_MATCH'),
+            GameType.MEMORY_MATCH);
+        expect(GameTypeExtension.fromString('INVALID_TYPE'), GameType.UNKNOWN);
+        expect(GameTypeExtension.fromString(null), GameType.UNKNOWN);
+      });
     });
   });
 }

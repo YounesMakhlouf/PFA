@@ -1,17 +1,31 @@
-import 'package:uuid/uuid.dart';
+import 'package:collection/collection.dart';
+
+enum ScreenType { MULTIPLE_CHOICE, MEMORY_MATCH, UNKNOWN }
+
+/// Helper extension for safe parsing from string (DB value) to enum.
+extension ScreenTypeExtension on ScreenType {
+  static ScreenType fromString(String? value) {
+    return ScreenType.values.firstWhereOrNull((e) => e.name == value) ??
+        ScreenType.UNKNOWN;
+  }
+
+  String toJson() => name;
+}
 
 class Screen {
   final String screenId;
   final int screenNumber;
-  final String? levelId;
+  final ScreenType type;
+  final String levelId;
   final String? instruction;
 
   Screen({
-    String? screenId,
+    required this.screenId,
+    required this.levelId,
+    required this.type,
     required this.screenNumber,
-    this.levelId,
     this.instruction,
-  }) : screenId = screenId ?? const Uuid().v4();
+  });
 
   List<Option> getOptions() {
     return []; // Base implementation, to be overridden
@@ -20,78 +34,47 @@ class Screen {
   bool checkAnswer(List<Option> selectedOptions) {
     return false; // Base implementation, to be overridden
   }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'screen_id': screenId,
-      'screen_number': screenNumber,
-      'level_id': levelId,
-      'instruction': instruction,
-      'screen_type': runtimeType.toString(),
-    };
-  }
-
-  static Screen fromJson(Map<String, dynamic> json) {
-    return Screen(
-      screenId: json['screen_id'],
-      screenNumber: json['screen_number'],
-      levelId: json['level_id'],
-      instruction: json['instruction'],
-    );
-  }
 }
 
 class Option {
   final String optionId;
+  final String screenId;
+  final bool? isCorrect; // Flag for multiple choice correct answer
   final String? labelText;
-  final String? pictureUrl;
+  final String? picturePath;
+  final String? audioPath;
   final String? pairId; // Used for Memory games to identify matching pairs
-  final String? screenId;
 
   Option({
-    String? optionId,
+    required this.optionId,
+    required this.screenId,
     this.labelText,
-    this.pictureUrl,
+    this.picturePath,
+    this.audioPath,
+    this.isCorrect,
     this.pairId,
-    this.screenId,
-  }) : optionId = optionId ?? const Uuid().v4();
-
-  Map<String, dynamic> toJson() {
-    return {
-      'option_id': optionId,
-      'label_text': labelText,
-      'picture_url': pictureUrl,
-      'pair_id': pairId,
-      'screen_id': screenId,
-    };
-  }
+  });
 
   factory Option.fromJson(Map<String, dynamic> json) {
     return Option(
-      optionId: json['option_id'],
-      labelText: json['label_text'],
-      pictureUrl: json['picture_url'],
-      pairId: json['pair_id'],
-      screenId: json['screen_id'],
+      optionId: json['option_id'] as String,
+      screenId: json['screen_id'] as String,
+      labelText: json['label_text'] as String?,
+      picturePath: json['picture_url'] as String?,
+      audioPath: json['audio_url'] as String?,
+      isCorrect: json['is_correct'] as bool?,
+      pairId: json['pair_id'] as String?,
     );
   }
 }
 
 class MemoryScreen extends Screen {
-  final List<Option> options;
-
   MemoryScreen({
-    super.screenId,
+    required super.screenId,
+    required super.levelId,
     required super.screenNumber,
-    super.levelId,
     super.instruction,
-    required this.options,
-  });
-
-  @override
-  List<Option> getOptions() {
-    return options;
-  }
+  }) : super(type: ScreenType.MEMORY_MATCH);
 
   @override
   bool checkAnswer(List<Option> selectedOptions) {
@@ -102,73 +85,43 @@ class MemoryScreen extends Screen {
     }
 
     // Check if the pairIds match
-    return selectedOptions[0].pairId == selectedOptions[1].pairId;
+    return selectedOptions[0].pairId ==
+        selectedOptions[1].pairId; // TODO: Move to service
   }
 
-  @override
-  Map<String, dynamic> toJson() {
-    final baseJson = super.toJson();
-    return {
-      ...baseJson,
-      'screen_type': 'MemoryScreen',
-    };
-  }
-
-  static MemoryScreen fromJson(
-      Map<String, dynamic> json, List<Option> options) {
+  factory MemoryScreen.fromJson(Map<String, dynamic> json) {
+    // Note: The 'options' are handled by the repository or service
     return MemoryScreen(
-      screenId: json['screen_id'],
-      screenNumber: json['screen_number'],
-      levelId: json['level_id'],
-      instruction: json['instruction'],
-      options: options,
+      screenId: json['screen_id'] as String,
+      levelId: json['level_id'] as String,
+      screenNumber: json['screen_number'] as int? ?? 0,
+      instruction: json['instruction'] as String?,
     );
   }
 }
 
 class MultipleChoiceScreen extends Screen {
-  final List<Option> options;
-  final Option correctAnswer;
-
   MultipleChoiceScreen({
-    super.screenId,
+    required super.screenId,
+    required super.levelId,
     required super.screenNumber,
-    super.levelId,
     super.instruction,
-    required this.options,
-    required this.correctAnswer,
-  });
-
-  @override
-  List<Option> getOptions() {
-    return options;
-  }
+  }) : super(type: ScreenType.MULTIPLE_CHOICE);
 
   @override
   bool checkAnswer(List<Option> selectedOptions) {
     if (selectedOptions.length != 1) return false;
-    return selectedOptions.first.optionId == correctAnswer.optionId;
+    return true; //TODO: move to service
   }
 
-  @override
-  Map<String, dynamic> toJson() {
-    final baseJson = super.toJson();
-    return {
-      ...baseJson,
-      'screen_type': 'MultipleChoiceScreen',
-      'correct_option_id': correctAnswer.optionId,
-    };
-  }
-
-  static MultipleChoiceScreen fromJson(
-      Map<String, dynamic> json, List<Option> options, Option correctAnswer) {
+  factory MultipleChoiceScreen.fromJson(Map<String, dynamic> json) {
+    // Note: The 'options' and 'correctAnswer' derived from the options list
+    // are handled by the repository or service constructing this object.
     return MultipleChoiceScreen(
-      screenId: json['screen_id'],
-      screenNumber: json['screen_number'],
-      levelId: json['level_id'],
-      instruction: json['instruction'],
-      options: options,
-      correctAnswer: correctAnswer,
+      screenId: json['screen_id'] as String,
+      levelId: json['level_id'] as String,
+      screenNumber: json['screen_number'] as int? ?? 0,
+      instruction: json['instruction'] as String?,
     );
   }
 }
