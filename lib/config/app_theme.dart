@@ -6,6 +6,8 @@ class AppColors {
   static const Color secondary = Color(0xFFFCCBA8);
   static const Color background = Color(0xFFE6F2F5);
   static const Color cardBackground = Color(0xFFB1D6E7);
+  static const Color statBoxBackground = Color(0X99FFFFFF);
+  static const Color lightGrey = Color(0xFFEEEEEE); // for buttons, borders...
   static const Color textPrimary = Color(0xFF000000);
   static const Color textLight = Colors.white;
   static const Color error = Color(0xFFBE2522);

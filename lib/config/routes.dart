@@ -8,6 +8,8 @@ import 'package:pfa/screens/select_child_profile_screen.dart';
 import 'package:pfa/screens/welcome_screen.dart';
 import 'package:pfa/games/multiple_choice_game.dart';
 
+import '../screens/stats_screen.dart';
+
 class AppRoutes {
   static const String authGate = '/';
   static const String welcome = '/welcome';
@@ -15,6 +17,7 @@ class AppRoutes {
   static const String createChildProfile = '/create-child-profile';
   static const String selectChildProfile = '/select-child-profile';
   static const String multipleChoiceGame = '/game/multiple-choice';
+  static const String stats = '/stats';
 
   static Map<String, WidgetBuilder> get routes {
     return {
@@ -44,6 +47,19 @@ class AppRoutes {
         }
         return MultipleChoiceGame(gameId: gameId);
       },
+      stats: (context) {
+        final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+        final childUuid = args?['childUuid'] as String?;
+
+        if (childUuid == null) {
+          return ErrorScreen(
+              errorMessage: "Child identifier is missing"
+          );
+        }
+
+        return StatsScreen(childUuid: childUuid);
+      },
+
     };
   }
 }

@@ -49,6 +49,18 @@ abstract class AppLocalizations {
   String get animals;
   String get fruitsAndVegetables;
 
+  // Stats
+  String get statsTitle;
+  String get globalStatsTitle;
+  String get categoryStatsTitle;
+  String get accuracy;
+  String get averageTime;
+  String get hintsUsed;
+  String get all;
+  String get periodThisWeek;
+  String get statsError;
+
+
   // Game instructions
   String get chooseCorrectColor;
 
