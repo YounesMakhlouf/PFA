@@ -79,6 +79,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   // Error messages
   @override
+  String get unknownCategory => 'Other';
+  @override
   String get unknownScreenType => 'Unknown screen type';
   @override
   String get applicationError => 'Application Error';
@@ -190,6 +192,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loading => 'Loading...';
+
   @override
   String get gameOver => 'Game Over!';
   @override
@@ -199,4 +202,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playAgain => 'Play Again';
   @override
   String get backToGames => 'Back to Games';
+  @override
+  String get exitGameTooltip => 'Exit Game';
+  @override
+  String get exitGameConfirmationTitle => 'Exit Game?';
+  @override
+  String get exitGameConfirmationMessage =>
+      'Are you sure you want to quit? Your current progress in this level might be lost.';
+  @override
+  String get cancelButton => 'Cancel';
+  @override
+  String get exitButton => 'Exit';
 }

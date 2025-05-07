@@ -141,6 +141,12 @@ abstract class AppLocalizations {
   String get congratulationsAllLevelsComplete;
   String get playAgain;
   String get backToGames;
+  String get exitGameTooltip;
+  String get exitGameConfirmationTitle;
+  String get exitGameConfirmationMessage;
+  String get cancelButton;
+  String get exitButton;
+  String get unknownCategory;
 }
 
 class _AppLocalizationsDelegate

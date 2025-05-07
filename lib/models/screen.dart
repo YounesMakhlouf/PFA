@@ -26,14 +26,6 @@ class Screen {
     required this.screenNumber,
     this.instruction,
   });
-
-  List<Option> getOptions() {
-    return []; // Base implementation, to be overridden
-  }
-
-  bool checkAnswer(List<Option> selectedOptions) {
-    return false; // Base implementation, to be overridden
-  }
 }
 
 class Option {
@@ -76,19 +68,6 @@ class MemoryScreen extends Screen {
     super.instruction,
   }) : super(type: ScreenType.MEMORY_MATCH);
 
-  @override
-  bool checkAnswer(List<Option> selectedOptions) {
-    if (selectedOptions.length != 2) return false;
-    if (selectedOptions[0].pairId == null ||
-        selectedOptions[1].pairId == null) {
-      return false;
-    }
-
-    // Check if the pairIds match
-    return selectedOptions[0].pairId ==
-        selectedOptions[1].pairId; // TODO: Move to service
-  }
-
   factory MemoryScreen.fromJson(Map<String, dynamic> json) {
     // Note: The 'options' are handled by the repository or service
     return MemoryScreen(
@@ -107,12 +86,6 @@ class MultipleChoiceScreen extends Screen {
     required super.screenNumber,
     super.instruction,
   }) : super(type: ScreenType.MULTIPLE_CHOICE);
-
-  @override
-  bool checkAnswer(List<Option> selectedOptions) {
-    if (selectedOptions.length != 1) return false;
-    return true; //TODO: move to service
-  }
 
   factory MultipleChoiceScreen.fromJson(Map<String, dynamic> json) {
     // Note: The 'options' and 'correctAnswer' derived from the options list

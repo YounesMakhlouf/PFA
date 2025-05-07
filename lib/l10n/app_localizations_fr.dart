@@ -79,6 +79,8 @@ class AppLocalizationsFr extends AppLocalizations {
 
   // Error messages
   @override
+  String get unknownCategory => 'Autre';
+  @override
   String get unknownScreenType => 'Type d\'écran inconnu';
   @override
   String get applicationError => 'Erreur d\'Application';
@@ -194,6 +196,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get loading => 'Chargement...';
+
   @override
   String get gameOver => 'Partie terminée !';
   @override
@@ -203,4 +206,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get playAgain => 'Rejouer';
   @override
   String get backToGames => 'Retour aux jeux';
+  @override
+  String get exitGameTooltip => 'Quitter le jeu';
+  @override
+  String get exitGameConfirmationTitle => 'Quitter le jeu ?';
+  @override
+  String get exitGameConfirmationMessage =>
+      'Êtes-vous sûr de vouloir quitter ? Votre progression actuelle dans ce niveau pourrait être perdue.';
+  @override
+  String get cancelButton => 'Annuler';
+  @override
+  String get exitButton => 'Quitter';
 }

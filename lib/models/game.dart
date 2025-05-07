@@ -35,7 +35,7 @@ extension GameCategoryExtension on GameCategory {
       case GameCategory.FRUITS_VEGETABLES:
         return AppLocalizations.of(context).fruitsAndVegetables;
       case GameCategory.UNKNOWN:
-        return "unknown"; //TODO:AppLocalizations.of(context).unknownCategory;
+        return AppLocalizations.of(context).unknownCategory;
     }
   }
 

@@ -46,6 +46,7 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
     final gameState = ref.watch(gameViewModelProvider(widget.gameId));
     final gameViewModel =
         ref.read(gameViewModelProvider(widget.gameId).notifier);
+    final logger = ref.read(loggingServiceProvider);
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -161,16 +162,72 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
             backgroundColor: gameThemeColor?.withAlpha((0.9 * 255).round()),
             foregroundColor: appBarForegroundColor,
             elevation: theme.appBarTheme.elevation,
-            // Optional: leading back button to exit game (might need confirmation dialog)
-            //leading: IconButton(
-            //  icon: Icon(Icons.arrow_back, color: appBarForegroundColor),
-            //onPressed: () {
-            // TODO: Maybe show "Are you sure you want to quit?" dialog
-            //  gameViewModel
-            //          .endCurrentSessionAndExit(); // Hypothetical method to end session before pop
-            //        Navigator.pop(context);
-            //     },
-            //      ),
+            leading: IconButton(
+              icon: Icon(Icons.close, color: appBarForegroundColor),
+              tooltip: l10n.exitGameTooltip,
+              onPressed: () async {
+                // Show Confirmation Dialog
+                final bool? shouldExit = await showDialog<bool>(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext dialogContext) {
+                    final dialogTheme = Theme.of(dialogContext);
+
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0)),
+                      title: Text(
+                        l10n.exitGameConfirmationTitle,
+                        style: dialogTheme.dialogTheme.titleTextStyle ??
+                            theme.textTheme.titleLarge,
+                      ),
+                      content: Text(
+                        l10n.exitGameConfirmationMessage,
+                        style: dialogTheme.dialogTheme.contentTextStyle ??
+                            theme.textTheme.bodyMedium,
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text(l10n.cancelButton),
+                          onPressed: () {
+                            Navigator.of(dialogContext).pop(false);
+                          },
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: theme.colorScheme.errorContainer,
+                            foregroundColor: theme.colorScheme.onErrorContainer,
+                          ),
+                          child: Text(l10n.exitButton),
+                          onPressed: () {
+                            Navigator.of(dialogContext).pop(true);
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+
+                // If the dialog was dismissed by tapping outside (shouldExit is null) or user pressed Cancel (false)
+                if (shouldExit != true) {
+                  logger.debug("Exit game cancelled by user.");
+                  return; // Do nothing, stay in the game
+                }
+
+                // User confirmed exit
+                logger.info("User confirmed exiting game ${widget.gameId}");
+                try {
+                  await gameViewModel.endCurrentSession(completed: false);
+                  logger.debug("Game session ended via ViewModel.");
+                } catch (e, st) {
+                  logger.error(
+                      "Error ending session via ViewModel on exit", e, st);
+                }
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
+              },
+            ),
           ),
           backgroundColor: theme.scaffoldBackgroundColor,
           body: SafeArea(

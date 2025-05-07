@@ -219,12 +219,9 @@ class GameViewModel extends StateNotifier<GameState> {
       await _sessionRepository.addAttemptToSession(
         sessionId: _currentGameSession!.sessionId,
         screenId: state.currentScreenData!.screen.screenId,
-        selectedOptionIds: [
-          selectedOption.optionId
-        ], // Assuming single selection
+        selectedOptionIds: [selectedOption.optionId],
         isCorrect: isCorrectAnswer,
         timeTakenMs: timeTakenMs,
-        // hintsUsed: ... // TODO: Implement hint tracking
       );
       _logger.debug(
           "GameViewModel: Recorded attempt for session ${_currentGameSession!.sessionId}");
@@ -246,11 +243,8 @@ class GameViewModel extends StateNotifier<GameState> {
       isCorrectCurrently = selectedOption.isCorrect!;
     } else if (screen is MemoryScreen) {
       // TODO: Implement memory game selection logic (select 2 cards)
-      // This method might need to be adapted to handle pair selection
       _logger
           .warning("Memory game checkAnswer logic not fully implemented here.");
-      // For now, let's assume single selection and a memory match is always "incorrect"
-      // until pair logic is in place. You'll need a temporary list of selected cards.
     } else {
       _logger.error(
           "Unsupported screen type for checkAnswer: ${screen.runtimeType}");
@@ -263,10 +257,9 @@ class GameViewModel extends StateNotifier<GameState> {
     recordAttempt(selectedOption, isCorrectCurrently); // Record the attempt
 
     if (isCorrectCurrently) {
-      // Use a Timer to delay moving to the next screen
+      // Delay moving to the next screen
       Timer(const Duration(seconds: 1), () {
         if (mounted) {
-          // StateNotifier is always "mounted"
           moveToNextScreen();
         }
       });
@@ -343,5 +336,23 @@ class GameViewModel extends StateNotifier<GameState> {
     // Combine, giving more weight to level progress
     return levelProgress +
         (screenProgressInCurrentLevel / totalLevels.toDouble());
+  }
+
+  Future<void> endCurrentSession({required bool completed}) async {
+    if (_currentGameSession != null && _currentGameSession!.endTime == null) {
+      final sessionId = _currentGameSession!.sessionId;
+      _logger.info(
+          "GameViewModel: Ending session $sessionId (completed: $completed)");
+      try {
+        await _sessionRepository.endSession(
+          sessionId: sessionId,
+          completed: completed,
+        );
+        _currentGameSession = null; // Clear current session reference
+      } catch (e, st) {
+        _logger.error(
+            "GameViewModel: Failed to end game session $sessionId", e, st);
+      }
+    }
   }
 }

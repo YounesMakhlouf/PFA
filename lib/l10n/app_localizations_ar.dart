@@ -78,6 +78,8 @@ class AppLocalizationsAr extends AppLocalizations {
 
   // Error messages
   @override
+  String get unknownCategory => 'أخرى';
+  @override
   String get unknownScreenType => 'غير معروف نوع الشاشة';
   @override
   String get applicationError => 'خطأ في التطبيق';
@@ -188,6 +190,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get loading => 'جار التحميل...';
+
   @override
   String get gameOver => 'انتهت اللعبة!';
   @override
@@ -197,4 +200,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get playAgain => 'العب مرة أخرى';
   @override
   String get backToGames => 'العودة إلى الألعاب';
+  @override
+  String get exitGameTooltip => 'الخروج من اللعبة';
+  @override
+  String get exitGameConfirmationTitle => 'الخروج من اللعبة؟';
+  @override
+  String get exitGameConfirmationMessage =>
+      'هل أنت متأكد أنك تريد الخروج؟ قد يتم فقدان تقدمك الحالي في هذا المستوى.';
+  @override
+  String get cancelButton => 'إلغاء';
+  @override
+  String get exitButton => 'خروج';
 }
