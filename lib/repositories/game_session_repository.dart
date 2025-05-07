@@ -135,7 +135,6 @@ class GameSessionRepository {
     required bool isCorrect,
     required int timeTakenMs,
     List<String>? selectedOptionIds,
-    int hintsUsed = 0,
     DateTime? timestamp,
   }) async {
     try {
@@ -150,18 +149,22 @@ class GameSessionRepository {
             'timestamp': (timestamp ?? DateTime.now()).toIso8601String(),
             'is_correct': isCorrect,
             'time_taken_ms': timeTakenMs,
-            'hints_used': hintsUsed,
           })
           .select()
           .single();
 
       _logger.debug('Attempt added with ID: ${response['attempt_id']}');
 
-      await _supabaseService.client.rpc('increment_session_stats', params: {
-        'p_session_id': sessionId,
-        'p_is_correct': isCorrect,
-        'p_hints_used_increment': hintsUsed
-      });
+      try {
+        await _supabaseService.client.rpc('increment_session_stats', params: {
+          'p_session_id': sessionId,
+          'p_is_correct': isCorrect,
+          'p_hints_used_increment': 0
+        });
+        _logger.debug('Incremented session stats for attempt on session $sessionId');
+      } on PostgrestException catch (rpcError, rpcSt) {
+        _logger.error('Supabase RPC error incrementing session stats for $sessionId after adding attempt', rpcError, rpcSt);
+      }
 
       return ScreenAttempt.fromJson(response);
     } on PostgrestException catch (e, stackTrace) {
@@ -180,14 +183,12 @@ class GameSessionRepository {
     required String sessionId,
     required bool completed,
     DateTime? endTime,
-    String? overallResult,
   }) async {
     try {
       _logger.info('Ending session: $sessionId');
       await _supabaseService.client.from('game_session').update({
         'end_time': (endTime ?? DateTime.now()).toIso8601String(),
         'completed': completed,
-        'overall_result': overallResult,
       }).eq('session_id', sessionId);
 
       _logger

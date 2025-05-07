@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pfa/config/app_theme.dart';
 import 'package:pfa/models/screen.dart';
 import 'package:pfa/screens/error_screen.dart';
 import 'package:pfa/screens/game_screen.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/providers/global_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pfa/utils/color_utils.dart';
 import 'package:pfa/viewmodels/game_state.dart';
 
 class MultipleChoiceGame extends ConsumerStatefulWidget {
@@ -148,16 +148,17 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
           return ErrorScreen(errorMessage: l10n.unexpectedError);
         }
 
-        // Determine AppBar color based on game theme or app theme
-        final gameThemeColor = Color(int.parse(gameState.game!.themeColorCode
-                ?.replaceFirst('#', '0xFF') ??
-            '0xFF${AppTheme.lightTheme.primaryColor.value.toRadixString(16)}'));
+        final fallbackColor =
+            theme.appBarTheme.backgroundColor ?? theme.primaryColor;
+
+        final gameThemeColor = gameState.game?.themeColorCode
+            .parseToColor(fallbackColor: fallbackColor);
         final appBarForegroundColor = theme.colorScheme.onPrimary;
 
         return Scaffold(
           appBar: AppBar(
             title: Text(gameState.game!.name),
-            backgroundColor: gameThemeColor.withOpacity(0.9),
+            backgroundColor: gameThemeColor?.withAlpha((0.9 * 255).round()),
             foregroundColor: appBarForegroundColor,
             elevation: theme.appBarTheme.elevation,
             // Optional: leading back button to exit game (might need confirmation dialog)

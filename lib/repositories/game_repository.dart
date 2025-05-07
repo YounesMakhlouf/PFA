@@ -16,8 +16,7 @@ class GameRepository {
   final SupabaseService _supabaseService;
   final LoggingService _logger;
 
-  static const String _gameSummarySelect =
-      'game_id, name, image_path, category, type';
+  static const String _gameSummarySelect = 'game_id, name, category, type';
   static const String _levelSummarySelect = 'level_id, game_id, level_number';
   static const String _screenSelect =
       'screen_id, level_id, screen_number, type, instruction';
@@ -143,13 +142,6 @@ class GameRepository {
           _logger.error(
               'Unknown or unsupported screen type "$screenTypeString" for screen ID: $screenId');
           throw Exception('Unsupported screen type: $screenTypeString');
-      }
-
-      // Ensure screenObject was successfully created
-      if (screenObject == null) {
-        _logger.error(
-            'Failed to instantiate screen object for type "$screenTypeString", screen ID: $screenId');
-        return null;
       }
 
       return ScreenWithOptionsMenu(screen: screenObject, options: options);

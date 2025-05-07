@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pfa/models/game.dart';
-import 'package:pfa/models/level.dart';
 import 'package:pfa/models/screen.dart';
 import 'package:pfa/repositories/game_repository.dart';
 import 'package:pfa/services/logging_service.dart';
 import 'package:pfa/repositories/game_session_repository.dart'; // For progress tracking
 import 'package:pfa/models/game_session.dart' as gs_model;
-import 'package:pfa/providers/global_providers.dart';
 import 'package:pfa/viewmodels/game_state.dart';
 
 class GameViewModel extends StateNotifier<GameState> {
@@ -237,8 +234,9 @@ class GameViewModel extends StateNotifier<GameState> {
   }
 
   void checkAnswer(Option selectedOption) {
-    if (state.status != GameStatus.playing || state.currentScreenData == null)
+    if (state.status != GameStatus.playing || state.currentScreenData == null) {
       return;
+    }
 
     bool isCorrectCurrently = false;
     final screen = state.currentScreenData!.screen;
@@ -313,7 +311,7 @@ class GameViewModel extends StateNotifier<GameState> {
   }
 
   void restartGame() {
-    _logger.info("GameViewModel: Restarting game ${_gameId}");
+    _logger.info("GameViewModel: Restarting game $_gameId");
     _screenCache.clear();
     _initializeGame();
   }
