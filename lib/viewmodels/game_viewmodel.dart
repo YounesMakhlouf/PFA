@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/models/screen.dart';
 import 'package:pfa/repositories/game_repository.dart';
 import 'package:pfa/services/logging_service.dart';
-import 'package:pfa/repositories/game_session_repository.dart'; // For progress tracking
+import 'package:pfa/repositories/game_session_repository.dart';
 import 'package:pfa/models/game_session.dart' as gs_model;
 import 'package:pfa/viewmodels/game_state.dart';
 
@@ -36,10 +36,8 @@ class GameViewModel extends StateNotifier<GameState> {
     state =
         state.copyWith(status: GameStatus.loadingGame, clearErrorMessage: true);
     try {
-      // 1. Fetch game summary (should be quick)
-      // Assuming GameRepository.getGameById fetches only game summary now
-      final loadedGame =
-          await _gameRepository.getGameById(_gameId); // Adjusted repo method
+      // 1. Fetch game summary
+      final loadedGame = await _gameRepository.getGameById(_gameId);
       if (loadedGame == null) {
         _logger.error('GameViewModel: Game not found with ID: $_gameId');
         state = state.copyWith(
@@ -94,7 +92,6 @@ class GameViewModel extends StateNotifier<GameState> {
     await _startNewGameSession(levelToLoad.levelId);
 
     try {
-      // Fetch screen IDs for the newly loaded level
       final screenIds =
           await _gameRepository.getScreenIdsForLevel(levelToLoad.levelId);
       state = state.copyWith(screenIdsInCurrentLevel: screenIds);
@@ -211,7 +208,7 @@ class GameViewModel extends StateNotifier<GameState> {
     if (_currentGameSession == null || state.currentScreenData == null) return;
     final startTime = DateTime.now();
 
-    // Simulate time taken (replace with actual timing if you have it)
+    // TODO: Currently simulating time taken (replace with actual timing). Requires some fancy stuff on the UI side
     await Future.delayed(const Duration(milliseconds: 200));
     final timeTakenMs = DateTime.now().difference(startTime).inMilliseconds;
 
@@ -254,7 +251,7 @@ class GameViewModel extends StateNotifier<GameState> {
 
     state =
         state.copyWith(isCorrect: isCorrectCurrently, clearErrorMessage: true);
-    recordAttempt(selectedOption, isCorrectCurrently); // Record the attempt
+    recordAttempt(selectedOption, isCorrectCurrently);
 
     if (isCorrectCurrently) {
       // Delay moving to the next screen
@@ -307,35 +304,6 @@ class GameViewModel extends StateNotifier<GameState> {
     _logger.info("GameViewModel: Restarting game $_gameId");
     _screenCache.clear();
     _initializeGame();
-  }
-
-  double getProgress() {
-    if (state.game == null || state.levels.isEmpty) return 0.0;
-
-    int totalScreensInGame = 0;
-    List<Future<List<String>>> screenIdFutures = [];
-
-    // This is becoming complex if we need to fetch screen counts for all levels on the fly
-    // For a simpler progress, we might just base it on levels completed.
-    // Or, Game/Level models could eventually store a 'screen_count'.
-
-    // Simplified progress based on levels completed and screens within current level
-    if (state.levels.isEmpty) return 0.0;
-
-    int totalLevels = state.levels.length;
-    if (totalLevels == 0) return 0.0;
-
-    double levelProgress = state.currentLevelIndex / totalLevels.toDouble();
-
-    double screenProgressInCurrentLevel = 0.0;
-    if (state.screenIdsInCurrentLevel.isNotEmpty) {
-      screenProgressInCurrentLevel = (state.currentScreenIndex) /
-          state.screenIdsInCurrentLevel.length.toDouble();
-    }
-
-    // Combine, giving more weight to level progress
-    return levelProgress +
-        (screenProgressInCurrentLevel / totalLevels.toDouble());
   }
 
   Future<void> endCurrentSession({required bool completed}) async {

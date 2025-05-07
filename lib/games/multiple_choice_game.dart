@@ -99,7 +99,6 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
                           foregroundColor: colorScheme.onErrorContainer)),
                   const SizedBox(height: 10),
                   TextButton(
-                    // Changed to TextButton for less emphasis
                     onPressed: () => Navigator.pop(context),
                     child: Text(l10n.goBack,
                         style: TextStyle(color: theme.colorScheme.primary)),
