@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/config/app_theme.dart';
-import 'package:pfa/constants/const.dart';
-import 'package:pfa/utils/supabase_utils.dart';
 
-class GameCardWidget extends ConsumerWidget {
+class GameCardWidget extends StatelessWidget {
   final String title;
   final IconData? iconData;
   final String? imagePath;
@@ -25,7 +22,7 @@ class GameCardWidget extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
 
@@ -40,15 +37,10 @@ class GameCardWidget extends ConsumerWidget {
         foregroundColor ?? defaultForegroundColor;
 
     Widget cardContent;
-    final String? fullImageUrl = getSupabasePublicUrl(
-      ref,
-      bucketId: StorageBuckets.gameAssets,
-      filePath: imagePath,
-    );
 
-    if (fullImageUrl != null) {
+    if (imagePath != null && imagePath!.isNotEmpty) {
       cardContent = Image.network(
-        fullImageUrl,
+        imagePath!,
         fit: BoxFit.contain,
         errorBuilder: (context, error, stackTrace) {
           // Fallback icon if image fails to load

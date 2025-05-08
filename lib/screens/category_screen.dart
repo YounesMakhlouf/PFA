@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pfa/constants/const.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/config/routes.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/providers/global_providers.dart';
 import 'package:pfa/screens/error_screen.dart';
+import 'package:pfa/utils/supabase_utils.dart';
 import 'package:pfa/widgets/game_card.dart';
 
 class CategoryGamesScreen extends ConsumerWidget {
@@ -79,10 +81,14 @@ Widget _buildGameGrid(
     itemBuilder: (context, index) {
       final game = displayGames[index];
       final bool isEnabled = true;
-
+      final String? fullImageUrl = getSupabasePublicUrl(
+        ref,
+        bucketId: StorageBuckets.gameAssets,
+        filePath: game.pictureUrl,
+      );
       return GameCardWidget(
         title: game.name,
-        imagePath: game.pictureUrl,
+        imagePath: fullImageUrl,
         isEnabled: isEnabled,
         onTap: isEnabled
             ? () => _navigateToGame(
