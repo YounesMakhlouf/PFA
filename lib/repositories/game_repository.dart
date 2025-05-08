@@ -16,7 +16,8 @@ class GameRepository {
   final SupabaseService _supabaseService;
   final LoggingService _logger;
 
-  static const String _gameSummarySelect = 'game_id, name, category, type';
+  static const String _gameSummarySelect =
+      'game_id, name, category, type, picture_url';
   static const String _levelSummarySelect = 'level_id, game_id, level_number';
   static const String _screenSelect =
       'screen_id, level_id, screen_number, type, instruction';
@@ -71,6 +72,36 @@ class GameRepository {
       throw Exception('Failed to load games: ${e.message}');
     } catch (e, stackTrace) {
       _logger.error('Unexpected error fetching available games', e, stackTrace);
+      throw Exception('An unexpected error occurred while loading games.');
+    }
+  }
+
+  Future<List<Game>> getGamesByCategory(GameCategory category) async {
+    final categoryString = category.name;
+
+    try {
+      _logger.info('Fetching games for category: $categoryString');
+      final response = await _supabaseService.client
+          .from('game')
+          .select(_gameSummarySelect)
+          .eq('category', categoryString)
+          .order('name', ascending: true);
+
+      final games = response.map((data) => Game.fromJson(data)).toList();
+      _logger.info(
+          'Successfully fetched ${games.length} games for category $categoryString');
+      return games;
+    } on PostgrestException catch (e, stackTrace) {
+      _logger.error(
+          'Supabase error fetching games for category $categoryString',
+          e,
+          stackTrace);
+      throw Exception('Failed to load games for category: ${e.message}');
+    } catch (e, stackTrace) {
+      _logger.error(
+          'Unexpected error fetching games for category $categoryString',
+          e,
+          stackTrace);
       throw Exception('An unexpected error occurred while loading games.');
     }
   }

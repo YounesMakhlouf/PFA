@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pfa/models/game.dart';
 import 'package:pfa/models/user.dart';
 import 'package:pfa/providers/active_child_notifier.dart';
 import 'package:pfa/viewmodels/game_state.dart';
@@ -128,3 +129,20 @@ final gameViewModelProvider = StateNotifierProvider.family<GameViewModel,
     );
   },
 );
+
+final gamesByCategoryProvider = FutureProvider.family<List<Game>, GameCategory>((ref, category) async {
+  final logger = ref.read(loggingServiceProvider);
+  logger.debug("gamesByCategoryProvider: Fetching games for category $category...");
+
+  final gameRepository = ref.read(gameRepositoryProvider);
+
+  try {
+
+    final games = await gameRepository.getGamesByCategory(category);
+    logger.info("gamesByCategoryProvider: Successfully fetched ${games.length} games for category $category.");
+    return games;
+  } catch (e, stackTrace) {
+    logger.error("gamesByCategoryProvider: Error fetching games for category $category", e, stackTrace);
+    rethrow;
+  }
+});

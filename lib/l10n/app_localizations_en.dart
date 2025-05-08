@@ -86,6 +86,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get applicationError => 'Application Error';
   @override
   String get retry => 'Retry';
+  @override
+  String errorLoadingGamesDetails(Object error) =>
+      'Error loading games: $error';
+  @override
+  String errorLoadingCategoryGamesDetails(String categoryName, Object error) =>
+      'Error loading games for $categoryName: $error';
+  @override
+  String errorLoadingProfileDetails(Object error) =>
+      'Error loading profile data: $error';
+  @override
+  String errorCheckingAuthDetails(Object error) =>
+      'Error checking authentication: $error';
+  @override
+  String get noGameCategoriesAvailable => 'No game categories available.';
+  @override
+  String noGamesInCategoryAvailable(String categoryName) =>
+      'No games available in the $categoryName category yet.';
 
   // Game feedback
   @override

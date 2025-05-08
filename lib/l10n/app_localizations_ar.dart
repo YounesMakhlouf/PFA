@@ -85,6 +85,23 @@ class AppLocalizationsAr extends AppLocalizations {
   String get applicationError => 'خطأ في التطبيق';
   @override
   String get retry => 'إعادة المحاولة';
+  @override
+  String errorLoadingGamesDetails(Object error) =>
+      'خطأ في تحميل الألعاب: $error';
+  @override
+  String errorLoadingCategoryGamesDetails(String categoryName, Object error) =>
+      'خطأ في تحميل الألعاب للفئة $categoryName: $error';
+  @override
+  String errorLoadingProfileDetails(Object error) =>
+      'خطأ في تحميل بيانات الملف الشخصي: $error';
+  @override
+  String errorCheckingAuthDetails(Object error) =>
+      'خطأ في التحقق من المصادقة: $error';
+  @override
+  String get noGameCategoriesAvailable => 'لا توجد فئات ألعاب متاحة.';
+  @override
+  String noGamesInCategoryAvailable(String categoryName) =>
+      'لا توجد ألعاب متاحة في فئة $categoryName حالياً.';
 
   // Game feedback
   @override

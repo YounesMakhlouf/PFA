@@ -30,8 +30,8 @@ class AuthGate extends ConsumerWidget {
           }, error: (err, st) {
             logger.error("AuthGate: Error loading initial profiles", err, st);
             return ErrorScreen(
-                errorMessage:
-                    "Error loading profile data: $err"); // TODO: Localize
+                errorMessage: AppLocalizations.of(context)
+                    .errorLoadingProfileDetails(err));
           }, data: (profiles) {
             logger.debug(
                 "AuthGate: Profiles loaded (${profiles.length}). Deciding screen...");

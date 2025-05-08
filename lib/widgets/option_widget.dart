@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pfa/constants/const.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/models/screen.dart';
-import 'package:pfa/providers/global_providers.dart';
+import 'package:pfa/utils/supabase_utils.dart';
 
 class OptionWidget extends ConsumerWidget {
   final Option option;
@@ -23,24 +24,11 @@ class OptionWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final logger = ref.read(loggingServiceProvider);
-    final bool hasImagePath =
-        option.picturePath != null && option.picturePath!.isNotEmpty;
-
-    String? fullImageUrl;
-    if (hasImagePath) {
-      try {
-        final supabaseService = ref.read(supabaseServiceProvider);
-        fullImageUrl = supabaseService.getPublicUrl(
-          bucketId: 'game-assets',
-          filePath: option.picturePath!,
-        );
-      } catch (e, stackTrace) {
-        logger.error('Failed to get public URL for ${option.picturePath}', e,
-            stackTrace);
-      }
-    }
-
+    final String? fullImageUrl = getSupabasePublicUrl(
+      ref,
+      bucketId: StorageBuckets.gameAssets,
+      filePath: option.picturePath,
+    );
     Widget content;
     final Color effectiveButtonColor =
         gameThemeColor ?? theme.colorScheme.primary;

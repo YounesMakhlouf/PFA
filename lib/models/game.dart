@@ -43,6 +43,52 @@ extension GameCategoryExtension on GameCategory {
     return GameCategory.values.firstWhereOrNull((e) => e.name == value) ??
         GameCategory.UNKNOWN;
   }
+
+  Color get themeColor {
+    switch (this) {
+      case GameCategory.LOGICAL_THINKING:
+        return Colors.indigo;
+      case GameCategory.EDUCATION:
+        return Colors.teal;
+      case GameCategory.RELAXATION:
+        return Colors.lightBlue;
+      case GameCategory.EMOTIONS:
+        return Colors.pink;
+      case GameCategory.NUMBERS:
+        return Colors.purple;
+      case GameCategory.COLORS_SHAPES:
+        return Colors.cyan;
+      case GameCategory.ANIMALS:
+        return Colors.green;
+      case GameCategory.FRUITS_VEGETABLES:
+        return Colors.orange;
+      default:
+        return Colors.black;
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case GameCategory.LOGICAL_THINKING:
+        return Icons.psychology;
+      case GameCategory.EDUCATION:
+        return Icons.school;
+      case GameCategory.RELAXATION:
+        return Icons.spa;
+      case GameCategory.EMOTIONS:
+        return Icons.emoji_emotions;
+      case GameCategory.NUMBERS:
+        return Icons.looks_one;
+      case GameCategory.COLORS_SHAPES:
+        return Icons.palette;
+      case GameCategory.ANIMALS:
+        return Icons.pets;
+      case GameCategory.FRUITS_VEGETABLES:
+        return Icons.eco;
+      default:
+        return Icons.extension_outlined;
+    }
+  }
 }
 
 enum GameType {

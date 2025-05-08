@@ -81,6 +81,12 @@ abstract class AppLocalizations {
   String get unknownScreenType;
   String get applicationError;
   String get retry;
+  String errorLoadingGamesDetails(Object error);
+  String errorLoadingCategoryGamesDetails(String categoryName, Object error);
+  String errorLoadingProfileDetails(Object error);
+  String errorCheckingAuthDetails(Object error);
+  String get noGameCategoriesAvailable;
+  String noGamesInCategoryAvailable(String categoryName);
 
   // Game feedback
   String get correct;
