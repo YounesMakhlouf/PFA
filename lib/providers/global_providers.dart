@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/services/multiple_choice_game_service.dart';
 import 'package:pfa/services/translation_service.dart';
+import 'package:pfa/view_models/game_screen/game_screen_state.dart';
+import 'package:pfa/view_models/game_screen/game_screen_view_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:pfa/services/logging_service.dart';
 import 'package:pfa/services/supabase_service.dart';
@@ -55,6 +57,11 @@ final gameRepositoryProvider = Provider<GameRepository>((ref) {
   final translationService = ref.watch(translationServiceProvider);
   return GameRepository(supabaseService: supabaseService, logger: logger);
 });
+
+final gameScreenViewModelProvider =
+    StateNotifierProvider<GameScreenViewModel, GameScreenState>(
+  (ref) => GameScreenViewModel(),
+);
 
 final multipleChoiceGameServiceProvider =
     Provider<MultipleChoiceGameService>((ref) {
