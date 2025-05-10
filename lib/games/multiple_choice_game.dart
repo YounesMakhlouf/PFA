@@ -161,6 +161,17 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
             backgroundColor: gameThemeColor?.withAlpha((0.9 * 255).round()),
             foregroundColor: appBarForegroundColor,
             elevation: theme.appBarTheme.elevation,
+            actions: [
+              if (gameState.currentScreenData?.screen.instruction != null &&
+                  gameState.currentScreenData!.screen.instruction!.isNotEmpty)
+                IconButton(
+                  icon: Icon(Icons.volume_up_outlined,
+                      color: appBarForegroundColor),
+                  tooltip: l10n.repeatInstructionTooltip,
+                  onPressed: () =>
+                      gameViewModel.repeatCurrentScreenInstruction(),
+                ),
+            ],
             leading: IconButton(
               icon: Icon(Icons.close, color: appBarForegroundColor),
               tooltip: l10n.exitGameTooltip,
@@ -238,7 +249,10 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
               currentScreenNumber: gameState.currentScreenIndex + 1,
               isCorrect: gameState.isCorrect,
               onOptionSelected: (Option selectedOption) {
-                gameViewModel.checkAnswer(selectedOption);
+                gameViewModel.checkAnswer(
+                    selectedOption: selectedOption,
+                    correctFeedbackText: l10n.correct,
+                    tryAgainFeedbackText: l10n.tryAgain);
               },
             ),
           ),

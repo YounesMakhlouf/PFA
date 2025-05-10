@@ -153,6 +153,7 @@ abstract class AppLocalizations {
   String get cancelButton;
   String get exitButton;
   String get unknownCategory;
+  String get repeatInstructionTooltip;
 }
 
 class _AppLocalizationsDelegate

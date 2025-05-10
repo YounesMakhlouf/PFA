@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pfa/constants/const.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/models/screen.dart';
 import 'package:pfa/l10n/app_localizations.dart';
@@ -107,9 +108,18 @@ class GameScreenWidget extends StatelessWidget {
     }
 
     final Color feedbackColor = isCorrect ? successColor : errorColor;
-    final String feedbackText = isCorrect
-        ? AppLocalizations.of(context).correct
-        : AppLocalizations.of(context).tryAgain;
+    final String feedbackText;
+    final String feedbackEmoji;
+
+    if (isCorrect) {
+      feedbackText = AppLocalizations.of(context).correct;
+      feedbackEmoji = (positiveEmojisList..shuffle()).first;
+    } else {
+      feedbackText = AppLocalizations.of(context).tryAgain;
+      feedbackEmoji = (neutralEmojisList..shuffle()).first;
+    }
+    final String fullFeedbackText = '$feedbackText $feedbackEmoji';
+
     final IconData feedbackIcon =
         isCorrect ? Icons.check_circle_outline : Icons.highlight_off;
 
@@ -129,7 +139,7 @@ class GameScreenWidget extends StatelessWidget {
           Icon(feedbackIcon, color: feedbackColor, size: 28),
           const SizedBox(width: 12),
           Text(
-            feedbackText,
+            fullFeedbackText,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: feedbackColor,

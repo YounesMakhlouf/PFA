@@ -106,9 +106,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   // Game feedback
   @override
-  String get correct => 'Correct! 👏';
+  String get correct => 'Correct!';
   @override
-  String get tryAgain => 'Try again! 🤔';
+  String get tryAgain => 'Try again!';
 
   // Game UI
   @override
@@ -230,4 +230,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancelButton => 'Cancel';
   @override
   String get exitButton => 'Exit';
+  @override
+  String get repeatInstructionTooltip => 'Repeat Instruction';
 }

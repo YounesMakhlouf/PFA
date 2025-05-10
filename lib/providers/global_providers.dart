@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/models/user.dart';
 import 'package:pfa/providers/active_child_notifier.dart';
+import 'package:pfa/services/audio_service.dart';
+import 'package:pfa/services/tts_service.dart';
 import 'package:pfa/viewmodels/game_state.dart';
 import 'package:pfa/viewmodels/game_viewmodel.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -21,6 +23,20 @@ final loggingServiceProvider = Provider<LoggingService>((ref) {
 final supabaseServiceProvider = Provider<SupabaseService>((ref) {
   final logger = ref.watch(loggingServiceProvider);
   return SupabaseService(logger);
+});
+
+final ttsServiceProvider = Provider<TtsService>((ref) {
+  final logger = ref.watch(loggingServiceProvider);
+  return TtsService(logger);
+});
+
+final audioServiceProvider = Provider<AudioService>((ref) {
+  final logger = ref.watch(loggingServiceProvider);
+  final audioService = AudioService(logger);
+  ref.onDispose(() {
+    audioService.dispose();
+  });
+  return audioService;
 });
 
 final supabaseClientProvider = Provider<SupabaseClient>((ref) {
@@ -110,7 +126,8 @@ final gameViewModelProvider = StateNotifierProvider.family<GameViewModel,
     final gameRepo = ref.read(gameRepositoryProvider);
     final sessionRepo = ref.read(gameSessionRepositoryProvider);
     final logger = ref.read(loggingServiceProvider);
-
+    final ttsService = ref.read(ttsServiceProvider);
+    final audioService = ref.read(audioServiceProvider);
     final activeChild = ref.watch(activeChildProvider);
 
     if (activeChild == null) {
@@ -119,30 +136,36 @@ final gameViewModelProvider = StateNotifierProvider.family<GameViewModel,
       throw StateError(
           "Cannot initialize GameViewModel: No active child selected. Please select a child profile first.");
     }
-
     return GameViewModel(
       gameId,
       activeChild.childId,
       gameRepo,
       logger,
       sessionRepo,
+      ttsService,
+      audioService,
     );
   },
 );
 
-final gamesByCategoryProvider = FutureProvider.family<List<Game>, GameCategory>((ref, category) async {
+final gamesByCategoryProvider =
+    FutureProvider.family<List<Game>, GameCategory>((ref, category) async {
   final logger = ref.read(loggingServiceProvider);
-  logger.debug("gamesByCategoryProvider: Fetching games for category $category...");
+  logger.debug(
+      "gamesByCategoryProvider: Fetching games for category $category...");
 
   final gameRepository = ref.read(gameRepositoryProvider);
 
   try {
-
     final games = await gameRepository.getGamesByCategory(category);
-    logger.info("gamesByCategoryProvider: Successfully fetched ${games.length} games for category $category.");
+    logger.info(
+        "gamesByCategoryProvider: Successfully fetched ${games.length} games for category $category.");
     return games;
   } catch (e, stackTrace) {
-    logger.error("gamesByCategoryProvider: Error fetching games for category $category", e, stackTrace);
+    logger.error(
+        "gamesByCategoryProvider: Error fetching games for category $category",
+        e,
+        stackTrace);
     rethrow;
   }
 });
