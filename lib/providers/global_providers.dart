@@ -4,8 +4,6 @@ import 'package:pfa/models/user.dart';
 import 'package:pfa/providers/active_child_notifier.dart';
 import 'package:pfa/services/multiple_choice_game_service.dart';
 import 'package:pfa/services/translation_service.dart';
-import 'package:pfa/view_models/game_screen/game_screen_state.dart';
-import 'package:pfa/view_models/game_screen/game_screen_view_model.dart';
 import 'package:pfa/viewmodels/game_state.dart';
 import 'package:pfa/viewmodels/game_viewmodel.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

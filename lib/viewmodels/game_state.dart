@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/models/level.dart';
 import 'package:pfa/models/screen.dart';
@@ -16,14 +17,19 @@ enum GameStatus {
 class GameState {
   final GameStatus status;
   final Game? game;
-  final List<Level> levels; // List of levels for the current game
+  final List<Level> levels;
   final Level? currentLevel;
   final ScreenWithOptionsMenu? currentScreenData;
   final int currentLevelIndex;
   final int currentScreenIndex;
-  final bool? isCorrect; // Feedback after an answer
+  final bool? isCorrect;
   final String? errorMessage;
   final List<String> screenIdsInCurrentLevel;
+
+  // Camera-related state
+  final bool isCameraInitialized;
+  final CameraController? cameraController;
+  final String? detectedEmotion;
 
   GameState({
     this.status = GameStatus.initial,
@@ -36,6 +42,9 @@ class GameState {
     this.isCorrect,
     this.errorMessage,
     this.screenIdsInCurrentLevel = const [],
+    this.isCameraInitialized = false,
+    this.cameraController,
+    this.detectedEmotion,
   });
 
   GameState copyWith({
@@ -45,13 +54,18 @@ class GameState {
     List<String>? screenIdsInCurrentLevel,
     Level? currentLevel,
     ScreenWithOptionsMenu? currentScreenData,
-    bool clearCurrentScreenData = false, // Flag to clear screen data
+    bool clearCurrentScreenData = false,
     int? currentLevelIndex,
     int? currentScreenIndex,
     bool? isCorrect,
-    bool clearIsCorrect = false, // Flag to clear feedback
+    bool clearIsCorrect = false,
     String? errorMessage,
-    bool clearErrorMessage = false, // Flag to clear error
+    bool clearErrorMessage = false,
+
+    // Camera state
+    bool? isCameraInitialized,
+    CameraController? cameraController,
+    String? detectedEmotion,
   }) {
     return GameState(
       status: status ?? this.status,
@@ -68,10 +82,14 @@ class GameState {
       isCorrect: clearIsCorrect ? null : (isCorrect ?? this.isCorrect),
       errorMessage:
           clearErrorMessage ? null : (errorMessage ?? this.errorMessage),
+
+      // Camera fields
+      isCameraInitialized: isCameraInitialized ?? this.isCameraInitialized,
+      cameraController: cameraController ?? this.cameraController,
+      detectedEmotion: detectedEmotion ?? this.detectedEmotion,
     );
   }
 
-  // Helper getters
   MultipleChoiceScreen? get multipleChoiceScreen =>
       currentScreenData?.screen is MultipleChoiceScreen
           ? currentScreenData!.screen as MultipleChoiceScreen
