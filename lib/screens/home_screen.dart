@@ -4,8 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/config/app_theme.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/config/routes.dart';
+import 'package:pfa/models/game.dart';
 import 'package:pfa/providers/global_providers.dart';
-import 'package:pfa/widgets/game_card.dart';
+import 'package:pfa/screens/error_screen.dart';
+import 'package:pfa/widgets/category_card_widget.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -118,89 +120,47 @@ class _HomePageState extends ConsumerState<HomeScreen> {
         ),
         backgroundColor: theme.scaffoldBackgroundColor,
         body: SafeArea(
-          child: _buildGameGrid(context, l10n, theme),
+          child: _buildCategoryGrid(context, ref, l10n, theme),
         ));
   }
 
-  void _navigateToGame(
-      BuildContext context, String routeName, dynamic arguments) {
-    final navigator = Navigator.of(context);
-    if (routeName == AppRoutes.stats) {
-      navigator.pushNamed(routeName, arguments: arguments);
-    } else {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.landscapeLeft,
-        DeviceOrientation.landscapeRight,
-      ]).then((_) {
-        if (!mounted) return;
-        navigator.pushNamed(routeName, arguments: arguments);
-      });
+  Widget _buildCategoryGrid(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+    ThemeData theme,
+  ) {
+    final List<GameCategory> displayCategories =
+        GameCategory.values.where((c) => c != GameCategory.UNKNOWN).toList();
+
+    if (displayCategories.isEmpty) {
+      return ErrorScreen(errorMessage: l10n.noGameCategoriesAvailable);
     }
-  }
 
-  Widget _buildGameGrid(
-      BuildContext context, AppLocalizations l10n, ThemeData theme) {
-    final List<Map<String, dynamic>> gameData = [
-      {
-        'title': l10n.colorsAndShapes,
-        'imagePath': 'assets/images/colors_icon.png',
-        'iconData': Icons.color_lens_outlined,
-        'route': AppRoutes.multipleChoiceGame,
-        'args': {'gameId': GameIds.colorsGame},
+    return GridView.builder(
+      padding: const EdgeInsets.all(16.0),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 16.0,
+        crossAxisSpacing: 16.0,
+        childAspectRatio: 0.9,
+      ),
+      itemCount: displayCategories.length,
+      itemBuilder: (context, index) {
+        final category = displayCategories[index];
+
+        return CategoryCardWidget(
+          category: category,
+          onTap: () {
+            ref.read(loggingServiceProvider).info("Tapped category: $category");
+            Navigator.pushNamed(
+              context,
+              AppRoutes.categoryGames,
+              arguments: {'category': category},
+            );
+          },
+        );
       },
-      {
-        'title': AppLocalizations.of(context).animals,
-        'imagePath': 'assets/images/animals_icon.png',
-        'iconData': Icons.pets,
-        'route': null,
-        'args': null,
-      }, // TODO: Change these to be retrieved from the database
-      {
-        'title': AppLocalizations.of(context).statsTitle,
-        'imagePath': 'assets/images/stats_icon.png',
-        'iconData': Icons.bar_chart,
-        'route': AppRoutes.stats,
-        'args': {
-          'childUuid': '72f918d8-c720-4a24-8434-dc2e67e59279'//TODO: get this from the app's global state
-        },
-      },
-    ];
-
-    return Column(
-      children: [
-        Expanded(
-          child: Padding(
-            padding: theme.cardTheme.margin ?? const EdgeInsets.all(16.0),
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 16.0,
-                crossAxisSpacing: 16.0,
-                childAspectRatio: 0.85,
-              ),
-              itemCount: gameData.length,
-              itemBuilder: (context, index) {
-                final game = gameData[index];
-                final bool isEnabled = game['route'] != null;
-
-                return GameCardWidget(
-                  title: game['title'],
-                  imagePath: game['imagePath'],
-                  iconData: game['iconData'],
-                  isEnabled: isEnabled,
-                  onTap: isEnabled
-                      ? () => _navigateToGame(
-                            context,
-                            game['route'],
-                            game['args'],
-                          )
-                      : null,
-                );
-              },
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

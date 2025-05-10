@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/models/screen.dart';
 import 'package:pfa/l10n/app_localizations.dart';
+import 'package:pfa/screens/error_screen.dart';
 import 'package:pfa/widgets/option_widget.dart';
 import 'package:pfa/config/app_theme.dart';
 
 class GameScreenWidget extends StatelessWidget {
   final Game game;
   final Screen currentScreen;
+  final List<Option> currentOptions;
   final int currentLevel;
   final int currentScreenNumber;
   final bool? isCorrect;
@@ -17,6 +19,7 @@ class GameScreenWidget extends StatelessWidget {
     super.key,
     required this.game,
     required this.currentScreen,
+    required this.currentOptions,
     required this.currentLevel,
     required this.currentScreenNumber,
     required this.onOptionSelected,
@@ -31,7 +34,11 @@ class GameScreenWidget extends StatelessWidget {
 
     Widget screenContent;
     if (screenData is MultipleChoiceScreen) {
-      screenContent = _buildMultipleChoiceUI(context, screenData, theme);
+      screenContent =
+          _buildMultipleChoiceUI(context, screenData, theme, currentOptions);
+    } else if (screenData is MemoryScreen) {
+      screenContent =
+          _buildMemoryUI(context, screenData, theme, currentOptions);
     } else {
       screenContent = Center(
         child: Text(
@@ -63,24 +70,28 @@ class GameScreenWidget extends StatelessWidget {
   }
 
   // --- Builder for Multiple Choice UI ---
-  Widget _buildMultipleChoiceUI(
-      BuildContext context, MultipleChoiceScreen screen, ThemeData theme) {
+  Widget _buildMultipleChoiceUI(BuildContext context,
+      MultipleChoiceScreen screen, ThemeData theme, List<Option> options) {
     return Center(
         child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: _buildOptionsArea(context, screen.options)));
+            child: _buildOptionsArea(context, options)));
+  }
+
+  Widget _buildMemoryUI(BuildContext context, MemoryScreen screen,
+      ThemeData theme, List<Option> options) {
+    return ErrorScreen(errorMessage: "not implmented yet"); //TODO: implement
   }
 
   Widget _buildOptionsArea(BuildContext context, List<Option> options) {
     return Wrap(
       alignment: WrapAlignment.center,
-      spacing: 90,
-      runSpacing: 90,
+      spacing: 60,
+      runSpacing: 60,
       children: options.map((option) {
         return OptionWidget(
           option: option,
           onTap: () => onOptionSelected(option),
-          gameThemeColor: game.themeColor,
         );
       }).toList(),
     );

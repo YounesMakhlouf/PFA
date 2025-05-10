@@ -60,7 +60,6 @@ abstract class AppLocalizations {
   String get periodThisWeek;
   String get statsError;
 
-
   // Game instructions
   String get chooseCorrectColor;
 
@@ -82,6 +81,12 @@ abstract class AppLocalizations {
   String get unknownScreenType;
   String get applicationError;
   String get retry;
+  String errorLoadingGamesDetails(Object error);
+  String errorLoadingCategoryGamesDetails(String categoryName, Object error);
+  String errorLoadingProfileDetails(Object error);
+  String errorCheckingAuthDetails(Object error);
+  String get noGameCategoriesAvailable;
+  String noGamesInCategoryAvailable(String categoryName);
 
   // Game feedback
   String get correct;
@@ -136,6 +141,18 @@ abstract class AppLocalizations {
   String get switchChildProfileButton;
   String get onlyOneProfileExists;
   String get logout;
+
+  String get loading;
+  String get gameOver;
+  String get congratulationsAllLevelsComplete;
+  String get playAgain;
+  String get backToGames;
+  String get exitGameTooltip;
+  String get exitGameConfirmationTitle;
+  String get exitGameConfirmationMessage;
+  String get cancelButton;
+  String get exitButton;
+  String get unknownCategory;
 }
 
 class _AppLocalizationsDelegate

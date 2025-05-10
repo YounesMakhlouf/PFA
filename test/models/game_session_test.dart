@@ -36,7 +36,6 @@ void main() {
       expect(session.totalAttempts, 0);
       expect(session.correctAttempts, 0);
       expect(session.hintsUsed, 0);
-      expect(session.overallResult, isNull);
     });
 
     test('should create a GameSession with optional fields', () {
@@ -51,7 +50,6 @@ void main() {
         totalAttempts: 5,
         correctAttempts: 3,
         hintsUsed: 1,
-        overallResult: 'Good effort!',
       );
 
       expect(session.sessionId, testSessionId);
@@ -64,7 +62,6 @@ void main() {
       expect(session.totalAttempts, 5);
       expect(session.correctAttempts, 3);
       expect(session.hintsUsed, 1);
-      expect(session.overallResult, 'Good effort!');
     });
 
     test('should calculate duration correctly when ended', () {

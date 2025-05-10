@@ -9,7 +9,6 @@ class GameSession {
   final int totalAttempts;
   final int correctAttempts;
   final int hintsUsed;
-  final String? overallResult;
 
   GameSession({
     required this.sessionId,
@@ -22,7 +21,6 @@ class GameSession {
     required this.totalAttempts,
     required this.correctAttempts,
     required this.hintsUsed,
-    this.overallResult,
   });
 
   factory GameSession.fromJson(Map<String, dynamic> json) {
@@ -48,7 +46,6 @@ class GameSession {
       totalAttempts: json['total_attempts'] as int? ?? 0,
       correctAttempts: json['correct_attempts'] as int? ?? 0,
       hintsUsed: json['hints_used'] as int? ?? 0,
-      overallResult: json['overall_result'] as String?,
     );
   }
 

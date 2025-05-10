@@ -1,22 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:pfa/config/app_theme.dart';
+import 'package:pfa/models/game.dart';
 
-class GameCardWidget extends StatelessWidget {
-  final String title;
-  final IconData? iconData;
-  final String? imagePath;
-  final Color? backgroundColor;
-  final Color? foregroundColor;
+class CategoryCardWidget extends StatelessWidget {
+  final GameCategory category;
   final VoidCallback? onTap;
   final bool isEnabled;
 
-  const GameCardWidget({
+  const CategoryCardWidget({
     super.key,
-    required this.title,
-    this.iconData,
-    this.imagePath,
-    this.backgroundColor,
-    this.foregroundColor,
+    required this.category,
     this.onTap,
     this.isEnabled = true,
   });
@@ -24,48 +17,15 @@ class GameCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final ColorScheme colorScheme = theme.colorScheme;
 
-    final Color effectiveBackgroundColor = backgroundColor ??
-        theme.cardTheme.color ??
-        colorScheme.primaryContainer;
-    final Color defaultForegroundColor =
+    final Color effectiveBackgroundColor = category.themeColor;
+    // Determine foreground based on background luminance
+    final Color effectiveForegroundColor =
         effectiveBackgroundColor.computeLuminance() > 0.5
             ? AppColors.textPrimary
             : AppColors.textLight;
-    final Color effectiveForegroundColor =
-        foregroundColor ?? defaultForegroundColor;
 
-    Widget cardContent;
-
-    if (imagePath != null && imagePath!.isNotEmpty) {
-      cardContent = Image.network(
-        imagePath!,
-        fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) {
-          // Fallback icon if image fails to load
-          return Icon(
-            Icons.broken_image_outlined,
-            size: 50,
-            color: colorScheme.error.withAlpha((0.7 * 255).round()),
-          );
-        },
-      );
-    } else if (iconData != null) {
-      cardContent = Icon(
-        iconData,
-        size: 60,
-        color: effectiveForegroundColor,
-      );
-    } else {
-      // Default placeholder if neither image nor icon is provided
-      cardContent = Icon(
-        Icons.category, // Generic category icon
-        size: 60,
-        color: theme.iconTheme.color?.withAlpha((0.7 * 255).round()) ??
-            effectiveForegroundColor.withAlpha((0.7 * 255).round()),
-      );
-    }
+    final String title = category.localizedName(context);
 
     return Opacity(
       opacity: isEnabled ? 1.0 : 0.5,
@@ -90,15 +50,18 @@ class GameCardWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Flexible(
-                  child: AspectRatio(
-                    aspectRatio: 1.0,
-                    child: Center(
-                      child: cardContent,
+                // Icon Area
+                Expanded(
+                  child: Center(
+                    child: Icon(
+                      category.icon,
+                      size: 60,
+                      color: effectiveForegroundColor,
                     ),
                   ),
                 ),
                 const SizedBox(height: 12),
+                // Title Area
                 FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
