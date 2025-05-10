@@ -1,11 +1,16 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/models/screen.dart';
 import 'package:pfa/l10n/app_localizations.dart';
+import 'package:pfa/providers/global_providers.dart';
+import 'package:pfa/view_models/game_screen/game_screen_state.dart';
+import 'package:pfa/view_models/game_screen/game_screen_view_model.dart';
 import 'package:pfa/widgets/option_widget.dart';
 import 'package:pfa/config/app_theme.dart';
 
-class GameScreenWidget extends StatelessWidget {
+class GameScreenWidget extends ConsumerStatefulWidget {
   final Game game;
   final Screen currentScreen;
   final int currentLevel;
@@ -24,14 +29,31 @@ class GameScreenWidget extends StatelessWidget {
   });
 
   @override
+  ConsumerState<GameScreenWidget> createState() => _GameScreenWidgetState();
+}
+
+class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(gameScreenViewModelProvider.notifier).initCamera();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final screenData = currentScreen;
+    final viewModel = ref.read(gameScreenViewModelProvider.notifier);
+    final state = ref.watch(gameScreenViewModelProvider);
+
+    final screenData = widget.currentScreen;
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
     Widget screenContent;
     if (screenData is MultipleChoiceScreen) {
-      screenContent = _buildMultipleChoiceUI(context, screenData, theme);
+      screenContent =
+          _buildMultipleChoiceUI(context, screenData, theme, viewModel, state);
     } else {
       screenContent = Center(
         child: Text(
@@ -55,20 +77,32 @@ class GameScreenWidget extends StatelessWidget {
         Expanded(
           child: screenContent,
         ),
-        _buildFeedbackArea(context, isCorrect, theme),
+        _buildFeedbackArea(context, widget.isCorrect, theme),
         _buildProgressIndicator(
-            context, currentLevel, currentScreenNumber, theme),
+            context, widget.currentLevel, widget.currentScreenNumber, theme),
       ],
     );
   }
 
-  // --- Builder for Multiple Choice UI ---
   Widget _buildMultipleChoiceUI(
-      BuildContext context, MultipleChoiceScreen screen, ThemeData theme) {
+    BuildContext context,
+    MultipleChoiceScreen screen,
+    ThemeData theme,
+    GameScreenViewModel viewModel,
+    GameScreenState state,
+  ) {
     return Center(
-        child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: _buildOptionsArea(context, screen.options)));
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: Column(
+          children: [
+            if (widget.game.category == GameCategory.EMOTIONS)
+              _buildCameraOptionRow(context, screen, viewModel, state),
+            const SizedBox(height: 20)
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildOptionsArea(BuildContext context, List<Option> options) {
@@ -79,8 +113,8 @@ class GameScreenWidget extends StatelessWidget {
       children: options.map((option) {
         return OptionWidget(
           option: option,
-          onTap: () => onOptionSelected(option),
-          gameThemeColor: game.themeColor,
+          onTap: () => widget.onOptionSelected(option),
+          gameThemeColor: widget.game.themeColor,
         );
       }).toList(),
     );
@@ -107,10 +141,13 @@ class GameScreenWidget extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-          color: feedbackColor.withAlpha((0.15 * 255).round()),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-              color: feedbackColor.withAlpha((0.5 * 255).round()), width: 1.5)),
+        color: feedbackColor.withAlpha((0.15 * 255).round()),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: feedbackColor.withAlpha((0.5 * 255).round()),
+          width: 1.5,
+        ),
+      ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -143,6 +180,77 @@ class GameScreenWidget extends StatelessWidget {
             ),
         textAlign: TextAlign.center,
       ),
+    );
+  }
+
+  Widget _buildCameraOptionRow(
+    BuildContext context,
+    MultipleChoiceScreen screen,
+    GameScreenViewModel viewModel,
+    GameScreenState state,
+  ) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double screenWidth = constraints.maxWidth;
+
+        // Dynamic camera size
+        double cameraSize = screenWidth * 0.4;
+        if (cameraSize > 250) cameraSize = 250;
+        if (cameraSize < 120) cameraSize = 120;
+
+        return Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 20,
+          runSpacing: 20,
+          children: [
+            // Camera preview + capture button + emotion text
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                state.isCameraInitialized && state.cameraController != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: SizedBox(
+                          width: cameraSize,
+                          height: cameraSize,
+                          child: CameraPreview(state.cameraController!),
+                        ),
+                      )
+                    : SizedBox(
+                        width: cameraSize,
+                        height: cameraSize,
+                        child: const Center(child: CircularProgressIndicator()),
+                      ),
+                const SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: viewModel.takePhoto,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: widget.game.themeColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  ),
+                  child: const Text("Capture"),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  state.detectedEmotion ?? "no emotion detected",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+
+            // Options area
+            if (screen.options.isNotEmpty)
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [_buildOptionsArea(context, screen.options)],
+              ),
+          ],
+        );
+      },
     );
   }
 }
