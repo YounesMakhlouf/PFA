@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/config/app_theme.dart';
 import 'package:pfa/models/user.dart';
-import 'package:pfa/config/routes.dart';
 import 'package:pfa/providers/global_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -85,7 +84,8 @@ class _CreateChildProfileScreenState
 
   Future<void> _submitForm() async {
     FocusScope.of(context).unfocus();
-
+    final navigator = Navigator.of(context);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     final logger = ref.read(loggingServiceProvider);
     final childRepository = ref.read(childRepositoryProvider);
 
@@ -114,16 +114,20 @@ class _CreateChildProfileScreenState
 
         logger.info(
             'Child profile created successfully for $firstName: ${newChildProfile?.childId}');
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)
-                  .profileCreatedSuccess(firstName)),
-              backgroundColor: AppColors.success,
-            ),
-          );
-          Navigator.of(context).pushReplacementNamed(AppRoutes.home);
+        ref.invalidate(initialChildProfilesProvider);
+        if (!mounted) return;
+        scaffoldMessenger.showSnackBar(
+          SnackBar(
+            content: Text(
+                AppLocalizations.of(context).profileCreatedSuccess(firstName)),
+            backgroundColor: AppColors.success,
+          ),
+        );
+        logger.info("Popping CreateChildProfileScreen after success.");
+        if (navigator.canPop()) {
+          navigator.pop();
+        } else {
+          logger.warning("CreateChildProfileScreen cannot pop.");
         }
       } catch (e, stackTrace) {
         logger.error('Failed to create child profile', e, stackTrace);

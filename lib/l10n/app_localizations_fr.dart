@@ -29,6 +29,26 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get fruitsAndVegetables => 'Fruits et Légumes';
 
+  //Stats
+  @override
+  String get statsTitle => 'Statistiques';
+  @override
+  String get globalStatsTitle => 'Statistiques globales';
+  @override
+  String get categoryStatsTitle => 'Statistiques par catégorie';
+  @override
+  String get accuracy => 'Précision';
+  @override
+  String get averageTime => 'Temps Moyen';
+  @override
+  String get hintsUsed => 'Indice utilisés';
+  @override
+  String get all => 'Tout';
+  @override
+  String get periodThisWeek => 'Cette Semaine';
+  @override
+  String get statsError => 'Aucune statistique disponible, réessayez plus tard';
+
   // Game instructions
   @override
   String get chooseCorrectColor => 'Choisissez la bonne couleur';
@@ -59,11 +79,30 @@ class AppLocalizationsFr extends AppLocalizations {
 
   // Error messages
   @override
+  String get unknownCategory => 'Autre';
+  @override
   String get unknownScreenType => 'Type d\'écran inconnu';
   @override
   String get applicationError => 'Erreur d\'Application';
   @override
   String get retry => 'Réessayer';
+  @override
+  String errorLoadingGamesDetails(Object error) =>
+      'Erreur lors du chargement des jeux : $error';
+  @override
+  String errorLoadingCategoryGamesDetails(String categoryName, Object error) =>
+      'Erreur lors du chargement des jeux pour $categoryName : $error';
+  @override
+  String errorLoadingProfileDetails(Object error) =>
+      'Erreur lors du chargement des données du profil : $error';
+  @override
+  String errorCheckingAuthDetails(Object error) =>
+      "Erreur lors de la vérification de l'authentification : $error";
+  @override
+  String get noGameCategoriesAvailable => 'Aucune catégorie de jeu disponible.';
+  @override
+  String noGamesInCategoryAvailable(String categoryName) =>
+      'Aucun jeu disponible dans la catégorie $categoryName pour le moment.';
 
   // Game feedback
   @override
@@ -159,4 +198,40 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get errorScreenRestartInstruction =>
       'Veuillez fermer et rouvrir l\'application.';
+  @override
+  String get selectChildProfileTitle => 'Sélectionner un profil';
+  @override
+  String get whoIsPlayingPrompt => 'Qui joue ?';
+  @override
+  String get addChildProfileButton => 'Ajouter un autre profil';
+  @override
+  String get manageProfilesTooltip => 'Gérer les profils';
+  @override
+  String get switchChildProfileButton => 'Changer de profil';
+  @override
+  String get onlyOneProfileExists => 'Un seul profil existe.';
+
+  @override
+  String get loading => 'Chargement...';
+
+  @override
+  String get gameOver => 'Partie terminée !';
+  @override
+  String get congratulationsAllLevelsComplete =>
+      'Félicitations ! Vous avez terminé tous les niveaux !';
+  @override
+  String get playAgain => 'Rejouer';
+  @override
+  String get backToGames => 'Retour aux jeux';
+  @override
+  String get exitGameTooltip => 'Quitter le jeu';
+  @override
+  String get exitGameConfirmationTitle => 'Quitter le jeu ?';
+  @override
+  String get exitGameConfirmationMessage =>
+      'Êtes-vous sûr de vouloir quitter ? Votre progression actuelle dans ce niveau pourrait être perdue.';
+  @override
+  String get cancelButton => 'Annuler';
+  @override
+  String get exitButton => 'Quitter';
 }

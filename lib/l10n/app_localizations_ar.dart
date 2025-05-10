@@ -29,6 +29,25 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get fruitsAndVegetables => 'خضر و غلال';
 
+  //Stats
+  @override
+  String get statsTitle => 'الاحصائيات';
+  @override
+  String get globalStatsTitle => 'الإحصائيات العامة';
+  @override
+  String get categoryStatsTitle => 'الإحصائيات حسب الفئة';
+  @override
+  String get accuracy => 'معدل الاجابات الصحيحة';
+  @override
+  String get averageTime => 'متوسط الوقت';
+  @override
+  String get hintsUsed => 'التلميحات المستخدمة';
+  @override
+  String get all => 'الكل';
+  @override
+  String get periodThisWeek => 'هذا الأسبوع';
+  @override
+  String get statsError => 'لا توجد إحصائيات متوفرة، حاول مرة أخرى لاحقا';
   // Game instructions
   @override
   String get chooseCorrectColor => 'اختر اللون الصحيح';
@@ -59,11 +78,30 @@ class AppLocalizationsAr extends AppLocalizations {
 
   // Error messages
   @override
+  String get unknownCategory => 'أخرى';
+  @override
   String get unknownScreenType => 'غير معروف نوع الشاشة';
   @override
   String get applicationError => 'خطأ في التطبيق';
   @override
   String get retry => 'إعادة المحاولة';
+  @override
+  String errorLoadingGamesDetails(Object error) =>
+      'خطأ في تحميل الألعاب: $error';
+  @override
+  String errorLoadingCategoryGamesDetails(String categoryName, Object error) =>
+      'خطأ في تحميل الألعاب للفئة $categoryName: $error';
+  @override
+  String errorLoadingProfileDetails(Object error) =>
+      'خطأ في تحميل بيانات الملف الشخصي: $error';
+  @override
+  String errorCheckingAuthDetails(Object error) =>
+      'خطأ في التحقق من المصادقة: $error';
+  @override
+  String get noGameCategoriesAvailable => 'لا توجد فئات ألعاب متاحة.';
+  @override
+  String noGamesInCategoryAvailable(String categoryName) =>
+      'لا توجد ألعاب متاحة في فئة $categoryName حالياً.';
 
   // Game feedback
   @override
@@ -154,4 +192,40 @@ class AppLocalizationsAr extends AppLocalizations {
   String get logout => 'تسجيل الخروج';
   @override
   String get errorScreenRestartInstruction => 'يرجى إغلاق التطبيق وإعادة فتحه.';
+  @override
+  String get selectChildProfileTitle => 'اختر الملف الشخصي';
+  @override
+  String get whoIsPlayingPrompt => 'من يلعب؟';
+  @override
+  String get addChildProfileButton => 'إضافة ملف تعريف آخر';
+  @override
+  String get manageProfilesTooltip => 'إدارة الملفات الشخصية';
+  @override
+  String get switchChildProfileButton => 'تبديل الملف الشخصي';
+  @override
+  String get onlyOneProfileExists => 'يوجد ملف شخصي واحد فقط.';
+
+  @override
+  String get loading => 'جار التحميل...';
+
+  @override
+  String get gameOver => 'انتهت اللعبة!';
+  @override
+  String get congratulationsAllLevelsComplete =>
+      'تهانينا! لقد أكملت جميع المستويات!';
+  @override
+  String get playAgain => 'العب مرة أخرى';
+  @override
+  String get backToGames => 'العودة إلى الألعاب';
+  @override
+  String get exitGameTooltip => 'الخروج من اللعبة';
+  @override
+  String get exitGameConfirmationTitle => 'الخروج من اللعبة؟';
+  @override
+  String get exitGameConfirmationMessage =>
+      'هل أنت متأكد أنك تريد الخروج؟ قد يتم فقدان تقدمك الحالي في هذا المستوى.';
+  @override
+  String get cancelButton => 'إلغاء';
+  @override
+  String get exitButton => 'خروج';
 }

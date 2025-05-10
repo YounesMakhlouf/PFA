@@ -1,6 +1,5 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
-import 'package:pfa/models/screen.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 
 enum GameCategory {
@@ -12,6 +11,7 @@ enum GameCategory {
   COLORS_SHAPES,
   ANIMALS,
   FRUITS_VEGETABLES,
+  UNKNOWN
 }
 
 // Extension to get UI-friendly properties for game categories
@@ -34,7 +34,14 @@ extension GameCategoryExtension on GameCategory {
         return AppLocalizations.of(context).animals;
       case GameCategory.FRUITS_VEGETABLES:
         return AppLocalizations.of(context).fruitsAndVegetables;
+      case GameCategory.UNKNOWN:
+        return AppLocalizations.of(context).unknownCategory;
     }
+  }
+
+  static GameCategory fromString(String? value) {
+    return GameCategory.values.firstWhereOrNull((e) => e.name == value) ??
+        GameCategory.UNKNOWN;
   }
 
   Color get themeColor {
@@ -55,6 +62,8 @@ extension GameCategoryExtension on GameCategory {
         return Colors.green;
       case GameCategory.FRUITS_VEGETABLES:
         return Colors.orange;
+      default:
+        return Colors.black;
     }
   }
 
@@ -76,6 +85,8 @@ extension GameCategoryExtension on GameCategory {
         return Icons.pets;
       case GameCategory.FRUITS_VEGETABLES:
         return Icons.eco;
+      default:
+        return Icons.extension_outlined;
     }
   }
 }
@@ -86,104 +97,60 @@ enum GameType {
   PUZZLE,
   STORY,
   IDENTIFY_INTRUDER,
+  UNKNOWN
+}
+
+extension GameTypeExtension on GameType {
+  static GameType fromString(String? value) {
+    return GameType.values.firstWhereOrNull((e) => e.name == value) ??
+        GameType.UNKNOWN;
+  }
 }
 
 class Game {
   final String gameId;
   final String name;
-  final String pictureUrl;
-  final String instruction;
+  final String? pictureUrl;
+  final String? description;
   final GameCategory category;
   final GameType type;
-  final List<Level> levels;
+  final String? themeColorCode;
+  final String? iconName;
   final String? educatorId;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
   Game({
-    String? gameId,
+    required this.gameId,
     required this.name,
-    required this.pictureUrl,
-    required this.instruction,
+    this.pictureUrl,
+    this.description,
     required this.category,
     required this.type,
-    required this.levels,
+    this.themeColorCode,
+    this.iconName,
     this.educatorId,
     this.createdAt,
     this.updatedAt,
-  }) : gameId = gameId ?? const Uuid().v4();
+  });
 
-  Map<String, dynamic> toJson() {
-    return {
-      'game_id': gameId,
-      'name': name,
-      'picture_url': pictureUrl,
-      'description': instruction,
-      'category': category.toString().split('.').last,
-      'type': type.toString().split('.').last,
-      'educator_id': educatorId,
-      'created_at': createdAt?.toIso8601String(),
-      'updated_at': updatedAt?.toIso8601String(),
-    };
-  }
+  factory Game.fromJson(Map<String, dynamic> json) {
+    DateTime? parseOptionalDateTime(String? dateStr) {
+      return dateStr == null ? null : DateTime.tryParse(dateStr)?.toLocal();
+    }
 
-  factory Game.fromJson(Map<String, dynamic> json, {List<Level>? levels}) {
     return Game(
-      gameId: json['game_id'],
-      name: json['name'],
-      pictureUrl: json['picture_url'] ?? '',
-      instruction: json['description'] ?? '',
-      category: GameCategory.values.firstWhere(
-          (e) => e.toString() == 'GameCategory.${json['category']}'),
-      type: GameType.values
-          .firstWhere((e) => e.toString() == 'GameType.${json['type']}'),
-      levels: levels ?? [],
-      educatorId: json['educator_id'],
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : null,
-      updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'])
-          : null,
-    );
-  }
-
-  Color get themeColor => category.themeColor;
-
-  IconData get icon => category.icon;
-}
-
-class Level {
-  final String levelId;
-  final int levelNumber;
-  final List<Screen> screens;
-  final String? gameId;
-
-  Level({
-    String? levelId,
-    required this.levelNumber,
-    required this.screens,
-    this.gameId,
-  }) : levelId = levelId ?? const Uuid().v4();
-
-  List<Screen> getScreens() {
-    return screens;
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'level_id': levelId,
-      'level_number': levelNumber,
-      'game_id': gameId,
-    };
-  }
-
-  factory Level.fromJson(Map<String, dynamic> json, {List<Screen>? screens}) {
-    return Level(
-      levelId: json['level_id'],
-      levelNumber: json['level_number'],
-      gameId: json['game_id'],
-      screens: screens ?? [],
+      gameId: json['game_id'] as String,
+      name: json['name'] as String? ?? 'Unnamed Game',
+      pictureUrl: json['picture_url'] as String?,
+      description: json['description'] as String?,
+      category: GameCategoryExtension.fromString(json['category'] as String?),
+      type: GameTypeExtension.fromString(json['type'] as String?),
+      themeColorCode: json['theme_color'] as String?,
+      iconName: json['icon_name'] as String?,
+      educatorId: json['educator_id'] as String?,
+      createdAt: parseOptionalDateTime(json['created_at'] as String?),
+      updatedAt: parseOptionalDateTime(json['updated_at'] as String?),
     );
   }
 }

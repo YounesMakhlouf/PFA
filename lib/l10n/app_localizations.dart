@@ -49,6 +49,17 @@ abstract class AppLocalizations {
   String get animals;
   String get fruitsAndVegetables;
 
+  // Stats
+  String get statsTitle;
+  String get globalStatsTitle;
+  String get categoryStatsTitle;
+  String get accuracy;
+  String get averageTime;
+  String get hintsUsed;
+  String get all;
+  String get periodThisWeek;
+  String get statsError;
+
   // Game instructions
   String get chooseCorrectColor;
 
@@ -70,6 +81,12 @@ abstract class AppLocalizations {
   String get unknownScreenType;
   String get applicationError;
   String get retry;
+  String errorLoadingGamesDetails(Object error);
+  String errorLoadingCategoryGamesDetails(String categoryName, Object error);
+  String errorLoadingProfileDetails(Object error);
+  String errorCheckingAuthDetails(Object error);
+  String get noGameCategoriesAvailable;
+  String noGamesInCategoryAvailable(String categoryName);
 
   // Game feedback
   String get correct;
@@ -117,8 +134,25 @@ abstract class AppLocalizations {
   String profileCreatedSuccess(String firstName);
   String get errorCreatingProfile;
   String get errorScreenRestartInstruction;
-
+  String get selectChildProfileTitle;
+  String get whoIsPlayingPrompt;
+  String get addChildProfileButton;
+  String get manageProfilesTooltip;
+  String get switchChildProfileButton;
+  String get onlyOneProfileExists;
   String get logout;
+
+  String get loading;
+  String get gameOver;
+  String get congratulationsAllLevelsComplete;
+  String get playAgain;
+  String get backToGames;
+  String get exitGameTooltip;
+  String get exitGameConfirmationTitle;
+  String get exitGameConfirmationMessage;
+  String get cancelButton;
+  String get exitButton;
+  String get unknownCategory;
 }
 
 class _AppLocalizationsDelegate

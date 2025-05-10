@@ -29,6 +29,26 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get fruitsAndVegetables => 'Fruits and Vegetables';
 
+  //Stats
+  @override
+  String get statsTitle => 'Stats';
+  @override
+  String get globalStatsTitle => 'Global Statistics';
+  @override
+  String get categoryStatsTitle => 'Category Statistics';
+  @override
+  String get accuracy => 'Accuracy';
+  @override
+  String get averageTime => 'Avg time';
+  @override
+  String get hintsUsed => 'Hints Used';
+  @override
+  String get all => 'All';
+  @override
+  String get periodThisWeek => 'This week';
+  @override
+  String get statsError => 'No stats available, try again later';
+
   // Game instructions
   @override
   String get chooseCorrectColor => 'Choose the correct color';
@@ -59,11 +79,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   // Error messages
   @override
+  String get unknownCategory => 'Other';
+  @override
   String get unknownScreenType => 'Unknown screen type';
   @override
   String get applicationError => 'Application Error';
   @override
   String get retry => 'Retry';
+  @override
+  String errorLoadingGamesDetails(Object error) =>
+      'Error loading games: $error';
+  @override
+  String errorLoadingCategoryGamesDetails(String categoryName, Object error) =>
+      'Error loading games for $categoryName: $error';
+  @override
+  String errorLoadingProfileDetails(Object error) =>
+      'Error loading profile data: $error';
+  @override
+  String errorCheckingAuthDetails(Object error) =>
+      'Error checking authentication: $error';
+  @override
+  String get noGameCategoriesAvailable => 'No game categories available.';
+  @override
+  String noGamesInCategoryAvailable(String categoryName) =>
+      'No games available in the $categoryName category yet.';
 
   // Game feedback
   @override
@@ -155,4 +194,40 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorScreenRestartInstruction =>
       'Please close and reopen the application.';
+  @override
+  String get selectChildProfileTitle => 'Select Profile';
+  @override
+  String get whoIsPlayingPrompt => 'Who is playing?';
+  @override
+  String get addChildProfileButton => 'Add Another Profile';
+  @override
+  String get manageProfilesTooltip => 'Manage Profiles';
+  @override
+  String get switchChildProfileButton => 'Switch Profile';
+  @override
+  String get onlyOneProfileExists => 'Only one profile exists.';
+
+  @override
+  String get loading => 'Loading...';
+
+  @override
+  String get gameOver => 'Game Over!';
+  @override
+  String get congratulationsAllLevelsComplete =>
+      'Congratulations! You\'ve completed all levels!';
+  @override
+  String get playAgain => 'Play Again';
+  @override
+  String get backToGames => 'Back to Games';
+  @override
+  String get exitGameTooltip => 'Exit Game';
+  @override
+  String get exitGameConfirmationTitle => 'Exit Game?';
+  @override
+  String get exitGameConfirmationMessage =>
+      'Are you sure you want to quit? Your current progress in this level might be lost.';
+  @override
+  String get cancelButton => 'Cancel';
+  @override
+  String get exitButton => 'Exit';
 }

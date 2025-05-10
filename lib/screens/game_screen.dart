@@ -1,18 +1,15 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/models/screen.dart';
 import 'package:pfa/l10n/app_localizations.dart';
-import 'package:pfa/providers/global_providers.dart';
-import 'package:pfa/view_models/game_screen/game_screen_state.dart';
-import 'package:pfa/view_models/game_screen/game_screen_view_model.dart';
+import 'package:pfa/screens/error_screen.dart';
 import 'package:pfa/widgets/option_widget.dart';
 import 'package:pfa/config/app_theme.dart';
 
-class GameScreenWidget extends ConsumerStatefulWidget {
+class GameScreenWidget extends StatelessWidget {
   final Game game;
   final Screen currentScreen;
+  final List<Option> currentOptions;
   final int currentLevel;
   final int currentScreenNumber;
   final bool? isCorrect;
@@ -22,38 +19,26 @@ class GameScreenWidget extends ConsumerStatefulWidget {
     super.key,
     required this.game,
     required this.currentScreen,
+    required this.currentOptions,
     required this.currentLevel,
     required this.currentScreenNumber,
     required this.onOptionSelected,
     this.isCorrect,
   });
-
-  @override
-  ConsumerState<GameScreenWidget> createState() => _GameScreenWidgetState();
-}
-
-class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
-  @override
-  void initState() {
-    super.initState();
-    Future.microtask(() {
-      ref.read(gameScreenViewModelProvider.notifier).initCamera();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.read(gameScreenViewModelProvider.notifier);
-    final state = ref.watch(gameScreenViewModelProvider);
 
-    final screenData = widget.currentScreen;
+    final screenData = currentScreen;
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
     Widget screenContent;
     if (screenData is MultipleChoiceScreen) {
       screenContent =
-          _buildMultipleChoiceUI(context, screenData, theme, viewModel, state);
+          _buildMultipleChoiceUI(context, screenData, theme, currentOptions);
+    } else if (screenData is MemoryScreen) {
+      screenContent =
+          _buildMemoryUI(context, screenData, theme, currentOptions);
     } else {
       screenContent = Center(
         child: Text(
@@ -77,44 +62,36 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
         Expanded(
           child: screenContent,
         ),
-        _buildFeedbackArea(context, widget.isCorrect, theme),
+        _buildFeedbackArea(context, isCorrect, theme),
         _buildProgressIndicator(
-            context, widget.currentLevel, widget.currentScreenNumber, theme),
+            context, currentLevel, currentScreenNumber, theme),
       ],
     );
   }
 
-  Widget _buildMultipleChoiceUI(
-    BuildContext context,
-    MultipleChoiceScreen screen,
-    ThemeData theme,
-    GameScreenViewModel viewModel,
-    GameScreenState state,
-  ) {
+  // --- Builder for Multiple Choice UI ---
+  Widget _buildMultipleChoiceUI(BuildContext context,
+      MultipleChoiceScreen screen, ThemeData theme, List<Option> options) {
     return Center(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 16.0),
-        child: Column(
-          children: [
-            if (widget.game.category == GameCategory.EMOTIONS)
-              _buildCameraOptionRow(context, screen, viewModel, state),
-            const SizedBox(height: 20)
-          ],
-        ),
-      ),
-    );
+        child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: _buildOptionsArea(context, options)));
+  }
+
+  Widget _buildMemoryUI(BuildContext context, MemoryScreen screen,
+      ThemeData theme, List<Option> options) {
+    return ErrorScreen(errorMessage: "not implmented yet"); //TODO: implement
   }
 
   Widget _buildOptionsArea(BuildContext context, List<Option> options) {
     return Wrap(
       alignment: WrapAlignment.center,
-      spacing: 90,
-      runSpacing: 90,
+      spacing: 60,
+      runSpacing: 60,
       children: options.map((option) {
         return OptionWidget(
           option: option,
-          onTap: () => widget.onOptionSelected(option),
-          gameThemeColor: widget.game.themeColor,
+          onTap: () => onOptionSelected(option),
         );
       }).toList(),
     );
@@ -183,74 +160,8 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
     );
   }
 
-  Widget _buildCameraOptionRow(
-    BuildContext context,
-    MultipleChoiceScreen screen,
-    GameScreenViewModel viewModel,
-    GameScreenState state,
-  ) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        double screenWidth = constraints.maxWidth;
-
-        // Dynamic camera size
-        double cameraSize = screenWidth * 0.4;
-        if (cameraSize > 250) cameraSize = 250;
-        if (cameraSize < 120) cameraSize = 120;
-
-        return Wrap(
-          alignment: WrapAlignment.center,
-          spacing: 20,
-          runSpacing: 20,
-          children: [
-            // Camera preview + capture button + emotion text
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                state.isCameraInitialized && state.cameraController != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: SizedBox(
-                          width: cameraSize,
-                          height: cameraSize,
-                          child: CameraPreview(state.cameraController!),
-                        ),
-                      )
-                    : SizedBox(
-                        width: cameraSize,
-                        height: cameraSize,
-                        child: const Center(child: CircularProgressIndicator()),
-                      ),
-                const SizedBox(height: 8),
-                ElevatedButton(
-                  onPressed: viewModel.takePhoto,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: widget.game.themeColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  ),
-                  child: const Text("Capture"),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  state.detectedEmotion ?? "no emotion detected",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-
-            // Options area
-            if (screen.options.isNotEmpty)
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [_buildOptionsArea(context, screen.options)],
-              ),
-          ],
-        );
-      },
-    );
+  
+    
+    
   }
-}
+
