@@ -321,7 +321,11 @@ class GameViewModel extends StateNotifier<GameState> {
 
     _cameraController = CameraController(frontCamera, ResolutionPreset.medium);
     await _cameraController!.initialize();
+    _logger.debug('Camera initialized: ${_cameraController!.description}');
     _isCameraInitialized = true;
+    state = state.copyWith(
+        isCameraInitialized: _isCameraInitialized,
+        cameraController: _cameraController);
   }
 
   Future<void> captureAndDetectEmotion() async {
