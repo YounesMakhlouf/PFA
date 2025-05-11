@@ -154,6 +154,11 @@ abstract class AppLocalizations {
   String get exitButton;
   String get unknownCategory;
   String get repeatInstructionTooltip;
+
+  String get onboardingDesc1;
+  String get onboardingDesc2;
+  String get onboardingSkipButton;
+  String get onboardingGetStartedButton;
 }
 
 class _AppLocalizationsDelegate

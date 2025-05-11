@@ -236,4 +236,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get exitButton => 'Quitter';
   @override
   String get repeatInstructionTooltip => 'Répéter l\'instruction';
+  @override
+  String get onboardingDesc1 => 'Cette application est spécialement conçue pour les enfants ayant des besoins spécifiques. Jouons et apprenons ensemble de manière ludique et sûre.';
+  @override
+  String get onboardingDesc2 => 'Suivez les progrès de vos enfants et découvrez des activités qui développent leurs compétences de manière intelligente et simple.';
+  @override
+  String get onboardingSkipButton => 'Passer';
+  @override
+  String get onboardingGetStartedButton => 'Commencer';
 }

@@ -96,7 +96,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'خطأ في تحميل بيانات الملف الشخصي: $error';
   @override
   String errorCheckingAuthDetails(Object error) =>
-      'خطأ في التحقق من المصادقة: $error';
+      'خطأ في التحقق من تسجيل الدخول: $error';
   @override
   String get noGameCategoriesAvailable => 'لا توجد فئات ألعاب متاحة.';
   @override
@@ -230,4 +230,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get exitButton => 'خروج';
   @override
   String get repeatInstructionTooltip => 'إعادة التعليمات';
+  @override
+  String get onboardingDesc1 => 'هذا التطبيق صُمم خصيصًا للأطفال ذوي الاحتياجات الخاصة. لنلعب ونتعلم معًا بطريقة ممتعة وآمنة.';
+  @override
+  String get onboardingDesc2 => 'تابعوا تقدم أطفالكم، واكتشفوا الأنشطة التي تنمي مهاراتهم بطريقة ذكية ومبسطة.';
+  @override
+  String get onboardingSkipButton => 'تخطى';
+  @override
+  String get onboardingGetStartedButton => 'ابدأ الآن';
 }
