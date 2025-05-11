@@ -66,8 +66,9 @@ Widget _buildGameGrid(
   ThemeData theme,
   List<Game> games,
 ) {
-  final displayGames =
-      games; //TODO: Later we can filter games if needed (e.g., based on child's age/conditions)
+  final displayGames = games;
+
+  final translationService = ref.read(translationServiceProvider);
 
   return GridView.builder(
     padding: const EdgeInsets.all(16.0),
@@ -86,8 +87,11 @@ Widget _buildGameGrid(
         bucketId: StorageBuckets.gameAssets,
         filePath: game.pictureUrl,
       );
+
+      final translatedTitle = translationService.getTranslatedText(context, game.name);
+
       return GameCardWidget(
-        title: game.name,
+        title: translatedTitle,
         imagePath: fullImageUrl,
         isEnabled: isEnabled,
         onTap: isEnabled
@@ -97,9 +101,9 @@ Widget _buildGameGrid(
                   AppRoutes.multipleChoiceGame,
                   {'gameId': game.gameId},
                 )
-            // ignore: dead_code
             : null,
       );
     },
   );
 }
+

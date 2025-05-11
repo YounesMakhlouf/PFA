@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/models/screen.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/screens/error_screen.dart';
 import 'package:pfa/widgets/option_widget.dart';
 import 'package:pfa/config/app_theme.dart';
+import 'package:pfa/providers/global_providers.dart';
 
-class GameScreenWidget extends StatelessWidget {
+class GameScreenWidget extends ConsumerWidget {
   final Game game;
   final Screen currentScreen;
   final List<Option> currentOptions;
@@ -25,12 +27,19 @@ class GameScreenWidget extends StatelessWidget {
     required this.onOptionSelected,
     this.isCorrect,
   });
-  @override
-  Widget build(BuildContext context) {
 
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // ✅ receive ref
     final screenData = currentScreen;
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
+
+    final translationService = ref.read(translationServiceProvider);
+
+    final translatedInstruction = screenData.instruction != null
+        ? translationService.getTranslatedText(context, screenData.instruction!)
+        : l10n.selectCorrectOption;
 
     Widget screenContent;
     if (screenData is MultipleChoiceScreen) {
@@ -53,15 +62,13 @@ class GameScreenWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           child: Text(
-            screenData.instruction ?? l10n.selectCorrectOption,
+            translatedInstruction, // ✅ use translated text here
             style: theme.textTheme.titleLarge
                 ?.copyWith(fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
         ),
-        Expanded(
-          child: screenContent,
-        ),
+        Expanded(child: screenContent),
         _buildFeedbackArea(context, isCorrect, theme),
         _buildProgressIndicator(
             context, currentLevel, currentScreenNumber, theme),
@@ -69,7 +76,6 @@ class GameScreenWidget extends StatelessWidget {
     );
   }
 
-  // --- Builder for Multiple Choice UI ---
   Widget _buildMultipleChoiceUI(BuildContext context,
       MultipleChoiceScreen screen, ThemeData theme, List<Option> options) {
     return Center(
@@ -80,7 +86,7 @@ class GameScreenWidget extends StatelessWidget {
 
   Widget _buildMemoryUI(BuildContext context, MemoryScreen screen,
       ThemeData theme, List<Option> options) {
-    return ErrorScreen(errorMessage: "not implmented yet"); //TODO: implement
+    return ErrorScreen(errorMessage: "not implemented yet"); //TODO: implement
   }
 
   Widget _buildOptionsArea(BuildContext context, List<Option> options) {
@@ -159,9 +165,4 @@ class GameScreenWidget extends StatelessWidget {
       ),
     );
   }
-
-  
-    
-    
-  }
-
+}

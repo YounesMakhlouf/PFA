@@ -16,11 +16,14 @@ class GameViewModel extends StateNotifier<GameState> {
   final GameSessionRepository _sessionRepository;
   final String _childId;
 
+  // Cache to avoid re-fetching screens
   final Map<String, ScreenWithOptionsMenu> _screenCache = {};
   gs_model.GameSession? _currentGameSession;
 
+  // Emotion detection
   late final EmotionDetectionService _emotionService;
   CameraController? _cameraController;
+  bool _isCameraInitialized = false;
 
   GameViewModel(
     this._gameId,
@@ -31,11 +34,10 @@ class GameViewModel extends StateNotifier<GameState> {
   ) : super(GameState(status: GameStatus.initial)) {
     _logger.info(
         'GameViewModel initialized for game ID: $_gameId, child ID: $_childId');
-    _emotionService = EmotionDetectionService();
     _initializeGame();
+    _emotionService = EmotionDetectionService();
   }
 
-  // ------------ Game Initialization ------------
   Future<void> _initializeGame() async {
     _logger.debug('GameViewModel: Initializing game...');
     state =
@@ -43,119 +45,295 @@ class GameViewModel extends StateNotifier<GameState> {
     try {
       final loadedGame = await _gameRepository.getGameById(_gameId);
       if (loadedGame == null) {
-        _logger.error('Game not found with ID: $_gameId');
+        _logger.error('GameViewModel: Game not found with ID: $_gameId');
         state = state.copyWith(
             status: GameStatus.error, errorMessage: 'Game not found');
         return;
       }
       state = state.copyWith(game: loadedGame, status: GameStatus.loadingLevel);
+
       final loadedLevels = await _gameRepository.getLevelsForGame(_gameId);
       if (loadedLevels.isEmpty) {
-        _logger.error('No levels found for game: $_gameId');
+        _logger.error('GameViewModel: No levels found for game: $_gameId');
         state = state.copyWith(
-            status: GameStatus.error, errorMessage: 'No levels found');
+            status: GameStatus.error,
+            errorMessage: 'No levels found for this game');
         return;
       }
       state = state.copyWith(levels: loadedLevels);
-      await _loadLevel(0);
+
+      await _loadLevel(0); // Load first level
     } catch (e, stackTrace) {
-      _logger.error('Error initializing game', e, stackTrace);
+      _logger.error('GameViewModel: Error initializing game', e, stackTrace);
       state = state.copyWith(
           status: GameStatus.error,
           errorMessage: 'Failed to load game: ${e.toString()}');
     }
   }
 
-  // ------------ Camera Handling ------------
-  Future<void> initCamera() async {
-    final cameras = await availableCameras();
-    final frontCamera = cameras.firstWhere(
-        (camera) => camera.lensDirection == CameraLensDirection.front);
-    _cameraController = CameraController(frontCamera, ResolutionPreset.medium);
-    await _cameraController!.initialize();
+  Future<void> _loadLevel(int levelIndex) async {
+    if (state.levels.isEmpty ||
+        levelIndex < 0 ||
+        levelIndex >= state.levels.length) {
+      _logger.error('GameViewModel: Invalid level index: $levelIndex');
+      state = state.copyWith(
+          status: GameStatus.error, errorMessage: 'Invalid level');
+      return;
+    }
 
-    // Update UI if needed
-    state = state.copyWith(isCameraInitialized: true);
-  }
+    final levelToLoad = state.levels[levelIndex];
+    state = state.copyWith(
+      status: GameStatus.loadingLevel,
+      currentLevelIndex: levelIndex,
+      currentLevel: levelToLoad,
+      currentScreenIndex: 0,
+      clearCurrentScreenData: true,
+      clearErrorMessage: true,
+      screenIdsInCurrentLevel: [],
+    );
+    _logger.debug(
+        'GameViewModel: Loading level ${levelIndex + 1} (${levelToLoad.levelId})');
+    await _startNewGameSession(levelToLoad.levelId);
 
-  Future<void> takePhotoAndDetectEmotion() async {
-    if (_cameraController != null && _cameraController!.value.isInitialized) {
-      final image = await _cameraController!.takePicture();
-      _logger.info('Photo captured at: ${image.path}');
+    try {
+      final screenIds =
+          await _gameRepository.getScreenIdsForLevel(levelToLoad.levelId);
+      state = state.copyWith(screenIdsInCurrentLevel: screenIds);
+      _logger.debug(
+          'GameViewModel: Loaded ${screenIds.length} screen IDs for level ${levelToLoad.levelId}');
 
-      final detectedEmotion = await _emotionService.detectEmotion(image.path);
-      _logger.info('Detected Emotion: $detectedEmotion');
-
-      state = state.copyWith(detectedEmotion: detectedEmotion);
-    } else {
-      _logger.warning('Camera not initialized. Skipping photo capture.');
+      if (screenIds.isNotEmpty) {
+        await _loadScreen(0);
+      } else {
+        _logger.warning(
+            'GameViewModel: No screens found for level ${levelToLoad.levelId}. Marking level complete.');
+        await _handleLevelCompletion();
+      }
+    } catch (e, stackTrace) {
+      _logger.error(
+          'GameViewModel: Error fetching screen IDs for level ${levelToLoad.levelId}',
+          e,
+          stackTrace);
+      state = state.copyWith(
+          status: GameStatus.error,
+          errorMessage: 'Failed to load level screens');
     }
   }
 
-  // ------------ Level Loading Logic (existing untouched) ------------
-  Future<void> _loadLevel(int levelIndex) async {/* ... same as before ... */}
+  Future<void> _loadScreen(int screenIndex) async {
+    if (state.currentLevel == null) {
+      _logger
+          .error('GameViewModel: Current level is null, cannot load screen.');
+      state = state.copyWith(
+          status: GameStatus.error, errorMessage: 'Level data missing');
+      return;
+    }
 
-  Future<void> _loadScreen(int screenIndex) async {/* ... same as before ... */}
+    final screenIdsInLevel = state.screenIdsInCurrentLevel;
 
-  Future<void> _startNewGameSession(String levelId) async {
-    /* ... same as before ... */
+    if (screenIdsInLevel.isEmpty ||
+        screenIndex < 0 ||
+        screenIndex >= screenIdsInLevel.length) {
+      _logger.warning(
+          'GameViewModel: No screens in level or invalid screen index $screenIndex. Marking level complete.');
+      await _handleLevelCompletion();
+      return;
+    }
+
+    state = state.copyWith(
+        status: GameStatus.loadingScreen,
+        currentScreenIndex: screenIndex,
+        clearCurrentScreenData: true);
+    final screenIdToLoad = screenIdsInLevel[screenIndex];
+    _logger.debug(
+        'GameViewModel: Loading screen ${screenIndex + 1} (ID: $screenIdToLoad)');
+
+    try {
+      ScreenWithOptionsMenu? screenData;
+      if (_screenCache.containsKey(screenIdToLoad)) {
+        screenData = _screenCache[screenIdToLoad];
+        _logger.debug('GameViewModel: Screen $screenIdToLoad found in cache.');
+      } else {
+        screenData = await _gameRepository.getScreenWithDetails(screenIdToLoad);
+        if (screenData != null) {
+          _screenCache[screenIdToLoad] = screenData;
+        }
+      }
+
+      if (screenData == null) {
+        _logger.error(
+            'GameViewModel: Failed to load screen details for ID: $screenIdToLoad');
+        state = state.copyWith(
+            status: GameStatus.error, errorMessage: 'Failed to load screen');
+        return;
+      }
+      if (screenData.screen.type != ScreenType.MULTIPLE_CHOICE &&
+          screenData.screen.type != ScreenType.MEMORY_MATCH) {
+        _logger.error(
+            'GameViewModel: Unsupported screen type: ${screenData.screen.type}');
+        state = state.copyWith(
+            status: GameStatus.error, errorMessage: 'Unsupported screen type');
+        return;
+      }
+      state = state.copyWith(
+          currentScreenData: screenData,
+          status: GameStatus.playing,
+          clearIsCorrect: true);
+    } catch (e, stackTrace) {
+      _logger.error(
+          'GameViewModel: Error loading screen $screenIdToLoad', e, stackTrace);
+      state = state.copyWith(
+          status: GameStatus.error,
+          errorMessage: 'Failed to load screen content');
+    }
   }
 
-  // ------------ Answer Check Logic ------------
-  void checkAnswer(Option selectedOption) {
-    if (state.status != GameStatus.playing || state.currentScreenData == null)
-      return;
+  Future<void> _startNewGameSession(String levelId) async {
+    if (_currentGameSession != null && _currentGameSession!.endTime == null) {
+      await _sessionRepository.endSession(
+          sessionId: _currentGameSession!.sessionId, completed: false);
+    }
+    try {
+      _currentGameSession = await _sessionRepository.createSession(
+        childId: _childId,
+        gameId: state.game!.gameId,
+        levelId: levelId,
+      );
+      _logger.info(
+          "GameViewModel: Started new session: ${_currentGameSession!.sessionId}");
+    } catch (e, st) {
+      _logger.error("GameViewModel: Failed to create session", e, st);
+    }
+  }
 
-    bool isCorrectCurrently = false;
+  Future<void> recordAttempt(
+      Option selectedOption, bool? isCorrectAnswer) async {
+    if (isCorrectAnswer == null) {
+      return;
+    }
+    if (_currentGameSession == null || state.currentScreenData == null) return;
+    final startTime = DateTime.now();
+
+    await Future.delayed(const Duration(milliseconds: 200));
+    final timeTakenMs = DateTime.now().difference(startTime).inMilliseconds;
+
+    try {
+      await _sessionRepository.addAttemptToSession(
+        sessionId: _currentGameSession!.sessionId,
+        screenId: state.currentScreenData!.screen.screenId,
+        selectedOptionIds: [selectedOption.optionId],
+        isCorrect: isCorrectAnswer,
+        timeTakenMs: timeTakenMs,
+      );
+      _logger.debug("GameViewModel: Recorded attempt");
+    } catch (e, st) {
+      _logger.error("GameViewModel: Failed to record attempt", e, st);
+    }
+  }
+
+  void checkAnswer(Option selectedOption) {
+    if (state.status != GameStatus.playing || state.currentScreenData == null) {
+      return;
+    }
+    bool? isCorrect = false;
     final screen = state.currentScreenData!.screen;
 
     if (screen is MultipleChoiceScreen) {
-      isCorrectCurrently = selectedOption.isCorrect!;
+      if (state.currentScreenData!.options.length == 1) {
+        isCorrect = null;
+      } else {
+        isCorrect = selectedOption.isCorrect ?? false;
+      }
     } else if (screen is MemoryScreen) {
-      _logger.warning("Memory game checkAnswer logic not fully implemented.");
+      _logger.warning("Memory game logic not fully implemented.");
     } else {
-      _logger.error("Unsupported screen type: ${screen.runtimeType}");
+      _logger.error("Unsupported screen type in checkAnswer.");
       state = state.copyWith(isCorrect: false, clearErrorMessage: true);
       return;
     }
 
-    state =
-        state.copyWith(isCorrect: isCorrectCurrently, clearErrorMessage: true);
-    recordAttempt(selectedOption, isCorrectCurrently);
+    state = state.copyWith(isCorrect: isCorrect, clearErrorMessage: true);
+    recordAttempt(selectedOption, isCorrect);
 
-    if (isCorrectCurrently) {
+    if (isCorrect != false) {
       Timer(const Duration(seconds: 1), () {
         if (mounted) moveToNextScreen();
       });
     }
   }
 
-  Future<void> recordAttempt(
-      Option selectedOption, bool isCorrectAnswer) async {
-    /* ... same as before ... */
+  Future<void> moveToNextScreen() async {
+    if (state.game == null || state.currentLevel == null) return;
+    state =
+        state.copyWith(clearIsCorrect: true, status: GameStatus.loadingScreen);
+
+    final screenIdsInLevel = state.screenIdsInCurrentLevel;
+
+    if (state.currentScreenIndex < screenIdsInLevel.length - 1) {
+      await _loadScreen(state.currentScreenIndex + 1);
+    } else {
+      await _handleLevelCompletion();
+    }
   }
 
-  Future<void> moveToNextScreen() async {/* ... same as before ... */}
+  Future<void> _handleLevelCompletion() async {
+    _logger.info("Level completed.");
+    if (_currentGameSession != null) {
+      await _sessionRepository.endSession(
+          sessionId: _currentGameSession!.sessionId, completed: true);
+      _currentGameSession = null;
+    }
 
-  Future<void> _handleLevelCompletion() async {/* ... same as before ... */}
+    if (state.currentLevelIndex < state.levels.length - 1) {
+      await _loadLevel(state.currentLevelIndex + 1);
+    } else {
+      _logger.info("Game completed.");
+      state = state.copyWith(
+          status: GameStatus.completed, clearCurrentScreenData: true);
+    }
+  }
 
   void restartGame() {
-    _logger.info("Restarting game $_gameId");
+    _logger.info("Restarting game.");
     _screenCache.clear();
     _initializeGame();
   }
 
   Future<void> endCurrentSession({required bool completed}) async {
     if (_currentGameSession != null && _currentGameSession!.endTime == null) {
-      final sessionId = _currentGameSession!.sessionId;
-      _logger.info("Ending session $sessionId (completed: $completed)");
       try {
         await _sessionRepository.endSession(
-            sessionId: sessionId, completed: completed);
+          sessionId: _currentGameSession!.sessionId,
+          completed: completed,
+        );
         _currentGameSession = null;
       } catch (e, st) {
-        _logger.error("Failed to end session $sessionId", e, st);
+        _logger.error("Failed to end session", e, st);
       }
+    }
+  }
+
+  Future<void> initCamera() async {
+    final cameras = await availableCameras();
+    final frontCamera = cameras.firstWhere(
+      (camera) => camera.lensDirection == CameraLensDirection.front,
+    );
+
+    _cameraController = CameraController(frontCamera, ResolutionPreset.medium);
+    await _cameraController!.initialize();
+    _isCameraInitialized = true;
+  }
+
+  Future<void> captureAndDetectEmotion() async {
+    if (_cameraController != null && _cameraController!.value.isInitialized) {
+      final image = await _cameraController!.takePicture();
+      _logger.debug('Captured image at: ${image.path}');
+
+      final detectedEmotion = await _emotionService.detectEmotion(image.path);
+      _logger.info('Detected Emotion: $detectedEmotion');
+
+      // Update UI state with detected emotion
+      state = state.copyWith(detectedEmotion: detectedEmotion);
     }
   }
 

@@ -58,7 +58,14 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
       case GameStatus.loadingLevel:
       case GameStatus.loadingScreen:
         return Scaffold(
-          appBar: AppBar(title: Text(gameState.game?.name ?? l10n.loading)),
+          appBar: AppBar(
+            title: Text(
+              gameState.game != null
+                  ? translationService.getTranslatedText(
+                      context, gameState.game!.name)
+                  : l10n.loading,
+            ),
+          ),
           backgroundColor: theme.scaffoldBackgroundColor,
           body: Center(
               child: CircularProgressIndicator(color: colorScheme.primary)),
@@ -114,7 +121,12 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
         return Scaffold(
           backgroundColor: theme.scaffoldBackgroundColor,
           appBar: AppBar(
-            title: Text(gameState.game?.name ?? l10n.gameOver),
+            title: Text(
+              gameState.game != null
+                  ? translationService.getTranslatedText(
+                      context, gameState.game!.name)
+                  : l10n.gameOver,
+            ),
             automaticallyImplyLeading: false,
           ),
           body: Center(
@@ -158,7 +170,10 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text(gameState.game!.name),
+            title: Text(
+              translationService.getTranslatedText(
+                  context, gameState.game!.name),
+            ),
             backgroundColor: gameThemeColor?.withAlpha((0.9 * 255).round()),
             foregroundColor: appBarForegroundColor,
             elevation: theme.appBarTheme.elevation,
@@ -166,7 +181,6 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
               icon: Icon(Icons.close, color: appBarForegroundColor),
               tooltip: l10n.exitGameTooltip,
               onPressed: () async {
-                // Show Confirmation Dialog
                 final bool? shouldExit = await showDialog<bool>(
                   context: context,
                   barrierDismissible: true,
@@ -208,13 +222,11 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
                   },
                 );
 
-                // If the dialog was dismissed by tapping outside (shouldExit is null) or user pressed Cancel (false)
                 if (shouldExit != true) {
                   logger.debug("Exit game cancelled by user.");
-                  return; // Do nothing, stay in the game
+                  return;
                 }
 
-                // User confirmed exit
                 logger.info("User confirmed exiting game ${widget.gameId}");
                 try {
                   await gameViewModel.endCurrentSession(completed: false);
