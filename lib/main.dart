@@ -77,7 +77,7 @@ class MyApp extends StatelessWidget {
       title: AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      initialRoute: AppRoutes.authGate,
+      routes: AppRoutes.routes,
       home: showOnboarding ? const OnboardingScreen() : const AuthGate(),
       locale: const Locale('ar'),
       localizationsDelegates: AppLocalizations.localizationsDelegates,

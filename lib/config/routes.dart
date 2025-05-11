@@ -13,7 +13,7 @@ import 'package:pfa/games/multiple_choice_game.dart';
 import '../screens/stats_screen.dart';
 
 class AppRoutes {
-  static const String authGate = '/';
+  static const String authGate = '/auth';
   static const String welcome = '/welcome';
   static const String home = '/home';
   static const String categoryGames = '/category-games';
