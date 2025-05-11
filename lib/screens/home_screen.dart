@@ -91,6 +91,14 @@ class _HomePageState extends ConsumerState<HomeScreen> {
                         SnackBar(content: Text(l10n.onlyOneProfileExists)));
                   }
                 }
+                else if (value == 'view_stats') {
+                  logger.info("Navigating to StatsScreen for child: ${activeChild.childId}");
+                  Navigator.pushNamed(
+                    context,
+                    AppRoutes.stats,
+                    arguments: {'childUuid': activeChild.childId},
+                  );
+                }
               },
               itemBuilder: (BuildContext context) {
                 final profilesCount = ref
@@ -107,6 +115,17 @@ class _HomePageState extends ConsumerState<HomeScreen> {
                     value: 'switch',
                     enabled: profilesCount > 1, // Disable if only one profile
                     child: Text(l10n.switchChildProfileButton),
+                  ),
+                  const PopupMenuDivider(),
+                  PopupMenuItem<String>(
+                    value: 'view_stats',
+                    child: Row(
+                      children: [
+                        Icon(Icons.bar_chart_outlined, color: theme.colorScheme.primary),
+                        const SizedBox(width: 8),
+                        Text("View Stats"), //TODO: Add to l10n
+                      ],
+                    ),
                   ),
                 ];
               },
