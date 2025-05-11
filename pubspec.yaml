@@ -51,6 +51,8 @@ dependencies:
   supabase_auth_ui: ^0.5.5
   collection: ^1.19.1
   flutter_riverpod: ^2.6.1
+  shared_preferences: 2.5.3
+  introduction_screen: 3.1.17
 
 dev_dependencies:
   flutter_test:

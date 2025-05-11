@@ -232,4 +232,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exitButton => 'Exit';
   @override
   String get repeatInstructionTooltip => 'Repeat Instruction';
+  @override
+  String get onboardingDesc1 => 'This app is specially designed for children with special needs. Let\'s play and learn together in a fun and safe way.';
+  @override
+  String get onboardingDesc2 => 'Track your children\'s progress and discover activities that develop their skills in smart and simple ways.';
+  @override
+  String get onboardingSkipButton => 'Skip';
+  @override
+  String get onboardingGetStartedButton => 'Get Started';
 }

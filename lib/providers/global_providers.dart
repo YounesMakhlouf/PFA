@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pfa/constants/const.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/models/user.dart';
 import 'package:pfa/providers/active_child_notifier.dart';
@@ -6,6 +7,7 @@ import 'package:pfa/services/audio_service.dart';
 import 'package:pfa/services/tts_service.dart';
 import 'package:pfa/viewmodels/game_state.dart';
 import 'package:pfa/viewmodels/game_viewmodel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:pfa/services/logging_service.dart';
 import 'package:pfa/services/supabase_service.dart';
@@ -168,4 +170,12 @@ final gamesByCategoryProvider =
         stackTrace);
     rethrow;
   }
+});
+final sharedPreferencesProvider = FutureProvider<SharedPreferences>((ref) async {
+  return await SharedPreferences.getInstance();
+});
+
+final onboardingCompletedProvider = FutureProvider<bool>((ref) async {
+  final prefs = await ref.watch(sharedPreferencesProvider.future);
+  return prefs.getBool(onboardingCompletedKey) ?? false;
 });
