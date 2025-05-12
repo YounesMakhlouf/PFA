@@ -6,6 +6,7 @@ import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/screens/error_screen.dart';
 import 'package:pfa/widgets/option_widget.dart';
 import 'package:pfa/config/app_theme.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class GameScreenWidget extends StatelessWidget {
   final Game game;
@@ -103,11 +104,25 @@ class GameScreenWidget extends StatelessWidget {
     final Color successColor = AppColors.success;
     final Color errorColor = theme.colorScheme.error;
 
-    if (isCorrect == null) {
-      return const SizedBox(height: 60);
-    }
+    // Key for AnimatedSwitcher to ensure widgets are treated as different
+    // when isCorrect changes from null -> true/false or true -> false.
+    final Key feedbackKey = ValueKey<bool?>(isCorrect);
 
-    final Color feedbackColor = isCorrect ? successColor : errorColor;
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      transitionBuilder: (Widget child, Animation<double> animation) {
+        return FadeTransition(opacity: animation, child: child);
+      },
+      child: isCorrect == null
+          ? SizedBox(key: feedbackKey, height: 60)
+          : _buildFeedbackContent(context, isCorrect, theme, feedbackKey),
+    );
+  }
+
+  Widget _buildFeedbackContent(
+      BuildContext context, bool isCorrect, ThemeData theme, Key key) {
+    final Color feedbackColor = isCorrect ? AppColors.success : AppColors.error;
+
     final String feedbackText;
     final String feedbackEmoji;
 
@@ -120,11 +135,11 @@ class GameScreenWidget extends StatelessWidget {
     }
     final String fullFeedbackText = '$feedbackText $feedbackEmoji';
 
-    final IconData feedbackIcon =
+    final IconData feedbackIconData =
         isCorrect ? Icons.check_circle_outline : Icons.highlight_off;
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
+    return Container(
+      key: key,
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -136,15 +151,26 @@ class GameScreenWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(feedbackIcon, color: feedbackColor, size: 28),
+          Icon(feedbackIconData, color: feedbackColor, size: 32)
+              .animate()
+              .scale(
+                duration: 400.ms,
+                begin: const Offset(0.5, 0.5),
+                curve: Curves.elasticOut,
+              )
+              .then(delay: 200.ms)
+              .shake(hz: 4, duration: 300.ms),
           const SizedBox(width: 12),
           Text(
             fullFeedbackText,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: feedbackColor,
-                ),
-          ),
+            style: theme.textTheme.titleLarge
+                ?.copyWith(fontWeight: FontWeight.bold, color: feedbackColor),
+          ).animate().fadeIn(duration: 300.ms, delay: 100.ms).slideY(
+              begin: 0.2,
+              end: 0,
+              duration: 300.ms,
+              delay: 100.ms,
+              curve: Curves.easeOut),
         ],
       ),
     );
