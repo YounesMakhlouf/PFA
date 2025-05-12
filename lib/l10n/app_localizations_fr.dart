@@ -48,6 +48,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get periodThisWeek => 'Cette Semaine';
   @override
   String get statsError => 'Aucune statistique disponible, réessayez plus tard';
+  @override
+  String get viewStats => 'Consulter les statistiques ';
 
   // Game instructions
   @override
@@ -127,7 +129,7 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get selectCorrectOption => 'Sélectionnez la bonne option';
 
-// Authenticatio
+// Authentication
   @override
   String get signIn => 'Se connecter';
   @override

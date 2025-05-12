@@ -48,6 +48,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get periodThisWeek => 'This week';
   @override
   String get statsError => 'No stats available, try again later';
+  @override
+  String get viewStats => 'View Stats ';
 
   // Game instructions
   @override

@@ -59,6 +59,7 @@ abstract class AppLocalizations {
   String get all;
   String get periodThisWeek;
   String get statsError;
+  String get viewStats;
 
   // Game instructions
   String get chooseCorrectColor;
