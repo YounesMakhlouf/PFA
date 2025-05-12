@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:pfa/models/user.dart';

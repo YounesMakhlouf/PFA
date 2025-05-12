@@ -123,7 +123,7 @@ class _HomePageState extends ConsumerState<HomeScreen> {
                       children: [
                         Icon(Icons.bar_chart_outlined, color: theme.colorScheme.primary),
                         const SizedBox(width: 8),
-                        Text("View Stats"), //TODO: Add to l10n
+                        Text(l10n.viewStats),
                       ],
                     ),
                   ),
