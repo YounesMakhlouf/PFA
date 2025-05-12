@@ -101,9 +101,6 @@ class GameScreenWidget extends StatelessWidget {
 
   Widget _buildFeedbackArea(
       BuildContext context, bool? isCorrect, ThemeData theme) {
-    final Color successColor = AppColors.success;
-    final Color errorColor = theme.colorScheme.error;
-
     // Key for AnimatedSwitcher to ensure widgets are treated as different
     // when isCorrect changes from null -> true/false or true -> false.
     final Key feedbackKey = ValueKey<bool?>(isCorrect);
