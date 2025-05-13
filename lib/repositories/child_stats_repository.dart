@@ -20,7 +20,8 @@ class ChildStatsRepository {
   }) async {
     try {
       final isGlobalStats = (category == "ALL");
-      final rpcFunctionName = isGlobalStats ? 'get_global_child_stats' : 'get_child_stats';
+      final rpcFunctionName =
+          isGlobalStats ? 'get_global_child_stats' : 'get_child_stats';
       final params = {
         'child_uuid': childUuid,
         'period_start': periodStart?.toIso8601String(),

@@ -66,8 +66,8 @@ class _SelectChildProfileScreenState
                   const SizedBox(height: 40),
                   Expanded(
                     child: profilesAsync.when(
-                      loading: () => const GenericLoadingScreen(
-                          message: "Loading profiles..."),
+                      loading: () => GenericLoadingScreen(
+                          message: l10n.loadingProfilesMessage),
                       error: (err, st) {
                         logger.error(
                             "SelectChildProfileScreen: Error loading profiles",
@@ -75,7 +75,7 @@ class _SelectChildProfileScreenState
                             st);
                         return ErrorScreen(
                             errorMessage:
-                                "$AppLocalizations.applicationError: $err");
+                                "${l10n.applicationError}: ${err.toString()}");
                       },
                       data: (profiles) {
                         profiles.sort((a, b) => a.firstName
@@ -91,8 +91,8 @@ class _SelectChildProfileScreenState
                                   AppRoutes.createChildProfile);
                             }
                           });
-                          return const Center(
-                              child: Text("No profiles found..."));
+                          return Center(
+                              child: Text(l10n.noProfilesFoundMessage));
                         }
 
                         return GridView.builder(
