@@ -9,6 +9,7 @@ import 'package:pfa/screens/game_screen.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/providers/global_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pfa/screens/generic_loading_screen.dart';
 import 'package:pfa/utils/color_utils.dart';
 import 'package:pfa/viewmodels/game_state.dart';
 
@@ -72,12 +73,7 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
       case GameStatus.loadingGame:
       case GameStatus.loadingLevel:
       case GameStatus.loadingScreen:
-        return Scaffold(
-          appBar: AppBar(title: Text(gameState.game?.name ?? l10n.loading)),
-          backgroundColor: theme.scaffoldBackgroundColor,
-          body: Center(
-              child: CircularProgressIndicator(color: colorScheme.primary)),
-        );
+        return GenericLoadingScreen(message: gameState.game?.name);
 
       case GameStatus.error:
         return Scaffold(

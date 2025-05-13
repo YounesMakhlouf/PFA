@@ -7,6 +7,7 @@ import 'package:pfa/config/routes.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/providers/global_providers.dart';
 import 'package:pfa/screens/error_screen.dart';
+import 'package:pfa/screens/generic_loading_screen.dart';
 import 'package:pfa/widgets/category_card_widget.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -61,7 +62,7 @@ class _HomePageState extends ConsumerState<HomeScreen> {
     if (activeChild == null) {
       logger.warning(
           "HomeScreen build: Active child is null. Showing loading. Check AuthGate logic.");
-      return Scaffold(body: const Center(child: CircularProgressIndicator()));
+      return const GenericLoadingScreen(message: "Initializing...");
     }
 
     return Scaffold(
@@ -75,9 +76,7 @@ class _HomePageState extends ConsumerState<HomeScreen> {
               icon: const Icon(Icons.account_circle_outlined),
               tooltip: l10n.manageProfilesTooltip,
               onSelected: (value) {
-                if (value == 'add') {
-                  Navigator.pushNamed(context, AppRoutes.createChildProfile);
-                } else if (value == 'switch') {
+                if (value == 'switch') {
                   final profiles =
                       ref.read(initialChildProfilesProvider).valueOrNull ?? [];
                   if (profiles.length > 1) {
@@ -90,9 +89,9 @@ class _HomePageState extends ConsumerState<HomeScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(l10n.onlyOneProfileExists)));
                   }
-                }
-                else if (value == 'view_stats') {
-                  logger.info("Navigating to StatsScreen for child: ${activeChild.childId}");
+                } else if (value == 'view_stats') {
+                  logger.info(
+                      "Navigating to StatsScreen for child: ${activeChild.childId}");
                   Navigator.pushNamed(
                     context,
                     AppRoutes.stats,
@@ -101,19 +100,9 @@ class _HomePageState extends ConsumerState<HomeScreen> {
                 }
               },
               itemBuilder: (BuildContext context) {
-                final profilesCount = ref
-                        .read(initialChildProfilesProvider)
-                        .valueOrNull
-                        ?.length ??
-                    0;
                 return <PopupMenuEntry<String>>[
                   PopupMenuItem<String>(
-                    value: 'add',
-                    child: Text(l10n.addChildProfileButton),
-                  ),
-                  PopupMenuItem<String>(
                     value: 'switch',
-                    enabled: profilesCount > 1, // Disable if only one profile
                     child: Text(l10n.switchChildProfileButton),
                   ),
                   const PopupMenuDivider(),
@@ -121,7 +110,8 @@ class _HomePageState extends ConsumerState<HomeScreen> {
                     value: 'view_stats',
                     child: Row(
                       children: [
-                        Icon(Icons.bar_chart_outlined, color: theme.colorScheme.primary),
+                        Icon(Icons.bar_chart_outlined,
+                            color: theme.colorScheme.primary),
                         const SizedBox(width: 8),
                         Text("View Stats"), //TODO: Add to l10n
                       ],

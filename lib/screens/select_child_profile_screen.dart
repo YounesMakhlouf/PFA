@@ -5,6 +5,7 @@ import 'package:pfa/config/routes.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/models/user.dart';
 import 'package:pfa/providers/global_providers.dart';
+import 'package:pfa/screens/generic_loading_screen.dart';
 import 'package:pfa/widgets/avatar_display.dart';
 
 class SelectChildProfileScreen extends ConsumerStatefulWidget {
@@ -67,8 +68,8 @@ class _SelectChildProfileScreenState
                   const SizedBox(height: 30),
                   Expanded(
                     child: profilesAsync.when(
-                      loading: () =>
-                          const Center(child: CircularProgressIndicator()),
+                      loading: () => const GenericLoadingScreen(
+                          message: "Initializing..."),
                       error: (err, st) {
                         logger.error(
                             "SelectChildProfileScreen: Error loading profiles",
