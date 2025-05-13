@@ -39,7 +39,16 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
   @override
   void initState() {
     super.initState();
-    ref.read(gameViewModelProvider(widget.game.gameId).notifier).initCamera();
+    final needsCamera = widget.game.category == GameCategory.EMOTIONS &&
+        widget.currentOptions.length == 1 &&
+        widget.currentOptions[0].isCorrect == true;
+
+    if (needsCamera) {
+      ref.read(gameViewModelProvider(widget.game.gameId).notifier).initCamera();
+      ref
+          .read(gameViewModelProvider(widget.game.gameId).notifier)
+          .startEmotionDetection();
+    }
   }
 
   @override
@@ -50,31 +59,14 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final screenData = widget.currentScreen;
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
-
     final translationService = ref.read(translationServiceProvider);
 
-    final translatedInstruction = screenData.instruction != null
-        ? translationService.getTranslatedText(context, screenData.instruction!)
+    final translatedInstruction = widget.currentScreen.instruction != null
+        ? translationService.getTranslatedText(
+            context, widget.currentScreen.instruction!)
         : l10n.selectCorrectOption;
-
-    Widget screenContent;
-    if (screenData is MultipleChoiceScreen) {
-      screenContent = _buildMultipleChoiceUI(
-          context, ref, screenData, theme, widget.currentOptions);
-    } else if (screenData is MemoryScreen) {
-      screenContent =
-          _buildMemoryUI(context, screenData, theme, widget.currentOptions);
-    } else {
-      screenContent = Center(
-        child: Text(
-          l10n.unknownScreenType,
-          style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.error),
-        ),
-      );
-    }
 
     return Column(
       children: [
@@ -87,7 +79,7 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
             textAlign: TextAlign.center,
           ),
         ),
-        Expanded(child: screenContent),
+        Expanded(child: _buildScreenContent(context)),
         _buildFeedbackArea(context, widget.isCorrect, theme),
         _buildProgressIndicator(
             context, widget.currentLevel, widget.currentScreenNumber, theme),
@@ -95,98 +87,85 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
     );
   }
 
-  Widget _buildMultipleChoiceUI(
-    BuildContext context,
-    WidgetRef ref,
-    MultipleChoiceScreen screen,
-    ThemeData theme,
-    List<Option> options,
-  ) {
-    final state = ref.watch(gameViewModelProvider(widget.game.gameId));
-    final viewModel =
-        ref.read(gameViewModelProvider(widget.game.gameId).notifier);
+  Widget _buildScreenContent(BuildContext context) {
+    final screen = widget.currentScreen;
 
-    return Center(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 16.0),
-        child: Column(
-          children: [
-            if (widget.game.category == GameCategory.EMOTIONS)
-              _buildCameraOptionRow(context, screen, viewModel, state),
-            const SizedBox(height: 20),
-            _buildOptionsArea(context, options),
-          ],
+    if (screen is MultipleChoiceScreen) {
+      return _buildMultipleChoiceUI(context, screen);
+    } else if (screen is MemoryScreen) {
+      return const ErrorScreen(errorMessage: "not implemented yet");
+    } else {
+      return Center(
+        child: Text(
+          AppLocalizations.of(context).unknownScreenType,
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(color: AppColors.error),
         ),
-      ),
+      );
+    }
+  }
+
+  Widget _buildMultipleChoiceUI(
+      BuildContext context, MultipleChoiceScreen screen) {
+    final state = ref.watch(gameViewModelProvider(widget.game.gameId));
+
+    final bool shouldShowCamera =
+        widget.game.category == GameCategory.EMOTIONS &&
+            widget.currentOptions.length == 1 &&
+            widget.currentOptions[0].isCorrect == true;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      child: shouldShowCamera
+          ? _buildCameraOptionRow(context, state)
+          : _buildOptionsArea(context, widget.currentOptions),
     );
   }
 
-  Widget _buildCameraOptionRow(
-    BuildContext context,
-    MultipleChoiceScreen screen,
-    GameViewModel viewModel,
-    GameState state,
-  ) {
+  Widget _buildCameraOptionRow(BuildContext context, GameState state) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        double screenWidth = constraints.maxWidth;
+        final double optionWidth = constraints.maxWidth * 0.5;
+        final double cameraSize = optionWidth * 0.75;
+        final gameViewModel =
+            ref.watch(gameViewModelProvider(widget.game.gameId).notifier);
+        final cameraController = gameViewModel.cameraController;
 
-        double cameraSize = screenWidth * 0.4;
-        if (cameraSize > 250) cameraSize = 250;
-        if (cameraSize < 120) cameraSize = 120;
-
-        return Wrap(
-          alignment: WrapAlignment.center,
-          spacing: 20,
-          runSpacing: 20,
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // 📷 Camera preview
             Column(
-              mainAxisSize: MainAxisSize.min,
               children: [
-                state.isCameraInitialized
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: SizedBox(
-                          width: cameraSize,
-                          height: cameraSize,
-                          child: CameraPreview(state.cameraController!),
-                        ),
-                      )
-                    : SizedBox(
-                        width: cameraSize,
-                        height: cameraSize,
-                        child: const Center(child: CircularProgressIndicator()),
-                      ),
-                const SizedBox(height: 8),
-                ElevatedButton(
-                  onPressed: viewModel.captureAndDetectEmotion,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  ),
-                  child: const Text("Capture"),
+                SizedBox(
+                  width: cameraSize,
+                  height: cameraSize,
+                  child: state.isCameraInitialized
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: CameraPreview(cameraController!),
+                        )
+                      : const Center(child: CircularProgressIndicator()),
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  state.detectedEmotion ?? "no emotion detected",
+                  state.detectedEmotion ?? "Detecting emotion...",
                   style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
+                      fontSize: 16, fontWeight: FontWeight.w600),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
+            const SizedBox(width: 24),
+            // 🟦 Options
+            Expanded(child: _buildOptionsArea(context, widget.currentOptions)),
           ],
         );
       },
     );
-  }
-
-  Widget _buildMemoryUI(BuildContext context, MemoryScreen screen,
-      ThemeData theme, List<Option> options) {
-    return const ErrorScreen(errorMessage: "not implemented yet");
   }
 
   Widget _buildOptionsArea(BuildContext context, List<Option> options) {
@@ -205,14 +184,10 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
 
   Widget _buildFeedbackArea(
       BuildContext context, bool? isCorrect, ThemeData theme) {
-    final Color successColor = AppColors.success;
-    final Color errorColor = theme.colorScheme.error;
+    if (isCorrect == null) return const SizedBox.shrink();
 
-    if (isCorrect == null) {
-      return const SizedBox.shrink();
-    }
-
-    final Color feedbackColor = isCorrect ? successColor : errorColor;
+    final Color feedbackColor =
+        isCorrect ? AppColors.success : theme.colorScheme.error;
     final String feedbackText = isCorrect
         ? AppLocalizations.of(context).correct
         : AppLocalizations.of(context).tryAgain;
@@ -252,6 +227,7 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
   Widget _buildProgressIndicator(
       BuildContext context, int level, int screenNum, ThemeData theme) {
     final l10n = AppLocalizations.of(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12.0),
       child: Text(

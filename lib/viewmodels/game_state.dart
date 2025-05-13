@@ -1,4 +1,3 @@
-import 'package:camera/camera.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/models/level.dart';
 import 'package:pfa/models/screen.dart';
@@ -26,9 +25,8 @@ class GameState {
   final String? errorMessage;
   final List<String> screenIdsInCurrentLevel;
 
-  // Camera-related state
+  // Camera-related light state
   final bool isCameraInitialized;
-  final CameraController? cameraController;
   final String? detectedEmotion;
 
   GameState({
@@ -43,7 +41,6 @@ class GameState {
     this.errorMessage,
     this.screenIdsInCurrentLevel = const [],
     this.isCameraInitialized = false,
-    this.cameraController,
     this.detectedEmotion,
   });
 
@@ -64,7 +61,6 @@ class GameState {
 
     // Camera state
     bool? isCameraInitialized,
-    CameraController? cameraController,
     String? detectedEmotion,
   }) {
     return GameState(
@@ -82,10 +78,7 @@ class GameState {
       isCorrect: clearIsCorrect ? null : (isCorrect ?? this.isCorrect),
       errorMessage:
           clearErrorMessage ? null : (errorMessage ?? this.errorMessage),
-
-      // Camera fields
       isCameraInitialized: isCameraInitialized ?? this.isCameraInitialized,
-      cameraController: cameraController ?? this.cameraController,
       detectedEmotion: detectedEmotion ?? this.detectedEmotion,
     );
   }
