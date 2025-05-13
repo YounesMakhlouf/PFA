@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pfa/config/app_theme.dart';
 import 'package:pfa/config/routes.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/models/user.dart';
 import 'package:pfa/providers/global_providers.dart';
+import 'package:pfa/screens/error_screen.dart';
 import 'package:pfa/screens/generic_loading_screen.dart';
 import 'package:pfa/widgets/avatar_display.dart';
 
@@ -43,41 +44,38 @@ class _SelectChildProfileScreenState
     final profilesAsync = ref.watch(initialChildProfilesProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.selectChildProfileTitle),
-        automaticallyImplyLeading: false,
-        backgroundColor: theme.appBarTheme.backgroundColor,
-        foregroundColor: theme.appBarTheme.foregroundColor,
-      ),
       backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 600),
+            constraints: const BoxConstraints(maxWidth: 500),
             child: Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
                     l10n.whoIsPlayingPrompt,
-                    style: theme.textTheme.headlineSmall,
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 40),
                   Expanded(
                     child: profilesAsync.when(
                       loading: () => const GenericLoadingScreen(
-                          message: "Initializing..."),
+                          message: "Loading profiles..."),
                       error: (err, st) {
                         logger.error(
                             "SelectChildProfileScreen: Error loading profiles",
                             err,
                             st);
-                        return Center(
-                            child: Text(
-                                "$AppLocalizations.applicationError: $err"));
+                        return ErrorScreen(
+                            errorMessage:
+                                "$AppLocalizations.applicationError: $err");
                       },
                       data: (profiles) {
                         profiles.sort((a, b) => a.firstName
@@ -97,21 +95,37 @@ class _SelectChildProfileScreenState
                               child: Text("No profiles found..."));
                         }
 
-                        return ListView.separated(
-                          shrinkWrap: true,
+                        return GridView.builder(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: profiles.length <= 2
+                                ? profiles.length
+                                : 2, // Show 1 or 2 per row
+                            mainAxisSpacing: 20,
+                            crossAxisSpacing: 20,
+                            childAspectRatio: 0.9,
+                          ),
                           itemCount: profiles.length,
-                          separatorBuilder: (context, index) =>
-                              const SizedBox(height: 16),
                           itemBuilder: (context, index) {
                             final profile = profiles[index];
-                            return _buildProfileCard(context, theme, profile);
+                            // Add animation to each card
+                            return _buildProfileCard(context, theme, profile)
+                                .animate()
+                                .fadeIn(
+                                    duration: 300.ms, delay: (100 * index).ms)
+                                .slideY(
+                                    begin: 0.2,
+                                    duration: 300.ms,
+                                    delay: (100 * index).ms,
+                                    curve: Curves.easeOut);
                           },
                         );
                       },
                     ),
                   ),
-                  const SizedBox(height: 30),
-                  OutlinedButton.icon(
+                  const SizedBox(height: 40),
+                  ElevatedButton.icon(
                     icon: const Icon(Icons.add_circle_outline),
                     label: Text(l10n.addChildProfileButton),
                     onPressed: _navigateToAddProfile,
@@ -137,29 +151,32 @@ class _SelectChildProfileScreenState
   Widget _buildProfileCard(
       BuildContext context, ThemeData theme, Child profile) {
     return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () => _selectProfile(profile),
+        borderRadius: BorderRadius.circular(16),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-          child: Row(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               AvatarDisplay(
                 avatarUrl: profile.avatarUrl,
-                radius: 30,
+                radius: 40,
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  profile.firstName,
-                  style: theme.textTheme.titleLarge,
-                  overflow: TextOverflow.ellipsis,
+              const SizedBox(height: 12),
+              Text(
+                profile.firstName,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
                 ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-              const Icon(Icons.arrow_forward_ios,
-                  size: 18, color: AppColors.disabled),
             ],
           ),
         ),
