@@ -245,7 +245,30 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get onboardingGetStartedButton => 'ابدأ الآن';
   @override
-  String get loadingProfilesMessage => 'جاري تحميل الملفات الشخصية...';
+  String get loadingProfilesMessage => 'جاري تحميل الملفات الشخصية.';
   @override
-  String get noProfilesFoundMessage => 'لم يتم العثور على ملفات شخصية...';
+  String get noProfilesFoundMessage => 'لم يتم العثور على ملفات شخصية.';
+
+  @override
+  String get settingsTitle => 'الإعدادات';
+  @override
+  String get ttsEnabledSetting => 'تمكين تحويل النص إلى كلام';
+  @override
+  String get soundEffectsEnabledSetting => 'تمكين المؤثرات الصوتية';
+  @override
+  String get loadingSetting => 'جاري تحميل الإعداد...';
+  @override
+  String get errorLoadingSetting => 'خطأ في تحميل الإعداد';
+  @override
+  String get languageSetting => 'اللغة';
+  @override
+  String get selectLanguageDialogTitle => 'اختر اللغة';
+  @override
+  String get ttsSpeechRateSetting => 'سرعة الكلام';
+  @override
+  String get ttsRateSlow => 'بطيء';
+  @override
+  String get ttsRateNormal => 'عادي';
+  @override
+  String get ttsRateFast => 'سريع';
 }

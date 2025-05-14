@@ -7,6 +7,7 @@ import 'package:pfa/screens/create_child_profile_screen.dart';
 import 'package:pfa/screens/error_screen.dart';
 import 'package:pfa/screens/home_screen.dart';
 import 'package:pfa/screens/select_child_profile_screen.dart';
+import 'package:pfa/screens/settings_screen.dart';
 import 'package:pfa/screens/welcome_screen.dart';
 import 'package:pfa/games/multiple_choice_game.dart';
 
@@ -21,6 +22,7 @@ class AppRoutes {
   static const String selectChildProfile = '/select-child-profile';
   static const String multipleChoiceGame = '/game/multiple-choice';
   static const String stats = '/stats';
+  static const String settings = '/settings';
 
   static Map<String, WidgetBuilder> get routes {
     return {
@@ -28,6 +30,7 @@ class AppRoutes {
       welcome: (context) => const WelcomeScreen(),
       home: (context) => const HomeScreen(),
       createChildProfile: (context) => const CreateChildProfileScreen(),
+      settings: (context) => const SettingsScreen(),
       selectChildProfile: (context) {
         final args =
             ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;

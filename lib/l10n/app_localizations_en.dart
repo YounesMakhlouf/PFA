@@ -249,4 +249,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loadingProfilesMessage => 'Loading profiles...';
   @override
   String get noProfilesFoundMessage => 'No profiles found...';
+  @override
+  String get settingsTitle => 'Settings';
+  @override
+  String get ttsEnabledSetting => 'Enable Text-to-Speech';
+  @override
+  String get soundEffectsEnabledSetting => 'Enable Sound Effects';
+  @override
+  String get loadingSetting => 'Loading setting...';
+  @override
+  String get errorLoadingSetting => 'Error loading setting';
+  @override
+  String get languageSetting => 'Language';
+  @override
+  String get selectLanguageDialogTitle => 'Select Language';
+  @override
+  String get ttsSpeechRateSetting => 'Speech Rate';
+  @override
+  String get ttsRateSlow => 'Slow';
+  @override
+  String get ttsRateNormal => 'Normal';
+  @override
+  String get ttsRateFast => 'Fast';
 }

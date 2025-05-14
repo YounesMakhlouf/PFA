@@ -164,6 +164,18 @@ abstract class AppLocalizations {
   String get onboardingDesc2;
   String get onboardingSkipButton;
   String get onboardingGetStartedButton;
+
+  String get settingsTitle;
+  String get ttsEnabledSetting;
+  String get soundEffectsEnabledSetting;
+  String get loadingSetting;
+  String get errorLoadingSetting;
+  String get languageSetting;
+  String get selectLanguageDialogTitle;
+  String get ttsSpeechRateSetting;
+  String get ttsRateSlow;
+  String get ttsRateNormal;
+  String get ttsRateFast;
 }
 
 class _AppLocalizationsDelegate

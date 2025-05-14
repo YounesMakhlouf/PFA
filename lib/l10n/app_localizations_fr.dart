@@ -253,4 +253,26 @@ class AppLocalizationsFr extends AppLocalizations {
   String get loadingProfilesMessage => 'Chargement des profils...';
   @override
   String get noProfilesFoundMessage => 'Aucun profil trouvé...';
+  @override
+  String get settingsTitle => 'Paramètres';
+  @override
+  String get ttsEnabledSetting => 'Activer la synthèse vocale';
+  @override
+  String get soundEffectsEnabledSetting => 'Activer les effets sonores';
+  @override
+  String get loadingSetting => 'Chargement du paramètre...';
+  @override
+  String get errorLoadingSetting => 'Erreur de chargement du paramètre';
+  @override
+  String get languageSetting => 'Langue';
+  @override
+  String get selectLanguageDialogTitle => 'Choisir la Language';
+  @override
+  String get ttsSpeechRateSetting => 'Vitesse de la parole';
+  @override
+  String get ttsRateSlow => 'Lent';
+  @override
+  String get ttsRateNormal => 'Normal';
+  @override
+  String get ttsRateFast => 'Rapide';
 }

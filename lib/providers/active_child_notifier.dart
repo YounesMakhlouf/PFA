@@ -8,6 +8,7 @@ class ActiveChildNotifier extends StateNotifier<Child?> {
 
   ActiveChildNotifier(this._ref) : super(null) {
     final logger = _ref.read(loggingServiceProvider);
+    _loadInitialActiveChild();
 
     _ref.listen<AsyncValue<List<Child>>>(initialChildProfilesProvider,
         (previous, next) {
@@ -35,6 +36,50 @@ class ActiveChildNotifier extends StateNotifier<Child?> {
         state = null;
       }
     });
+  }
+
+  Future<void> _loadInitialActiveChild() async {
+    final logger = _ref.read(loggingServiceProvider);
+    final settingsService = _ref.read(settingsServiceProvider);
+    final childRepository = _ref.read(childRepositoryProvider);
+
+    final lastActiveId = await settingsService.getLastActiveChildId();
+    if (lastActiveId != null) {
+      logger.info(
+          "ActiveChildNotifier: Found last active child ID: $lastActiveId. Verifying...");
+      try {
+        // Verify this child still exists and belongs to the current user
+        final profile = await childRepository.getChildProfileById(lastActiveId);
+        if (profile != null) {
+          // Check if current user (from auth state) matches profile's account_id
+          final currentAuthUser =
+              _ref.read(supabaseAuthStateProvider).valueOrNull?.session?.user;
+          if (currentAuthUser != null &&
+              profile.accountId == currentAuthUser.id) {
+            logger.info(
+                "ActiveChildNotifier: Setting last active child: ${profile.childId}");
+            state = profile;
+          } else {
+            logger.warning(
+                "ActiveChildNotifier: Last active child $lastActiveId does not belong to current user or user not found. Clearing persisted ID.");
+            await settingsService.setLastActiveChildId(null);
+          }
+        } else {
+          logger.warning(
+              "ActiveChildNotifier: Last active child $lastActiveId not found in DB. Clearing persisted ID.");
+          await settingsService.setLastActiveChildId(null);
+        }
+      } catch (e, st) {
+        logger.error(
+            "ActiveChildNotifier: Error verifying last active child $lastActiveId",
+            e,
+            st);
+        await settingsService.setLastActiveChildId(null);
+      }
+    } else {
+      logger.debug(
+          "ActiveChildNotifier: No last active child ID found in settings.");
+    }
   }
 
   void _updateActiveChild(AsyncValue<List<Child>> asyncProfiles) {
@@ -74,8 +119,12 @@ class ActiveChildNotifier extends StateNotifier<Child?> {
   }
 
   void set(Child? child) {
-    _ref.read(loggingServiceProvider).info(
-        "ActiveChildNotifier: Manually setting active child to ${child?.childId ?? 'null'}");
-    state = child;
+    final settingsService = _ref.read(settingsServiceProvider);
+    if (state?.childId != child?.childId) {
+      _ref.read(loggingServiceProvider).info(
+          "ActiveChildNotifier: Manually setting active child to ${child?.childId ?? 'null'}");
+      state = child;
+      settingsService.setLastActiveChildId(child?.childId);
+    }
   }
 }
