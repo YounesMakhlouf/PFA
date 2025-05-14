@@ -1,16 +1,16 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:pfa/services/logging_service.dart';
+import 'package:pfa/services/settings_service.dart';
 
 enum SoundType { correct, incorrect, levelComplete, uiClick, gameComplete }
 
 class AudioService {
   final LoggingService _logger;
   final AudioPlayer _feedbackPlayer = AudioPlayer();
-
+  final SettingsService _settingsService;
   bool _isInitialized = false;
-  bool _soundsEnabled = true; // TODO: Add to settings
 
-  AudioService(this._logger) {
+  AudioService(this._logger, this._settingsService) {
     _initialize();
   }
 
@@ -22,21 +22,19 @@ class AudioService {
     _logger.info('Audio Service Initialized.');
   }
 
-  void setSoundsEnabled(bool enabled) {
-    _soundsEnabled = enabled;
-    _logger.info('AudioService: Sounds enabled set to $enabled');
-    if (!enabled) {
-      _feedbackPlayer.stop();
-    }
-  }
-
   Future<void> playSound(SoundType soundType, {double volume = 1.0}) async {
-    if (!_isInitialized || !_soundsEnabled) {
-      _logger.debug(
-          'AudioService: Sound playback skipped (not initialized or sounds disabled).');
+    final bool soundEffectsEnabled =
+        await _settingsService.areSoundEffectsEnabled();
+    if (!_isInitialized || !soundEffectsEnabled) {
+      if (!soundEffectsEnabled) {
+        _logger.debug(
+            "AudioService: Sound playback skipped, sound effects disabled by user settings.");
+      } else {
+        _logger
+            .debug('AudioService: Sound playback skipped (not initialized).');
+      }
       return;
     }
-
     String? soundPath;
     switch (soundType) {
       case SoundType.correct:

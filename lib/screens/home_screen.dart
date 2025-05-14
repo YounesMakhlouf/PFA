@@ -97,13 +97,23 @@ class _HomePageState extends ConsumerState<HomeScreen> {
                     AppRoutes.stats,
                     arguments: {'childUuid': activeChild.childId},
                   );
+                } else if (value == 'settings') {
+                  logger.info("Navigating to SettingsScreen");
+                  Navigator.pushNamed(context, AppRoutes.settings);
                 }
               },
               itemBuilder: (BuildContext context) {
                 return <PopupMenuEntry<String>>[
                   PopupMenuItem<String>(
                     value: 'switch',
-                    child: Text(l10n.switchChildProfileButton),
+                    child: Row(
+                      children: [
+                        Icon(Icons.switch_account_outlined,
+                            color: theme.colorScheme.primary),
+                        const SizedBox(width: 8),
+                        Text(l10n.switchChildProfileButton),
+                      ],
+                    ),
                   ),
                   const PopupMenuDivider(),
                   PopupMenuItem<String>(
@@ -114,6 +124,17 @@ class _HomePageState extends ConsumerState<HomeScreen> {
                             color: theme.colorScheme.primary),
                         const SizedBox(width: 8),
                         Text("View Stats"), //TODO: Add to l10n
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'settings',
+                    child: Row(
+                      children: [
+                        Icon(Icons.settings_outlined,
+                            color: theme.colorScheme.primary),
+                        const SizedBox(width: 8),
+                        Text(l10n.settingsTitle),
                       ],
                     ),
                   ),

@@ -71,20 +71,22 @@ class AppInitializer extends ConsumerWidget {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   final bool showOnboarding;
   const MyApp({required this.showOnboarding, super.key});
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Locale currentLocale = ref.watch(localeProvider);
+
     return MaterialApp(
-      title: AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       routes: AppRoutes.routes,
       home: showOnboarding ? const OnboardingScreen() : const AuthGate(),
-      locale: const Locale('ar'),
+      locale: currentLocale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
+      onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
     );
   }
 }

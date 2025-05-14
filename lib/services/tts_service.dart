@@ -1,14 +1,21 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:pfa/models/enums.dart';
+import 'package:pfa/providers/global_providers.dart';
 import 'package:pfa/services/logging_service.dart';
+import 'package:pfa/services/settings_service.dart';
 
 class TtsService {
   final LoggingService _logger;
+  final SettingsService _settingsService;
+  final Ref _ref;
   final FlutterTts _flutterTts = FlutterTts();
 
   bool _isInitialized = false;
-  String _currentLanguage = 'ar';
+  String _lastSetTtsEngineLanguage = AppLanguage.arabic.code;
+  double _currentSpeechRate = 1.0;
 
-  TtsService(this._logger) {
+  TtsService(this._logger, this._settingsService, this._ref) {
     _initializeTts();
   }
 
@@ -24,34 +31,75 @@ class TtsService {
       _logger.error("TTS Error: $msg");
     });
 
-    await setLanguage(_currentLanguage);
+    _ref.listen<AppLanguage>(appLanguageProvider,
+        (previousLanguage, newLanguage) {
+      _logger.info(
+          'TTS Service: App language changed from ${previousLanguage?.code} to ${newLanguage.code}. Updating TTS engine.');
+      _updateTtsEngineLanguage(newLanguage.code);
+    });
 
+    final initialAppLanguage = _ref.read(appLanguageProvider);
+    await _updateTtsEngineLanguage(initialAppLanguage.code);
+
+    _currentSpeechRate = await _settingsService.getTtsSpeechRate();
+    await _applySpeechRate(_currentSpeechRate);
     _isInitialized = true;
-    _logger.info('TTS Service Initialized.');
+    _logger.info(
+        'TTS Service Initialized. Initial language set attempt for: ${initialAppLanguage.code}');
   }
 
-  Future<void> setLanguage(String languageCode) async {
-    _logger.info('TTS: Setting language to $languageCode');
+  Future<void> _updateTtsEngineLanguage(String languageCode) async {
+    String ttsLangCode = languageCode;
+    if (languageCode == 'en') ttsLangCode = 'en-US';
+    if (languageCode == 'ar') ttsLangCode = 'ar';
+    if (languageCode == 'fr') ttsLangCode = 'fr-FR';
+
+    _logger.info(
+        'TTS: Attempting to set engine language to $ttsLangCode (app lang: $languageCode)');
     try {
-      var result = await _flutterTts.setLanguage(languageCode);
+      var result = await _flutterTts.setLanguage(ttsLangCode);
       if (result == 1) {
-        // 1 indicates success
-        _currentLanguage = languageCode;
-        _logger.info('TTS: Language set successfully.');
+        _lastSetTtsEngineLanguage = ttsLangCode;
+        _logger.info('TTS: Engine language set successfully to $ttsLangCode.');
       } else {
         _logger.warning(
-            'TTS: Failed to set language $languageCode (result code: $result). Might not be supported.');
-        await _flutterTts.setLanguage("ar");
-        _currentLanguage = "ar";
+            'TTS: Failed to set engine language $ttsLangCode (result code: $result). Might not be supported. Last set: $_lastSetTtsEngineLanguage');
       }
     } catch (e, st) {
-      _logger.error('TTS: Error setting language $languageCode', e, st);
+      _logger.error('TTS: Error setting engine language $ttsLangCode', e, st);
     }
   }
 
+  Future<void> _applySpeechRate(double rate) async {
+    try {
+      var result = await _flutterTts.setSpeechRate(rate);
+      if (result == 1) {
+        _currentSpeechRate = rate;
+        _logger.info("TTS: Speech rate set to $rate");
+      } else {
+        _logger.warning(
+            "TTS: Failed to set speech rate to $rate (result: $result)");
+      }
+    } catch (e, st) {
+      _logger.error("TTS: Error setting speech rate to $rate", e, st);
+    }
+  }
+
+  Future<void> changeSpeechRate(double newRate) async {
+    if (!_isInitialized) return;
+    await _settingsService.setTtsSpeechRate(newRate);
+    await _applySpeechRate(newRate);
+  }
+
   Future<void> speak(String text) async {
-    if (!_isInitialized || text.isEmpty) {
-      _logger.warning('TTS service not ready or text is empty, cannot speak.');
+    final bool ttsEnabled = await _settingsService.isTtsEnabled();
+    if (!_isInitialized || !ttsEnabled || text.isEmpty) {
+      if (!ttsEnabled) {
+        _logger.debug("TTS: Speak skipped, TTS is disabled by user settings.");
+      } else {
+        _logger
+            .warning('TTS service not ready or text is empty, cannot speak.');
+      }
       return;
     }
 
