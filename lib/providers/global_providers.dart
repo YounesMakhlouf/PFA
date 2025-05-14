@@ -8,7 +8,6 @@ import 'package:pfa/providers/active_child_notifier.dart';
 import 'package:pfa/providers/app_language_notifier.dart';
 import 'package:pfa/providers/tts_speech_rate_notifier.dart';
 import 'package:pfa/services/audio_service.dart';
-import 'package:pfa/services/child_service.dart';
 import 'package:pfa/services/settings_service.dart';
 import 'package:pfa/services/tts_service.dart';
 import 'package:pfa/viewmodels/game_state.dart';
@@ -22,6 +21,7 @@ import 'package:pfa/repositories/game_repository.dart';
 import 'package:pfa/repositories/game_session_repository.dart';
 
 import '../repositories/child_stats_repository.dart';
+import '../services/child_service.dart';
 import '../services/child_stats_service.dart';
 
 final loggingServiceProvider = Provider<LoggingService>((ref) {
@@ -69,6 +69,19 @@ final childRepositoryProvider = Provider<ChildRepository>((ref) {
   return ChildRepository(supabaseService: supabaseService, logger: logger);
 });
 
+final gameSessionRepositoryProvider = Provider<GameSessionRepository>((ref) {
+  final supabaseService = ref.watch(supabaseServiceProvider);
+  final logger = ref.watch(loggingServiceProvider);
+  return GameSessionRepository(
+      supabaseService: supabaseService, logger: logger);
+});
+
+final gameRepositoryProvider = Provider<GameRepository>((ref) {
+  final supabaseService = ref.watch(supabaseServiceProvider);
+  final logger = ref.watch(loggingServiceProvider);
+  return GameRepository(supabaseService: supabaseService, logger: logger);
+});
+
 final initialChildProfilesProvider = FutureProvider<List<Child>>((ref) async {
   final logger = ref.read(loggingServiceProvider);
 
@@ -103,22 +116,22 @@ StateNotifierProvider<ActiveChildNotifier, Child?>((ref) {
 });
 
 final childServiceProvider = Provider<ChildService>((ref){
-  final childRepository = ref.watch(childRepositoryProvider);
-  return ChildService(childRepository: childRepository);
+  final child_repository = ref.watch(childRepositoryProvider);
+  return ChildService(childRepository: child_repository);
 });
 
-/// game providers
-final gameSessionRepositoryProvider = Provider<GameSessionRepository>((ref) {
+/// stats providers
+final childStatsRepositoryProvider = Provider<ChildStatsRepository>((ref) {
   final supabaseService = ref.watch(supabaseServiceProvider);
   final logger = ref.watch(loggingServiceProvider);
-  return GameSessionRepository(
-      supabaseService: supabaseService, logger: logger);
+  return ChildStatsRepository(supabaseService: supabaseService, logger: logger);
 });
 
-final gameRepositoryProvider = Provider<GameRepository>((ref) {
-  final supabaseService = ref.watch(supabaseServiceProvider);
-  final logger = ref.watch(loggingServiceProvider);
-  return GameRepository(supabaseService: supabaseService, logger: logger);
+final childStatsServiceProvider = Provider<ChildStatsService>((ref) {
+  final childStatsRepository = ref.watch(childStatsRepositoryProvider);
+  return ChildStatsService(
+    statsRepository: childStatsRepository,
+  );
 });
 
 final gameViewModelProvider = StateNotifierProvider.family<GameViewModel,
@@ -170,25 +183,8 @@ FutureProvider.family<List<Game>, GameCategory>((ref, category) async {
     rethrow;
   }
 });
-
-/// stats providers
-final childStatsRepositoryProvider = Provider<ChildStatsRepository>((ref) {
-  final supabaseService = ref.watch(supabaseServiceProvider);
-  final logger = ref.watch(loggingServiceProvider);
-  return ChildStatsRepository(supabaseService: supabaseService, logger: logger);
-});
-
-final childStatsServiceProvider = Provider<ChildStatsService>((ref) {
-  final childStatsRepository = ref.watch(childStatsRepositoryProvider);
-  return ChildStatsService(
-    statsRepository: childStatsRepository,
-  );
-});
-
-
-final sharedPreferencesProvider = FutureProvider<SharedPreferences>((ref) async {
 final sharedPreferencesProvider =
-    FutureProvider<SharedPreferences>((ref) async {
+FutureProvider<SharedPreferences>((ref) async {
   return await SharedPreferences.getInstance();
 });
 
@@ -207,7 +203,7 @@ final ttsEnabledProvider = FutureProvider<bool>((ref) async {
 });
 
 final ttsSpeechRateProvider =
-    StateNotifierProvider<TtsSpeechRateNotifier, double>((ref) {
+StateNotifierProvider<TtsSpeechRateNotifier, double>((ref) {
   final settingsService = ref.watch(settingsServiceProvider);
   final ttsService = ref.watch(ttsServiceProvider);
   final logger = ref.watch(loggingServiceProvider);
@@ -219,7 +215,7 @@ final soundEffectsEnabledProvider = FutureProvider<bool>((ref) async {
 });
 
 final appLanguageProvider =
-    StateNotifierProvider<AppLanguageNotifier, AppLanguage>((ref) {
+StateNotifierProvider<AppLanguageNotifier, AppLanguage>((ref) {
   final settingsService = ref.watch(settingsServiceProvider);
   final logger = ref.watch(loggingServiceProvider);
   return AppLanguageNotifier(settingsService, logger);
