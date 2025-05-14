@@ -22,7 +22,7 @@ class AuthGate extends ConsumerWidget {
 
         if (session != null) {
           logger.debug(
-              "AuthGate: Session found (User ID: ${session.user.id}).  Checking initial profiles...");
+              "AuthGate: Session found (User ID: ${session.user.id}). Checking initial profiles...");
           final profilesAsync = ref.watch(initialChildProfilesProvider);
           return profilesAsync.when(loading: () {
             logger.debug("AuthGate: Loading initial profiles...");
@@ -80,7 +80,7 @@ class AuthGate extends ConsumerWidget {
       },
       loading: () {
         logger.debug("AuthGate: Auth state loading...");
-        return const GenericLoadingScreen();
+        return GenericLoadingScreen(message: "Authenticating"); //TODO: Localize
       },
       error: (error, stackTrace) {
         logger.error("AuthGate: Error in auth stream", error, stackTrace);

@@ -1,9 +1,14 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/constants/const.dart';
+import 'package:pfa/models/enums.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/models/user.dart';
 import 'package:pfa/providers/active_child_notifier.dart';
+import 'package:pfa/providers/app_language_notifier.dart';
+import 'package:pfa/providers/tts_speech_rate_notifier.dart';
 import 'package:pfa/services/audio_service.dart';
+import 'package:pfa/services/settings_service.dart';
 import 'package:pfa/services/tts_service.dart';
 import 'package:pfa/viewmodels/game_state.dart';
 import 'package:pfa/viewmodels/game_viewmodel.dart';
@@ -29,15 +34,15 @@ final supabaseServiceProvider = Provider<SupabaseService>((ref) {
 
 final ttsServiceProvider = Provider<TtsService>((ref) {
   final logger = ref.watch(loggingServiceProvider);
-  return TtsService(logger);
+  final settingsService = ref.watch(settingsServiceProvider);
+  return TtsService(logger, settingsService, ref);
 });
 
 final audioServiceProvider = Provider<AudioService>((ref) {
   final logger = ref.watch(loggingServiceProvider);
-  final audioService = AudioService(logger);
-  ref.onDispose(() {
-    audioService.dispose();
-  });
+  final settingsService = ref.watch(settingsServiceProvider);
+  final audioService = AudioService(logger, settingsService);
+  ref.onDispose(() => audioService.dispose());
   return audioService;
 });
 
@@ -171,11 +176,45 @@ final gamesByCategoryProvider =
     rethrow;
   }
 });
-final sharedPreferencesProvider = FutureProvider<SharedPreferences>((ref) async {
+final sharedPreferencesProvider =
+    FutureProvider<SharedPreferences>((ref) async {
   return await SharedPreferences.getInstance();
 });
 
 final onboardingCompletedProvider = FutureProvider<bool>((ref) async {
   final prefs = await ref.watch(sharedPreferencesProvider.future);
   return prefs.getBool(onboardingCompletedKey) ?? false;
+});
+
+final settingsServiceProvider = Provider<SettingsService>((ref) {
+  final logger = ref.watch(loggingServiceProvider);
+  return SettingsService(logger);
+});
+
+final ttsEnabledProvider = FutureProvider<bool>((ref) async {
+  return await ref.watch(settingsServiceProvider).isTtsEnabled();
+});
+
+final ttsSpeechRateProvider =
+    StateNotifierProvider<TtsSpeechRateNotifier, double>((ref) {
+  final settingsService = ref.watch(settingsServiceProvider);
+  final ttsService = ref.watch(ttsServiceProvider);
+  final logger = ref.watch(loggingServiceProvider);
+  return TtsSpeechRateNotifier(settingsService, ttsService, logger);
+});
+
+final soundEffectsEnabledProvider = FutureProvider<bool>((ref) async {
+  return await ref.watch(settingsServiceProvider).areSoundEffectsEnabled();
+});
+
+final appLanguageProvider =
+    StateNotifierProvider<AppLanguageNotifier, AppLanguage>((ref) {
+  final settingsService = ref.watch(settingsServiceProvider);
+  final logger = ref.watch(loggingServiceProvider);
+  return AppLanguageNotifier(settingsService, logger);
+});
+
+final localeProvider = Provider<Locale>((ref) {
+  final appLanguage = ref.watch(appLanguageProvider);
+  return Locale(appLanguage.code);
 });
