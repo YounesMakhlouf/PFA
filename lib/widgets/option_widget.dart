@@ -11,6 +11,7 @@ class OptionWidget extends ConsumerWidget {
   final Color? gameThemeColor;
   final bool isSelected; // for visual feedback in memory game
   final bool isDisabled;
+  final bool isStory;
 
   const OptionWidget({
     super.key,
@@ -19,6 +20,7 @@ class OptionWidget extends ConsumerWidget {
     this.gameThemeColor,
     this.isSelected = false,
     this.isDisabled = false,
+    this.isStory = false,
   });
 
   @override
@@ -45,22 +47,22 @@ class OptionWidget extends ConsumerWidget {
           effectiveButtonColor, borderRadius, theme);
     }
 
-    // Add selection/disabled visual cues
     BoxDecoration decoration = BoxDecoration(
       borderRadius: borderRadius,
       border: isSelected
           ? Border.all(color: theme.colorScheme.secondary, width: 3)
           : null,
-      boxShadow:
-          theme.cardTheme.elevation != null && theme.cardTheme.elevation! > 0
-              ? const [
-                  BoxShadow(
-                    color: Color.fromRGBO(0, 0, 0, 0.25),
-                    blurRadius: 4,
-                    offset: Offset(0, 4),
-                  ),
-                ]
-              : null,
+      boxShadow: (!isStory &&
+              theme.cardTheme.elevation != null &&
+              theme.cardTheme.elevation! > 0)
+          ? const [
+              BoxShadow(
+                color: Color.fromRGBO(0, 0, 0, 0.25),
+                blurRadius: 4,
+                offset: Offset(0, 4),
+              ),
+            ]
+          : null,
     );
 
     // Use Semantics for accessibility
@@ -94,12 +96,13 @@ class OptionWidget extends ConsumerWidget {
 
   Widget _buildImageOption(BuildContext context, String imageUrl,
       BorderRadius borderRadius, ThemeData theme) {
+    final double size = isStory ? 180 : 100; // Bigger for story
     return Container(
-      width: 100,
-      height: 100,
+      width: size,
+      height: size,
       decoration: BoxDecoration(
         borderRadius: borderRadius,
-        color: theme.cardTheme.color,
+        color: isStory ? Colors.transparent : theme.cardTheme.color,
       ),
       child: ClipRRect(
         borderRadius: borderRadius,

@@ -53,7 +53,6 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
 
   @override
   void dispose() {
-    ref.read(gameViewModelProvider(widget.game.gameId).notifier).dispose();
     super.dispose();
   }
 
@@ -116,8 +115,7 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
             widget.currentOptions.length == 1 &&
             widget.currentOptions[0].isCorrect == true;
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
+    return SizedBox(
       child: shouldShowCamera
           ? _buildCameraOptionRow(context, state)
           : _buildOptionsArea(context, widget.currentOptions),
@@ -125,60 +123,63 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
   }
 
   Widget _buildCameraOptionRow(BuildContext context, GameState state) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final double optionWidth = constraints.maxWidth * 0.5;
-        final double cameraSize = optionWidth * 0.75;
-        final gameViewModel =
-            ref.watch(gameViewModelProvider(widget.game.gameId).notifier);
-        final cameraController = gameViewModel.cameraController;
+    final gameViewModel =
+        ref.watch(gameViewModelProvider(widget.game.gameId).notifier);
+    final cameraController = gameViewModel.cameraController;
 
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 📷 Camera preview
-            Column(
-              children: [
-                SizedBox(
-                  width: cameraSize,
-                  height: cameraSize,
-                  child: state.isCameraInitialized
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: CameraPreview(cameraController!),
-                        )
-                      : const Center(child: CircularProgressIndicator()),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  state.detectedEmotion ?? "Detecting emotion...",
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w600),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-            const SizedBox(width: 24),
-            // 🟦 Options
-            Expanded(child: _buildOptionsArea(context, widget.currentOptions)),
-          ],
-        );
-      },
+    final Option currentOption = widget.currentOptions.first;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        // 1/4 of the width for options
+        Expanded(
+          flex: 1,
+          child: Column(
+            children: [
+              _buildOptionsArea(context, [currentOption])
+            ],
+          ),
+        ),
+
+        // 3/4 of the width for camera
+        Expanded(
+          flex: 1,
+          child: AspectRatio(
+            aspectRatio: 4 / 3,
+            child: state.isCameraInitialized && cameraController != null
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: CameraPreview(cameraController),
+                  )
+                : const Center(child: CircularProgressIndicator()),
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildOptionsArea(BuildContext context, List<Option> options) {
-    return Wrap(
-      alignment: WrapAlignment.center,
-      spacing: 60,
-      runSpacing: 60,
-      children: options.map((option) {
-        return OptionWidget(
-          option: option,
-          onTap: () => widget.onOptionSelected(option),
-        );
-      }).toList(),
+    final bool isStory = options.length == 1;
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        minHeight: MediaQuery.of(context).size.height * 0.4,
+      ),
+      child: Center(
+        child: Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 60,
+          runSpacing: 60,
+          children: options.map((option) {
+            return OptionWidget(
+              option: option,
+              onTap: () => widget.onOptionSelected(option),
+              isStory: isStory,
+            );
+          }).toList(),
+        ),
+      ),
     );
   }
 
