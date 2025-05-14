@@ -64,21 +64,18 @@ class GenericLoadingScreen extends ConsumerWidget {
       ),
     );
 
-    if (showAppBar) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text(appBarTitle ?? l10n.loading),
-          backgroundColor: theme.appBarTheme.backgroundColor,
-          foregroundColor: theme.appBarTheme.foregroundColor,
-          elevation: theme.appBarTheme.elevation,
-          automaticallyImplyLeading: false,
-        ),
-        backgroundColor: theme.scaffoldBackgroundColor,
-        body: loadingContent,
-      );
-    } else {
-      return Scaffold(
-          backgroundColor: theme.scaffoldBackgroundColor, body: loadingContent);
-    }
+    return Scaffold(
+      appBar: showAppBar
+          ? AppBar(
+              title: Text(appBarTitle ?? l10n.loading),
+              backgroundColor: theme.appBarTheme.backgroundColor,
+              foregroundColor: theme.appBarTheme.foregroundColor,
+              elevation: theme.appBarTheme.elevation,
+              automaticallyImplyLeading: false,
+            )
+          : null,
+      backgroundColor: theme.scaffoldBackgroundColor,
+      body: loadingContent,
+    );
   }
 }
