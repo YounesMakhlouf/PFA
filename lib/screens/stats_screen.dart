@@ -9,6 +9,7 @@ import '../models/category_option.dart';
 import '../models/stats_summary.dart';
 import '../providers/global_providers.dart';
 import '../services/child_stats_service.dart';
+import '../utils/category_localization_utils.dart';
 import '../widgets/accuracy_bar_chart.dart';
 import '../widgets/big_stat_box.dart';
 import '../widgets/category_filter_dropdown.dart';
@@ -115,7 +116,7 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
         final stats = await _statsService.getStats(
           childUuid: widget.childUuid,
           category: category.name,
-          timeFilter: 'all', // Explicitly use 'all' filter
+          timeFilter: 'all',
         );
         result[category.name] = stats?.accuracy ?? 0.0;
       }
@@ -133,25 +134,16 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
 
   Widget _buildStatsSection(BuildContext context) {
     if (_statsError != null) {
-      return ErrorScreen(errorMessage: _chartError!);
+      return ErrorScreen(errorMessage: _statsError!);
     }
+
     final categoryOptions = [
       CategoryOption(value: 'ALL', label: AppLocalizations.of(context).all),
-      CategoryOption(
-          value: 'NUMBERS', label: AppLocalizations.of(context).numbers),
-      CategoryOption(
-          value: 'COLORS_SHAPES',
-          label: AppLocalizations.of(context).colorsAndShapes),
-      CategoryOption(
-          value: 'EMOTIONS', label: AppLocalizations.of(context).emotions),
-      CategoryOption(
-          value: 'LOGICAL_THINKING',
-          label: AppLocalizations.of(context).logicalThinking),
-      CategoryOption(
-          value: 'ANIMALS', label: AppLocalizations.of(context).animals),
-      CategoryOption(
-          value: 'FRUITS_VEGETABLES',
-          label: AppLocalizations.of(context).fruitsAndVegetables),
+      ...game.GameCategory.values.map((category) => CategoryOption(
+
+          value: category.name,
+        label: getLocalizedCategory(category.name, context),
+      )),
     ];
 
     return Stack(

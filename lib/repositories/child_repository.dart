@@ -1,3 +1,4 @@
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:pfa/models/user.dart';
 import 'package:pfa/services/supabase_service.dart';
@@ -193,6 +194,80 @@ class ChildRepository {
           'Unexpected error deleting child profile $childId', e, stackTrace);
       throw Exception(
           'An unexpected error occurred while deleting the profile.');
+    }
+  }
+
+  /// child - educator operations
+
+  /// fetches all educators associated to a given child
+  Future<List<String>> getEducatorsForChild(String childId) async {
+    final currentUser = _supabaseService.currentUser;
+    if (currentUser == null) {
+      _logger.warning('Attempted to add educator while not logged in.');
+      throw Exception('Unauthorized, please login first');
+    }
+    try{
+      _logger.info("Attempting to fetch educators for child $childId");
+      final response = await _supabaseService.client.rpc<List<String>>(
+        'get_educators_for_child',
+        params: {
+          'child_id': childId,
+        }
+      );
+      return response;
+    } catch(e,stackTrace){
+      _logger.error(
+        'Unexpected error fetching educators for child $childId', e, stackTrace,
+      );
+      throw Exception('An unexpected error occurred while fetching educators');
+    }
+  }
+  /// associates an educator to  a given child
+  Future<String> addEducatorByEmail(String childId, String educatorEmail) async {
+    final currentUser = _supabaseService.currentUser;
+    if (currentUser == null) {
+      _logger.warning('Attempted to add educator while not logged in.');
+      return 'Unauthorized, please login first';
+    }
+    try {
+      _logger.info("Attempting to add educator $educatorEmail to child $childId");
+      final response = await _supabaseService.client.rpc<String>(
+        'add_educator_by_email',
+        params: {
+          'child_id': childId,
+          'educator_email': educatorEmail,
+        },
+      );
+      return response;
+    } catch (e, stackTrace) {
+      _logger.error(
+        'Unexpected error adding educator to child $childId', e, stackTrace,
+      );
+      throw Exception('An unexpected error occurred while adding the educator');
+    }
+  }
+  /// removes an educator from a child's list of educators
+  Future<String> removeEducatorByEmail(String childId, String educatorEmail) async {
+    final currentUser = _supabaseService.currentUser;
+    if (currentUser == null) {
+      _logger.warning('Attempted to remove educator while not logged in.');
+      return 'Unauthorized, please login first';
+    }
+    try {
+      _logger.info("Attempting to remove educator $educatorEmail from child $childId");
+      final response = await _supabaseService.client.rpc<String>(
+        'remove_educator_by_email',
+        params: {
+          'child_id': childId,
+          'educator_email': educatorEmail,
+        },
+      );
+      return response;
+    } catch (e, stackTrace) {
+      _logger.error(
+        'Unexpected error removing educator from child $childId', e, stackTrace,
+      );
+      throw Exception('An unexpected error occurred while removing the educator');
     }
   }
 }

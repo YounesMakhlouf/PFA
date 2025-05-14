@@ -1,8 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:pfa/config/app_theme.dart';
-
-import '../l10n/app_localizations.dart';
+import '../utils/category_localization_utils.dart';
 
 class AccuracyBarChart extends StatelessWidget {
   final Map<String, double> categoryAccuracies;
@@ -52,7 +51,7 @@ class AccuracyBarChart extends StatelessWidget {
                   final index = value.toInt();
                   final keys = categoryAccuracies.keys.toList();
                   if (index >= 0 && index < keys.length) {
-                    final localized = getLocalizedLabel(keys[index],context);
+                    final localized = getLocalizedCategory(keys[index],context);
                     return Padding(
                       padding: const EdgeInsets.only(top: 8),
                       child: Transform.rotate(
@@ -89,27 +88,4 @@ class AccuracyBarChart extends StatelessWidget {
   }
 }
 
-String getLocalizedLabel(String key, BuildContext context) {
-  final loc = AppLocalizations.of(context);
-  switch (key) {
-    case 'NUMBERS':
-      return loc.numbers;
-    case 'EDUCATION':
-      return loc.education;
-    case 'RELAXATION':
-      return loc.relaxation;
-    case 'COLORS_SHAPES':
-      return loc.colorsAndShapes;
-    case 'EMOTIONS':
-      return loc.emotions;
-    case 'LOGICAL_THINKING':
-      return loc.logicalThinking;
-    case 'ANIMALS':
-      return loc.animals;
-    case 'FRUITS_VEGETABLES':
-      return loc.fruitsAndVegetables;
-    default:
-      return key;
-  }
-}
 

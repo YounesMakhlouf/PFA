@@ -48,9 +48,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get periodThisWeek => 'هذا الأسبوع';
   @override
   String get statsError => 'لا توجد إحصائيات متوفرة، حاول مرة أخرى لاحقا';
+
+  @override
+  String get viewStats => 'الاطلاع على الاحصائيات ';
   // Game instructions
   @override
   String get chooseCorrectColor => 'اختر اللون الصحيح';
+
 
   // Colors
   @override
