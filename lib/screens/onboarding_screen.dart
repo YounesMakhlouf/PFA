@@ -14,7 +14,6 @@ class OnboardingScreen extends ConsumerWidget {
     final logger = ref.read(loggingServiceProvider);
     logger.info("Onboarding completed. Navigating to AuthGate.");
 
-
     ref.read(sharedPreferencesProvider).whenData((prefs) {
       prefs.setBool(onboardingCompletedKey, true);
     });
@@ -45,10 +44,10 @@ class OnboardingScreen extends ConsumerWidget {
           ),
           image: Center(
               child: Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: Image.asset('assets/images/onboarding_child_puzzle.png', height: 300),
-              )
-          ),
+            padding: const EdgeInsets.only(top: 20.0),
+            child: Image.asset('assets/images/onboarding_child_puzzle.png',
+                height: 300),
+          )),
           decoration: PageDecoration(
             pageColor: theme.scaffoldBackgroundColor,
             bodyAlignment: Alignment.center,
@@ -70,10 +69,10 @@ class OnboardingScreen extends ConsumerWidget {
           ),
           image: Center(
               child: Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: Image.asset('assets/images/onboarding_family.png', height: 300),
-              )
-          ),
+            padding: const EdgeInsets.only(top: 20.0),
+            child:
+                Image.asset('assets/images/onboarding_family.png', height: 300),
+          )),
           decoration: PageDecoration(
             pageColor: theme.scaffoldBackgroundColor,
             bodyAlignment: Alignment.center,
@@ -89,12 +88,14 @@ class OnboardingScreen extends ConsumerWidget {
       pages: getPages(),
       onDone: () => _onIntroEnd(context, ref),
       onSkip: () => _onIntroEnd(context, ref),
-
       showSkipButton: true,
-      skip: Text(l10n.onboardingSkipButton, style: TextStyle(fontWeight: FontWeight.w600, color: theme.colorScheme.primary)),
+      skip: Text(l10n.onboardingSkipButton,
+          style: TextStyle(
+              fontWeight: FontWeight.w600, color: theme.colorScheme.primary)),
       next: Icon(Icons.arrow_forward, color: theme.colorScheme.primary),
-      done: Text(l10n.onboardingGetStartedButton, style: TextStyle(fontWeight: FontWeight.w600, color: theme.colorScheme.primary)),
-
+      done: Text(l10n.onboardingGetStartedButton,
+          style: TextStyle(
+              fontWeight: FontWeight.w600, color: theme.colorScheme.primary)),
       dotsDecorator: DotsDecorator(
         size: const Size.square(10.0),
         activeSize: const Size(20.0, 10.0),

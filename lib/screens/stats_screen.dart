@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/screens/error_screen.dart';
+import 'package:pfa/screens/generic_loading_screen.dart';
 
 import '../models/category_option.dart';
 import '../models/stats_summary.dart';
@@ -14,14 +15,14 @@ import '../widgets/category_filter_dropdown.dart';
 import '../widgets/time_filter_dropdown.dart';
 import '../models/game.dart' as game;
 
-class StatsScreen extends  ConsumerStatefulWidget  {
+class StatsScreen extends ConsumerStatefulWidget {
   final String childUuid;
   const StatsScreen({super.key, required this.childUuid});
   @override
   ConsumerState<StatsScreen> createState() => _StatsScreenState();
 }
 
-class _StatsScreenState extends ConsumerState<StatsScreen>{
+class _StatsScreenState extends ConsumerState<StatsScreen> {
   late final ChildStatsService _statsService;
   // global
   StatsSummary? _stats;
@@ -53,8 +54,8 @@ class _StatsScreenState extends ConsumerState<StatsScreen>{
     _statsService = ref.read(childStatsServiceProvider);
   }
 
-  Future<void>  _loadInitialData() async {
-    await Future.wait([_loadStats(),_loadCategoryChartData()]);
+  Future<void> _loadInitialData() async {
+    await Future.wait([_loadStats(), _loadCategoryChartData()]);
   }
 
   @override
@@ -69,7 +70,6 @@ class _StatsScreenState extends ConsumerState<StatsScreen>{
             _buildStatsSection(context),
             const SizedBox(height: 24),
             _buildCategoryChartSection()
-
           ],
         ),
       ),
@@ -89,12 +89,14 @@ class _StatsScreenState extends ConsumerState<StatsScreen>{
         timeFilter: _timeFilter,
         category: _selectedCategory,
       );
-      if(_stats == null && !_loadingStats){
-        setState(() => _statsError = AppLocalizations.of(context).applicationError);
+      if (_stats == null && !_loadingStats) {
+        setState(
+            () => _statsError = AppLocalizations.of(context).applicationError);
       }
       setState(() => _stats = stats);
     } catch (e) {
-      setState(() => _statsError = AppLocalizations.of(context).applicationError);
+      setState(
+          () => _statsError = AppLocalizations.of(context).applicationError);
     } finally {
       setState(() => _loadingStats = false);
     }
@@ -119,8 +121,7 @@ class _StatsScreenState extends ConsumerState<StatsScreen>{
       }
 
       final sortedResult = Map.fromEntries(
-          result.entries.toList()..sort((a, b) => b.value.compareTo(a.value))
-      );
+          result.entries.toList()..sort((a, b) => b.value.compareTo(a.value)));
 
       setState(() => _categoryAccuracies = sortedResult);
     } catch (e) {
@@ -132,22 +133,31 @@ class _StatsScreenState extends ConsumerState<StatsScreen>{
 
   Widget _buildStatsSection(BuildContext context) {
     if (_statsError != null) {
-      return ErrorScreen(errorMessage: _chartError!) ;
+      return ErrorScreen(errorMessage: _chartError!);
     }
     final categoryOptions = [
       CategoryOption(value: 'ALL', label: AppLocalizations.of(context).all),
-      CategoryOption(value: 'NUMBERS', label: AppLocalizations.of(context).numbers),
-      CategoryOption(value: 'COLORS_SHAPES', label: AppLocalizations.of(context).colorsAndShapes),
-      CategoryOption(value: 'EMOTIONS', label: AppLocalizations.of(context).emotions),
-      CategoryOption(value: 'LOGICAL_THINKING', label: AppLocalizations.of(context).logicalThinking),
-      CategoryOption(value: 'ANIMALS', label: AppLocalizations.of(context).animals),
-      CategoryOption(value: 'FRUITS_VEGETABLES', label: AppLocalizations.of(context).fruitsAndVegetables),
+      CategoryOption(
+          value: 'NUMBERS', label: AppLocalizations.of(context).numbers),
+      CategoryOption(
+          value: 'COLORS_SHAPES',
+          label: AppLocalizations.of(context).colorsAndShapes),
+      CategoryOption(
+          value: 'EMOTIONS', label: AppLocalizations.of(context).emotions),
+      CategoryOption(
+          value: 'LOGICAL_THINKING',
+          label: AppLocalizations.of(context).logicalThinking),
+      CategoryOption(
+          value: 'ANIMALS', label: AppLocalizations.of(context).animals),
+      CategoryOption(
+          value: 'FRUITS_VEGETABLES',
+          label: AppLocalizations.of(context).fruitsAndVegetables),
     ];
 
     return Stack(
       children: [
         Opacity(
-          opacity: _loadingStats? 0.5 : 1.0,
+          opacity: _loadingStats ? 0.5 : 1.0,
           child: AbsorbPointer(
             absorbing: _loadingStats,
             child: StatsContainer(
@@ -189,16 +199,16 @@ class _StatsScreenState extends ConsumerState<StatsScreen>{
   Widget _buildCategoryChartSection() {
     if (_chartError != null) return ErrorScreen(errorMessage: _chartError!);
     if (_loadingChart) {
-      return const Center(child: CircularProgressIndicator());
+      return const GenericLoadingScreen();
     }
 
     if (_categoryAccuracies == null || _categoryAccuracies!.isEmpty) {
-      return  Text(AppLocalizations.of(context).statsError);
+      return Text(AppLocalizations.of(context).statsError);
     }
 
     return AccuracyBarChart(
-        categoryAccuracies: _categoryAccuracies!,
-        context: context,
+      categoryAccuracies: _categoryAccuracies!,
+      context: context,
     );
   }
 
@@ -215,12 +225,9 @@ class _StatsScreenState extends ConsumerState<StatsScreen>{
     _loadStats();
   }
 
-
   void _handleCategoryChange(String? value) {
     if (value == null) return;
     setState(() => _selectedCategory = value);
     _loadStats();
   }
-
-
 }

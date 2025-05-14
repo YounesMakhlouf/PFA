@@ -3,6 +3,7 @@ import 'package:pfa/config/app_theme.dart';
 import 'package:pfa/providers/global_providers.dart';
 import 'package:pfa/screens/auth_gate.dart';
 import 'package:pfa/screens/error_screen.dart';
+import 'package:pfa/screens/generic_loading_screen.dart';
 import 'package:pfa/screens/onboarding_screen.dart';
 import 'package:pfa/services/supabase_service.dart';
 import 'package:pfa/services/logging_service.dart';
@@ -58,10 +59,12 @@ class AppInitializer extends ConsumerWidget {
       },
       loading: () => const MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Scaffold(body: Center(child: CircularProgressIndicator())),
+        home: GenericLoadingScreen(),
       ),
       error: (err, stack) {
-        ref.read(loggingServiceProvider).error("Error checking onboarding status", err, stack);
+        ref
+            .read(loggingServiceProvider)
+            .error("Error checking onboarding status", err, stack);
         return MyApp(showOnboarding: true);
       },
     );
