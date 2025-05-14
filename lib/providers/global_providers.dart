@@ -104,8 +104,8 @@ StateNotifierProvider<ActiveChildNotifier, Child?>((ref) {
 });
 
 final childServiceProvider = Provider<ChildService>((ref){
-  final child_repository = ref.watch(childRepositoryProvider);
-  return ChildService(childRepository: child_repository);
+  final childRepository = ref.watch(childRepositoryProvider);
+  return ChildService(childRepository: childRepository);
 });
 
 /// stats providers
