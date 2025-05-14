@@ -63,23 +63,11 @@ final currentUserIdProvider = Provider<String?>((ref) {
 });
 
 /// child providers
+
 final childRepositoryProvider = Provider<ChildRepository>((ref) {
   final supabaseService = ref.watch(supabaseServiceProvider);
   final logger = ref.watch(loggingServiceProvider);
   return ChildRepository(supabaseService: supabaseService, logger: logger);
-});
-
-final gameSessionRepositoryProvider = Provider<GameSessionRepository>((ref) {
-  final supabaseService = ref.watch(supabaseServiceProvider);
-  final logger = ref.watch(loggingServiceProvider);
-  return GameSessionRepository(
-      supabaseService: supabaseService, logger: logger);
-});
-
-final gameRepositoryProvider = Provider<GameRepository>((ref) {
-  final supabaseService = ref.watch(supabaseServiceProvider);
-  final logger = ref.watch(loggingServiceProvider);
-  return GameRepository(supabaseService: supabaseService, logger: logger);
 });
 
 final initialChildProfilesProvider = FutureProvider<List<Child>>((ref) async {
@@ -121,6 +109,7 @@ final childServiceProvider = Provider<ChildService>((ref){
 });
 
 /// stats providers
+
 final childStatsRepositoryProvider = Provider<ChildStatsRepository>((ref) {
   final supabaseService = ref.watch(supabaseServiceProvider);
   final logger = ref.watch(loggingServiceProvider);
@@ -134,6 +123,20 @@ final childStatsServiceProvider = Provider<ChildStatsService>((ref) {
   );
 });
 
+/// game providers
+
+final gameSessionRepositoryProvider = Provider<GameSessionRepository>((ref) {
+  final supabaseService = ref.watch(supabaseServiceProvider);
+  final logger = ref.watch(loggingServiceProvider);
+  return GameSessionRepository(
+      supabaseService: supabaseService, logger: logger);
+});
+
+final gameRepositoryProvider = Provider<GameRepository>((ref) {
+  final supabaseService = ref.watch(supabaseServiceProvider);
+  final logger = ref.watch(loggingServiceProvider);
+  return GameRepository(supabaseService: supabaseService, logger: logger);
+});
 final gameViewModelProvider = StateNotifierProvider.family<GameViewModel,
     GameState, String /* gameId */ >(
       (ref, gameId) {
