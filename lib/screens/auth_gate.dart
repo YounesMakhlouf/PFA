@@ -22,7 +22,7 @@ class AuthGate extends ConsumerWidget {
 
         if (session != null) {
           logger.debug(
-              "AuthGate: Session found (User ID: ${session.user.id}).  Checking initial profiles...");
+              "AuthGate: Session found (User ID: ${session.user.id}). Checking initial profiles...");
           final profilesAsync = ref.watch(initialChildProfilesProvider);
           return profilesAsync.when(loading: () {
             logger.debug("AuthGate: Loading initial profiles...");
@@ -40,15 +40,41 @@ class AuthGate extends ConsumerWidget {
               logger.debug(
                   "AuthGate: No profiles, showing CreateChildProfileScreen.");
               return const CreateChildProfileScreen();
+            } else if (profiles.length == 1) {
+              logger.debug(
+                  "AuthGate: One profile, setting active and showing HomeScreen.");
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (ref.read(activeChildProvider) == null ||
+                    ref.read(activeChildProvider)?.childId !=
+                        profiles.first.childId) {
+                  logger.info(
+                      "AuthGate/PostFrame: Setting single profile active: ${profiles.first.childId}");
+                  ref.read(activeChildProvider.notifier).set(profiles.first);
+                }
+              });
+              return const HomeScreen();
             } else {
               logger.debug(
-                  "AuthGate: Profiles exist. Showing HomeScreen. ActiveChildNotifier will handle active profile.");
+                  "AuthGate: Multiple profiles. TODO: Show SelectChildProfileScreen.");
+              // TODO: Replace with actual selection screen. Temporary fallback: set first and go home
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (ref.read(activeChildProvider) == null) {
+                  logger.info(
+                      "AuthGate/PostFrame: Setting first of multiple profiles active: ${profiles.first.childId}");
+                  ref.read(activeChildProvider.notifier).set(profiles.first);
+                }
+              });
               return const HomeScreen();
             }
           });
         } else {
           logger.debug(
               "AuthGate: No session found. Navigating to WelcomeScreen.");
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (ref.read(activeChildProvider) != null) {
+              ref.read(activeChildProvider.notifier).set(null);
+            }
+          });
           return const WelcomeScreen();
         }
       },
