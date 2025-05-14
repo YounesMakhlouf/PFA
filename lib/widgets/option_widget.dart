@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pfa/config/app_theme.dart';
 import 'package:pfa/constants/const.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/models/screen.dart';
@@ -103,22 +105,15 @@ class OptionWidget extends ConsumerWidget {
       ),
       child: ClipRRect(
         borderRadius: borderRadius,
-        child: Image.network(
-          imageUrl,
+        child: CachedNetworkImage(
+          imageUrl: imageUrl,
           fit: BoxFit.cover,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return Center(
-              child: CircularProgressIndicator(
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                    : null,
-                color: theme.colorScheme.primary,
-              ),
-            );
-          },
-          errorBuilder: (context, error, stackTrace) {
+          placeholder: (context, url) => Container(
+            color: AppColors.lightGrey.withAlpha((0.3 * 255).round()),
+            child: const Center(
+                child: CircularProgressIndicator(strokeWidth: 2.0)),
+          ),
+          errorWidget: (context, error, stackTrace) {
             return Center(
               child: Icon(
                 Icons.broken_image_outlined,
