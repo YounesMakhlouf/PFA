@@ -143,6 +143,10 @@ abstract class AppLocalizations {
   String get onlyOneProfileExists;
   String get logout;
 
+  // Profile messages
+  String get loadingProfilesMessage;
+  String get noProfilesFoundMessage;
+
   String get loading;
   String get gameOver;
   String get congratulationsAllLevelsComplete;

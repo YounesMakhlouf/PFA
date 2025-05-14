@@ -33,7 +33,7 @@ class AppRoutes {
             ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
         final profiles = args?['profiles'] as List<Child>?;
         if (profiles == null) {
-          return Scaffold(body: Center(child: Text("Error: Profiles missing")));
+          return ErrorScreen(errorMessage: "Profiles missing");
         }
         return SelectChildProfileScreen(profiles: profiles);
       },

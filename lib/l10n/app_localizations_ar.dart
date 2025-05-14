@@ -235,11 +235,17 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get repeatInstructionTooltip => 'إعادة التعليمات';
   @override
-  String get onboardingDesc1 => 'هذا التطبيق صُمم خصيصًا للأطفال ذوي الاحتياجات الخاصة. لنلعب ونتعلم معًا بطريقة ممتعة وآمنة.';
+  String get onboardingDesc1 =>
+      'هذا التطبيق صُمم خصيصًا للأطفال ذوي الاحتياجات الخاصة. لنلعب ونتعلم معًا بطريقة ممتعة وآمنة.';
   @override
-  String get onboardingDesc2 => 'تابعوا تقدم أطفالكم، واكتشفوا الأنشطة التي تنمي مهاراتهم بطريقة ذكية ومبسطة.';
+  String get onboardingDesc2 =>
+      'تابعوا تقدم أطفالكم، واكتشفوا الأنشطة التي تنمي مهاراتهم بطريقة ذكية ومبسطة.';
   @override
   String get onboardingSkipButton => 'تخطى';
   @override
   String get onboardingGetStartedButton => 'ابدأ الآن';
+  @override
+  String get loadingProfilesMessage => 'جاري تحميل الملفات الشخصية...';
+  @override
+  String get noProfilesFoundMessage => 'لم يتم العثور على ملفات شخصية...';
 }
