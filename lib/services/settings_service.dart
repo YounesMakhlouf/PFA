@@ -62,12 +62,12 @@ class SettingsService {
 
   Future<void> setTtsSpeechRate(double rate) async {
     final prefs = SharedPreferencesAsync();
-    final clampedRate = rate.clamp(0.1, 2.0);
+    final clampedRate = rate.clamp(0.0, 1.0);
     await prefs.setDouble(keyTtsSpeechRate, clampedRate);
     _logger.info("SettingsService: TTS speech rate set to $clampedRate");
   }
 
-  Future<double> getTtsSpeechRate({double defaultValue = 1.0}) async {
+  Future<double> getTtsSpeechRate({double defaultValue = 0.5}) async {
     final prefs = SharedPreferencesAsync();
     final rate = await prefs.getDouble(keyTtsSpeechRate) ?? defaultValue;
     _logger.debug(

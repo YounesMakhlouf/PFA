@@ -19,7 +19,7 @@ class TtsSpeechRateNotifier extends StateNotifier<double> {
   }
 
   Future<void> updateSpeechRate(double newRate) async {
-    final clampedRate = newRate.clamp(0.1, 2.0);
+    final clampedRate = newRate.clamp(0.0, 1.0);
     if (state != clampedRate) {
       await _ttsService.changeSpeechRate(clampedRate);
       state = clampedRate;

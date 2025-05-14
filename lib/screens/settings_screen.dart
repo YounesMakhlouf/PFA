@@ -117,13 +117,15 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 Slider(
                   value: currentSpeechRate,
-                  min: 0.5,
-                  max: 1.5,
+                  min: 0.0,
+                  max: 1.0,
                   divisions: 10,
                   label: currentSpeechRate.toStringAsFixed(1),
                   activeColor: Theme.of(context).colorScheme.primary,
-                  inactiveColor:
-                      Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                  inactiveColor: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withAlpha((0.3 * 255).round()),
                   onChanged: (double value) {
                     ref
                         .read(ttsSpeechRateProvider.notifier)
