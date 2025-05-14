@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:pfa/utils/color_utils.dart';
 
@@ -35,10 +36,10 @@ class GameCardWidget extends StatelessWidget {
     Widget cardContent;
 
     if (imagePath != null && imagePath!.isNotEmpty) {
-      cardContent = Image.network(
-        imagePath!,
+      cardContent = CachedNetworkImage(
+        imageUrl: imagePath!,
         fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) {
+        errorWidget: (context, url, error) {
           // Fallback icon if image fails to load
           return Icon(
             Icons.broken_image_outlined,
