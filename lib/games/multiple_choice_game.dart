@@ -57,6 +57,7 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
         ref.read(gameViewModelProvider(widget.gameId).notifier);
     final logger = ref.read(loggingServiceProvider);
     final l10n = AppLocalizations.of(context);
+    final translationService = ref.read(translationServiceProvider);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -73,7 +74,9 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
       case GameStatus.loadingGame:
       case GameStatus.loadingLevel:
       case GameStatus.loadingScreen:
-        return GenericLoadingScreen(message: gameState.game?.name);
+        return GenericLoadingScreen(
+            message: translationService.getTranslatedText(
+                context, gameState.game!.name));
 
       case GameStatus.error:
         return Scaffold(
@@ -211,7 +214,10 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text(gameState.game!.name),
+            title: Text(
+              translationService.getTranslatedText(
+                  context, gameState.game!.name),
+            ),
             backgroundColor: gameThemeColor?.withAlpha((0.9 * 255).round()),
             foregroundColor: appBarForegroundColor,
             elevation: theme.appBarTheme.elevation,
@@ -230,7 +236,6 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
               icon: Icon(Icons.close, color: appBarForegroundColor),
               tooltip: l10n.exitGameTooltip,
               onPressed: () async {
-                // Show Confirmation Dialog
                 final bool? shouldExit = await showDialog<bool>(
                   context: context,
                   barrierDismissible: true,
@@ -272,13 +277,11 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
                   },
                 );
 
-                // If the dialog was dismissed by tapping outside (shouldExit is null) or user pressed Cancel (false)
                 if (shouldExit != true) {
                   logger.debug("Exit game cancelled by user.");
-                  return; // Do nothing, stay in the game
+                  return;
                 }
 
-                // User confirmed exit
                 logger.info("User confirmed exiting game ${widget.gameId}");
                 try {
                   await gameViewModel.endCurrentSession(completed: false);
