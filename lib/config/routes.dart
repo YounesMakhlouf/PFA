@@ -7,13 +7,14 @@ import 'package:pfa/screens/create_child_profile_screen.dart';
 import 'package:pfa/screens/error_screen.dart';
 import 'package:pfa/screens/home_screen.dart';
 import 'package:pfa/screens/select_child_profile_screen.dart';
+import 'package:pfa/screens/settings_screen.dart';
 import 'package:pfa/screens/welcome_screen.dart';
 import 'package:pfa/games/multiple_choice_game.dart';
 
 import '../screens/stats_screen.dart';
 
 class AppRoutes {
-  static const String authGate = '/';
+  static const String authGate = '/auth';
   static const String welcome = '/welcome';
   static const String home = '/home';
   static const String categoryGames = '/category-games';
@@ -21,7 +22,8 @@ class AppRoutes {
   static const String selectChildProfile = '/select-child-profile';
   static const String multipleChoiceGame = '/game/multiple-choice';
   static const String stats = '/stats';
-  static const String emotionDetectionGame = '/game/multiple-choice';
+  static const String settings = '/settings';
+  static const String emotionDetectionGame = '/game/emotion-detection';
 
   static Map<String, WidgetBuilder> get routes {
     return {
@@ -29,12 +31,13 @@ class AppRoutes {
       welcome: (context) => const WelcomeScreen(),
       home: (context) => const HomeScreen(),
       createChildProfile: (context) => const CreateChildProfileScreen(),
+      settings: (context) => const SettingsScreen(),
       selectChildProfile: (context) {
         final args =
             ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
         final profiles = args?['profiles'] as List<Child>?;
         if (profiles == null) {
-          return Scaffold(body: Center(child: Text("Error: Profiles missing")));
+          return ErrorScreen(errorMessage: "Profiles missing");
         }
         return SelectChildProfileScreen(profiles: profiles);
       },

@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:pfa/constants/const.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/models/screen.dart';
@@ -9,6 +10,7 @@ import 'package:pfa/viewmodels/game_state.dart';
 import 'package:pfa/viewmodels/game_viewmodel.dart';
 import 'package:pfa/widgets/option_widget.dart';
 import 'package:pfa/config/app_theme.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:pfa/providers/global_providers.dart';
 
 class GameScreenWidget extends ConsumerStatefulWidget {
@@ -183,18 +185,43 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
 
   Widget _buildFeedbackArea(
       BuildContext context, bool? isCorrect, ThemeData theme) {
+    // Key for AnimatedSwitcher to ensure widgets are treated as different
+    // when isCorrect changes from null -> true/false or true -> false.
+    final Key feedbackKey = ValueKey<bool?>(isCorrect);
+
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      transitionBuilder: (Widget child, Animation<double> animation) {
+        return FadeTransition(opacity: animation, child: child);
+      },
+      child: isCorrect == null
+          ? SizedBox(key: feedbackKey, height: 60)
+          : _buildFeedbackContent(context, isCorrect, theme, feedbackKey),
+    );
+  }
+
+  Widget _buildFeedbackContent(
+      BuildContext context, bool? isCorrect, ThemeData theme, Key key) {
+    final Color feedbackColor = isCorrect == true ? AppColors.success : AppColors.error;
+
+    final String feedbackText;
+    final String feedbackEmoji;
     if (isCorrect == null) return const SizedBox.shrink();
 
-    final Color feedbackColor =
-        isCorrect ? AppColors.success : theme.colorScheme.error;
-    final String feedbackText = isCorrect
-        ? AppLocalizations.of(context).correct
-        : AppLocalizations.of(context).tryAgain;
-    final IconData feedbackIcon =
+    if (isCorrect) {
+      feedbackText = AppLocalizations.of(context).correct;
+      feedbackEmoji = (positiveEmojisList..shuffle()).first;
+    } else {
+      feedbackText = AppLocalizations.of(context).tryAgain;
+      feedbackEmoji = (neutralEmojisList..shuffle()).first;
+    }
+    final String fullFeedbackText = '$feedbackText $feedbackEmoji';
+
+    final IconData feedbackIconData =
         isCorrect ? Icons.check_circle_outline : Icons.highlight_off;
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
+    return Container(
+      key: key,
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -209,15 +236,26 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(feedbackIcon, color: feedbackColor, size: 28),
+          Icon(feedbackIconData, color: feedbackColor, size: 32)
+              .animate()
+              .scale(
+                duration: 400.ms,
+                begin: const Offset(0.5, 0.5),
+                curve: Curves.elasticOut,
+              )
+              .then(delay: 200.ms)
+              .shake(hz: 4, duration: 300.ms),
           const SizedBox(width: 12),
           Text(
-            feedbackText,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: feedbackColor,
-            ),
-          ),
+            fullFeedbackText,
+            style: theme.textTheme.titleLarge
+                ?.copyWith(fontWeight: FontWeight.bold, color: feedbackColor),
+          ).animate().fadeIn(duration: 300.ms, delay: 100.ms).slideY(
+              begin: 0.2,
+              end: 0,
+              duration: 300.ms,
+              delay: 100.ms,
+              curve: Curves.easeOut),
         ],
       ),
     );

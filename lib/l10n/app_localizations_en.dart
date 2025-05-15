@@ -48,6 +48,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get periodThisWeek => 'This week';
   @override
   String get statsError => 'No stats available, try again later';
+  @override
+  String get viewStats => 'View Stats ';
 
   // Game instructions
   @override
@@ -106,9 +108,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   // Game feedback
   @override
-  String get correct => 'Correct! 👏';
+  String get correct => 'Correct!';
   @override
-  String get tryAgain => 'Try again! 🤔';
+  String get tryAgain => 'Try again!';
 
   // Game UI
   @override
@@ -198,6 +200,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectChildProfileTitle => 'Select Profile';
   @override
   String get whoIsPlayingPrompt => 'Who is playing?';
+
   @override
   String get addChildProfileButton => 'Add Another Profile';
   @override
@@ -230,4 +233,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancelButton => 'Cancel';
   @override
   String get exitButton => 'Exit';
+  @override
+  String get repeatInstructionTooltip => 'Repeat Instruction';
+  @override
+  String get onboardingDesc1 =>
+      'This app is specially designed for children with special needs. Let\'s play and learn together in a fun and safe way.';
+  @override
+  String get onboardingDesc2 =>
+      'Track your children\'s progress and discover activities that develop their skills in smart and simple ways.';
+  @override
+  String get onboardingSkipButton => 'Skip';
+  @override
+  String get onboardingGetStartedButton => 'Get Started';
+  @override
+  String get loadingProfilesMessage => 'Loading profiles...';
+  @override
+  String get noProfilesFoundMessage => 'No profiles found...';
+  @override
+  String get settingsTitle => 'Settings';
+  @override
+  String get ttsEnabledSetting => 'Enable Text-to-Speech';
+  @override
+  String get soundEffectsEnabledSetting => 'Enable Sound Effects';
+  @override
+  String get loadingSetting => 'Loading setting...';
+  @override
+  String get errorLoadingSetting => 'Error loading setting';
+  @override
+  String get languageSetting => 'Language';
+  @override
+  String get selectLanguageDialogTitle => 'Select Language';
+  @override
+  String get ttsSpeechRateSetting => 'Speech Rate';
+  @override
+  String get ttsRateSlow => 'Slow';
+  @override
+  String get ttsRateNormal => 'Normal';
+  @override
+  String get ttsRateFast => 'Fast';
 }

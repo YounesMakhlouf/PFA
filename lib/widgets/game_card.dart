@@ -1,5 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:pfa/config/app_theme.dart';
+import 'package:pfa/utils/color_utils.dart';
 
 class GameCardWidget extends StatelessWidget {
   final String title;
@@ -29,20 +30,16 @@ class GameCardWidget extends StatelessWidget {
     final Color effectiveBackgroundColor = backgroundColor ??
         theme.cardTheme.color ??
         colorScheme.primaryContainer;
-    final Color defaultForegroundColor =
-        effectiveBackgroundColor.computeLuminance() > 0.5
-            ? AppColors.textPrimary
-            : AppColors.textLight;
-    final Color effectiveForegroundColor =
-        foregroundColor ?? defaultForegroundColor;
+    final Color effectiveForegroundColor = foregroundColor ??
+        getContrastingForegroundColor(effectiveBackgroundColor);
 
     Widget cardContent;
 
     if (imagePath != null && imagePath!.isNotEmpty) {
-      cardContent = Image.network(
-        imagePath!,
+      cardContent = CachedNetworkImage(
+        imageUrl: imagePath!,
         fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) {
+        errorWidget: (context, url, error) {
           // Fallback icon if image fails to load
           return Icon(
             Icons.broken_image_outlined,

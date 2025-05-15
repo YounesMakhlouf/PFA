@@ -59,6 +59,7 @@ abstract class AppLocalizations {
   String get all;
   String get periodThisWeek;
   String get statsError;
+  String get viewStats;
 
   // Game instructions
   String get chooseCorrectColor;
@@ -142,6 +143,10 @@ abstract class AppLocalizations {
   String get onlyOneProfileExists;
   String get logout;
 
+  // Profile messages
+  String get loadingProfilesMessage;
+  String get noProfilesFoundMessage;
+
   String get loading;
   String get gameOver;
   String get congratulationsAllLevelsComplete;
@@ -153,6 +158,24 @@ abstract class AppLocalizations {
   String get cancelButton;
   String get exitButton;
   String get unknownCategory;
+  String get repeatInstructionTooltip;
+
+  String get onboardingDesc1;
+  String get onboardingDesc2;
+  String get onboardingSkipButton;
+  String get onboardingGetStartedButton;
+
+  String get settingsTitle;
+  String get ttsEnabledSetting;
+  String get soundEffectsEnabledSetting;
+  String get loadingSetting;
+  String get errorLoadingSetting;
+  String get languageSetting;
+  String get selectLanguageDialogTitle;
+  String get ttsSpeechRateSetting;
+  String get ttsRateSlow;
+  String get ttsRateNormal;
+  String get ttsRateFast;
 }
 
 class _AppLocalizationsDelegate

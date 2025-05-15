@@ -3,10 +3,11 @@ import 'package:camera/camera.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/models/screen.dart';
 import 'package:pfa/repositories/game_repository.dart';
+import 'package:pfa/services/audio_service.dart';
 import 'package:pfa/services/logging_service.dart';
 import 'package:pfa/repositories/game_session_repository.dart';
 import 'package:pfa/models/game_session.dart' as gs_model;
-import 'package:pfa/services/emotion_detection_service.dart';
+import 'package:pfa/services/tts_service.dart';
 import 'package:pfa/viewmodels/game_state.dart';
 
 class GameViewModel extends StateNotifier<GameState> {
@@ -17,6 +18,8 @@ class GameViewModel extends StateNotifier<GameState> {
   final GameSessionRepository _sessionRepository;
 
   bool _isDetecting = false;
+  final TtsService _ttsService;
+  final AudioService _audioService;
 
   // Cache
   final Map<String, ScreenWithOptionsMenu> _screenCache = {};
@@ -32,6 +35,8 @@ class GameViewModel extends StateNotifier<GameState> {
     this._gameRepository,
     this._logger,
     this._sessionRepository,
+    this._ttsService,
+    this._audioService,
   ) : super(GameState(status: GameStatus.initial)) {
     _logger.info(
         'GameViewModel initialized for game ID: $_gameId, child ID: $_childId');
@@ -176,11 +181,32 @@ class GameViewModel extends StateNotifier<GameState> {
           currentScreenData: screenData,
           status: GameStatus.playing,
           clearIsCorrect: true);
+
+      final instructionToSpeak = screenData.screen.instruction;
+      if (instructionToSpeak != null && instructionToSpeak.isNotEmpty) {
+        _logger.debug(
+            'GameViewModel: Speaking screen instruction: "$instructionToSpeak"');
+        _ttsService.speak(instructionToSpeak);
+      }
     } catch (e, stackTrace) {
       _logger.error('Error loading screen $screenIdToLoad', e, stackTrace);
       state = state.copyWith(
           status: GameStatus.error,
           errorMessage: 'Failed to load screen content');
+    }
+  }
+
+  void repeatCurrentScreenInstruction() {
+    if (state.status == GameStatus.playing && state.currentScreenData != null) {
+      final instructionToSpeak = state.currentScreenData!.screen.instruction;
+      if (instructionToSpeak != null && instructionToSpeak.isNotEmpty) {
+        _logger.debug(
+            'GameViewModel: Re-speaking screen instruction: "$instructionToSpeak"');
+        _ttsService.speak(instructionToSpeak);
+      }
+    } else {
+      _logger.warning(
+          "repeatCurrentScreenInstruction called but no screen is active or instruction available.");
     }
   }
 
@@ -225,9 +251,13 @@ class GameViewModel extends StateNotifier<GameState> {
     }
   }
 
-  void checkAnswer(Option selectedOption) {
-    if (state.status != GameStatus.playing || state.currentScreenData == null)
+  void checkAnswer(
+      {required Option selectedOption,
+      required String correctFeedbackText,
+      required String tryAgainFeedbackText}) {
+    if (state.status != GameStatus.playing || state.currentScreenData == null) {
       return;
+    }
     bool? isCorrect = false;
     final screen = state.currentScreenData!.screen;
 
@@ -245,10 +275,19 @@ class GameViewModel extends StateNotifier<GameState> {
       return;
     }
 
-    state = state.copyWith(isCorrect: isCorrect, clearErrorMessage: true);
-    recordAttempt(selectedOption, isCorrect);
-
-    if (isCorrect != false) {
+    state =
+        state.copyWith(isCorrect: isCorrectCurrently, clearErrorMessage: true);
+    recordAttempt(selectedOption, isCorrectCurrently);
+    final feedbackText =
+        isCorrectCurrently ? correctFeedbackText : tryAgainFeedbackText;
+    _ttsService.speak(feedbackText);
+    if (isCorrectCurrently) {
+      _audioService.playSound(SoundType.correct);
+    } else {
+      _audioService.playSound(SoundType.incorrect);
+    }
+    if (isCorrectCurrently) {
+      // Delay moving to the next screen
       Timer(const Duration(seconds: 1), () {
         if (mounted) moveToNextScreen();
       });
@@ -273,7 +312,8 @@ class GameViewModel extends StateNotifier<GameState> {
     if (_currentGameSession != null) {
       await _sessionRepository.endSession(
           sessionId: _currentGameSession!.sessionId, completed: true);
-      _currentGameSession = null;
+      _audioService.playSound(SoundType.levelComplete);
+      _currentGameSession = null; // Clear for next level
     }
 
     if (state.currentLevelIndex < state.levels.length - 1) {
@@ -282,6 +322,7 @@ class GameViewModel extends StateNotifier<GameState> {
       _logger.info("Game completed.");
       state = state.copyWith(
           status: GameStatus.completed, clearCurrentScreenData: true);
+      _audioService.playSound(SoundType.gameComplete);
     }
   }
 

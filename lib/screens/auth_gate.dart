@@ -4,6 +4,7 @@ import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/providers/global_providers.dart';
 import 'package:pfa/screens/create_child_profile_screen.dart';
 import 'package:pfa/screens/error_screen.dart';
+import 'package:pfa/screens/generic_loading_screen.dart';
 import 'package:pfa/screens/home_screen.dart';
 import 'package:pfa/screens/welcome_screen.dart';
 
@@ -21,12 +22,12 @@ class AuthGate extends ConsumerWidget {
 
         if (session != null) {
           logger.debug(
-              "AuthGate: Session found (User ID: ${session.user.id}).  Checking initial profiles...");
+              "AuthGate: Session found (User ID: ${session.user.id}). Checking initial profiles...");
           final profilesAsync = ref.watch(initialChildProfilesProvider);
           return profilesAsync.when(loading: () {
             logger.debug("AuthGate: Loading initial profiles...");
-            return const Scaffold(
-                body: Center(child: CircularProgressIndicator()));
+            return const GenericLoadingScreen(
+                message: "Loading initial profiles..");
           }, error: (err, st) {
             logger.error("AuthGate: Error loading initial profiles", err, st);
             return ErrorScreen(
@@ -79,14 +80,7 @@ class AuthGate extends ConsumerWidget {
       },
       loading: () {
         logger.debug("AuthGate: Auth state loading...");
-        return Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          body: Center(
-            child: CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          ),
-        );
+        return GenericLoadingScreen(message: "Authenticating"); //TODO: Localize
       },
       error: (error, stackTrace) {
         logger.error("AuthGate: Error in auth stream", error, stackTrace);

@@ -6,6 +6,7 @@ import 'package:pfa/config/routes.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/providers/global_providers.dart';
 import 'package:pfa/screens/error_screen.dart';
+import 'package:pfa/screens/generic_loading_screen.dart';
 import 'package:pfa/utils/supabase_utils.dart';
 import 'package:pfa/widgets/game_card.dart';
 
@@ -32,7 +33,8 @@ class CategoryGamesScreen extends ConsumerWidget {
         body: SafeArea(
             child: gamesAsync.when(loading: () {
           logger.debug("CategoryGamesScreen: Loading games for $category...");
-          return const Center(child: CircularProgressIndicator());
+          return GenericLoadingScreen(
+              message: "Loading games for $category...");
         }, error: (err, st) {
           logger.error("CategoryGamesScreen: Error loading games for $category",
               err, st);

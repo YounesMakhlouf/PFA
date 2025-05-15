@@ -48,9 +48,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get periodThisWeek => 'هذا الأسبوع';
   @override
   String get statsError => 'لا توجد إحصائيات متوفرة، حاول مرة أخرى لاحقا';
+
+  @override
+  String get viewStats => 'الاطلاع على الاحصائيات ';
   // Game instructions
   @override
   String get chooseCorrectColor => 'اختر اللون الصحيح';
+
 
   // Colors
   @override
@@ -96,7 +100,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'خطأ في تحميل بيانات الملف الشخصي: $error';
   @override
   String errorCheckingAuthDetails(Object error) =>
-      'خطأ في التحقق من المصادقة: $error';
+      'خطأ في التحقق من تسجيل الدخول: $error';
   @override
   String get noGameCategoriesAvailable => 'لا توجد فئات ألعاب متاحة.';
   @override
@@ -105,9 +109,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   // Game feedback
   @override
-  String get correct => 'صحيح! 👏';
+  String get correct => 'صحيح!';
   @override
-  String get tryAgain => 'حاول مرة أخرى! 🤔';
+  String get tryAgain => 'حاول مرة أخرى!';
 
   // Game UI
   @override
@@ -228,4 +232,43 @@ class AppLocalizationsAr extends AppLocalizations {
   String get cancelButton => 'إلغاء';
   @override
   String get exitButton => 'خروج';
+  @override
+  String get repeatInstructionTooltip => 'إعادة التعليمات';
+  @override
+  String get onboardingDesc1 =>
+      'هذا التطبيق صُمم خصيصًا للأطفال ذوي الاحتياجات الخاصة. لنلعب ونتعلم معًا بطريقة ممتعة وآمنة.';
+  @override
+  String get onboardingDesc2 =>
+      'تابعوا تقدم أطفالكم، واكتشفوا الأنشطة التي تنمي مهاراتهم بطريقة ذكية ومبسطة.';
+  @override
+  String get onboardingSkipButton => 'تخطى';
+  @override
+  String get onboardingGetStartedButton => 'ابدأ الآن';
+  @override
+  String get loadingProfilesMessage => 'جاري تحميل الملفات الشخصية.';
+  @override
+  String get noProfilesFoundMessage => 'لم يتم العثور على ملفات شخصية.';
+
+  @override
+  String get settingsTitle => 'الإعدادات';
+  @override
+  String get ttsEnabledSetting => 'تمكين تحويل النص إلى كلام';
+  @override
+  String get soundEffectsEnabledSetting => 'تمكين المؤثرات الصوتية';
+  @override
+  String get loadingSetting => 'جاري تحميل الإعداد...';
+  @override
+  String get errorLoadingSetting => 'خطأ في تحميل الإعداد';
+  @override
+  String get languageSetting => 'اللغة';
+  @override
+  String get selectLanguageDialogTitle => 'اختر اللغة';
+  @override
+  String get ttsSpeechRateSetting => 'سرعة الكلام';
+  @override
+  String get ttsRateSlow => 'بطيء';
+  @override
+  String get ttsRateNormal => 'عادي';
+  @override
+  String get ttsRateFast => 'سريع';
 }

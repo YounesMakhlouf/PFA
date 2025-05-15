@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pfa/config/app_theme.dart';
 import 'package:pfa/models/game.dart';
+import 'package:pfa/utils/color_utils.dart';
 
 class CategoryCardWidget extends StatelessWidget {
   final GameCategory category;
@@ -19,11 +19,8 @@ class CategoryCardWidget extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
 
     final Color effectiveBackgroundColor = category.themeColor;
-    // Determine foreground based on background luminance
     final Color effectiveForegroundColor =
-        effectiveBackgroundColor.computeLuminance() > 0.5
-            ? AppColors.textPrimary
-            : AppColors.textLight;
+        getContrastingForegroundColor(effectiveBackgroundColor);
 
     final String title = category.localizedName(context);
 

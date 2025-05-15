@@ -48,6 +48,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get periodThisWeek => 'Cette Semaine';
   @override
   String get statsError => 'Aucune statistique disponible, réessayez plus tard';
+  @override
+  String get viewStats => 'Consulter les statistiques ';
 
   // Game instructions
   @override
@@ -106,9 +108,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   // Game feedback
   @override
-  String get correct => 'Correct ! 👏';
+  String get correct => 'Correct !';
   @override
-  String get tryAgain => 'Essayez encore ! 🤔';
+  String get tryAgain => 'Essayez encore !';
 
   // Game UI
   @override
@@ -127,7 +129,7 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get selectCorrectOption => 'Sélectionnez la bonne option';
 
-// Authenticatio
+// Authentication
   @override
   String get signIn => 'Se connecter';
   @override
@@ -202,6 +204,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get selectChildProfileTitle => 'Sélectionner un profil';
   @override
   String get whoIsPlayingPrompt => 'Qui joue ?';
+
   @override
   String get addChildProfileButton => 'Ajouter un autre profil';
   @override
@@ -234,4 +237,42 @@ class AppLocalizationsFr extends AppLocalizations {
   String get cancelButton => 'Annuler';
   @override
   String get exitButton => 'Quitter';
+  @override
+  String get repeatInstructionTooltip => 'Répéter l\'instruction';
+  @override
+  String get onboardingDesc1 =>
+      'Cette application est spécialement conçue pour les enfants ayant des besoins spécifiques. Jouons et apprenons ensemble de manière ludique et sûre.';
+  @override
+  String get onboardingDesc2 =>
+      'Suivez les progrès de vos enfants et découvrez des activités qui développent leurs compétences de manière intelligente et simple.';
+  @override
+  String get onboardingSkipButton => 'Passer';
+  @override
+  String get onboardingGetStartedButton => 'Commencer';
+  @override
+  String get loadingProfilesMessage => 'Chargement des profils...';
+  @override
+  String get noProfilesFoundMessage => 'Aucun profil trouvé...';
+  @override
+  String get settingsTitle => 'Paramètres';
+  @override
+  String get ttsEnabledSetting => 'Activer la synthèse vocale';
+  @override
+  String get soundEffectsEnabledSetting => 'Activer les effets sonores';
+  @override
+  String get loadingSetting => 'Chargement du paramètre...';
+  @override
+  String get errorLoadingSetting => 'Erreur de chargement du paramètre';
+  @override
+  String get languageSetting => 'Langue';
+  @override
+  String get selectLanguageDialogTitle => 'Choisir la Language';
+  @override
+  String get ttsSpeechRateSetting => 'Vitesse de la parole';
+  @override
+  String get ttsRateSlow => 'Lent';
+  @override
+  String get ttsRateNormal => 'Normal';
+  @override
+  String get ttsRateFast => 'Rapide';
 }

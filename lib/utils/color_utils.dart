@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pfa/config/app_theme.dart';
 
 extension HexColorParsing on String? {
   Color parseToColor({required Color fallbackColor}) {
@@ -22,4 +23,11 @@ extension HexColorParsing on String? {
       return fallbackColor;
     }
   }
+}
+
+Color getContrastingForegroundColor(Color backgroundColor) {
+  // Determine foreground based on background luminance
+  return backgroundColor.computeLuminance() > 0.5
+      ? AppColors.textPrimary
+      : AppColors.textLight;
 }
