@@ -176,6 +176,7 @@ abstract class AppLocalizations {
   String get ttsRateSlow;
   String get ttsRateNormal;
   String get ttsRateFast;
+  String get hapticsEnabledSetting;
 }
 
 class _AppLocalizationsDelegate

@@ -55,7 +55,6 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get chooseCorrectColor => 'اختر اللون الصحيح';
 
-
   // Colors
   @override
   String get red => 'أحمر';
@@ -271,4 +270,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ttsRateNormal => 'عادي';
   @override
   String get ttsRateFast => 'سريع';
+  @override
+  String get hapticsEnabledSetting => 'تمكين ردود الفعل اللمسية';
 }

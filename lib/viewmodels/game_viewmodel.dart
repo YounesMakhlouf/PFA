@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/models/screen.dart';
+import 'package:pfa/providers/global_providers.dart';
 import 'package:pfa/repositories/game_repository.dart';
 import 'package:pfa/services/audio_service.dart';
 import 'package:pfa/services/logging_service.dart';
@@ -20,6 +22,7 @@ class GameViewModel extends StateNotifier<GameState> {
   bool _isDetecting = false;
   final TtsService _ttsService;
   final AudioService _audioService;
+  final Ref _ref;
 
   // Cache
   final Map<String, ScreenWithOptionsMenu> _screenCache = {};
@@ -37,6 +40,7 @@ class GameViewModel extends StateNotifier<GameState> {
     this._sessionRepository,
     this._ttsService,
     this._audioService,
+    this._ref,
   ) : super(GameState(status: GameStatus.initial)) {
     _logger.info(
         'GameViewModel initialized for game ID: $_gameId, child ID: $_childId');
@@ -258,14 +262,16 @@ class GameViewModel extends StateNotifier<GameState> {
     if (state.status != GameStatus.playing || state.currentScreenData == null) {
       return;
     }
-    bool? isCorrect = false;
+
+    bool? isCorrectCurrently = false;
+    final bool hapticsAreEnabled = _ref.read(hapticsEnabledProvider);
     final screen = state.currentScreenData!.screen;
 
     if (screen is MultipleChoiceScreen) {
       if (_isDetecting) {
-        isCorrect = state.detectedEmotion == selectedOption.labelText;
+        isCorrectCurrently = state.detectedEmotion == selectedOption.labelText;
       } else {
-        isCorrect = selectedOption.isCorrect;
+        isCorrectCurrently = selectedOption.isCorrect;
       }
     } else if (screen is MemoryScreen) {
       _logger.warning("Memory game logic not fully implemented.");
@@ -279,14 +285,20 @@ class GameViewModel extends StateNotifier<GameState> {
         state.copyWith(isCorrect: isCorrectCurrently, clearErrorMessage: true);
     recordAttempt(selectedOption, isCorrectCurrently);
     final feedbackText =
-        isCorrectCurrently ? correctFeedbackText : tryAgainFeedbackText;
+        isCorrectCurrently == true ? correctFeedbackText : tryAgainFeedbackText;
     _ttsService.speak(feedbackText);
-    if (isCorrectCurrently) {
+    if (isCorrectCurrently == true) {
       _audioService.playSound(SoundType.correct);
+      if (hapticsAreEnabled) {
+        HapticFeedback.mediumImpact();
+      }
     } else {
       _audioService.playSound(SoundType.incorrect);
+      if (hapticsAreEnabled) {
+        HapticFeedback.lightImpact();
+      }
     }
-    if (isCorrectCurrently) {
+    if (isCorrectCurrently == true) {
       // Delay moving to the next screen
       Timer(const Duration(seconds: 1), () {
         if (mounted) moveToNextScreen();
