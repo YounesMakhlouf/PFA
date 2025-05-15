@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/models/screen.dart';
 import 'package:pfa/viewmodels/game_state.dart';
-import 'package:pfa/viewmodels/game_viewmodel.dart';
 import 'package:pfa/providers/global_providers.dart';
 
 class EmotionDetectionWidget extends ConsumerWidget {

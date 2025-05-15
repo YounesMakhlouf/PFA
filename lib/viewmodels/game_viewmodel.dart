@@ -6,6 +6,7 @@ import 'package:pfa/models/screen.dart';
 import 'package:pfa/providers/global_providers.dart';
 import 'package:pfa/repositories/game_repository.dart';
 import 'package:pfa/services/audio_service.dart';
+import 'package:pfa/services/emotion_detection_service.dart';
 import 'package:pfa/services/logging_service.dart';
 import 'package:pfa/repositories/game_session_repository.dart';
 import 'package:pfa/models/game_session.dart' as gs_model;

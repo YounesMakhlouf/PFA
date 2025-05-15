@@ -7,7 +7,6 @@ import 'package:pfa/models/screen.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/screens/error_screen.dart';
 import 'package:pfa/viewmodels/game_state.dart';
-import 'package:pfa/viewmodels/game_viewmodel.dart';
 import 'package:pfa/widgets/option_widget.dart';
 import 'package:pfa/config/app_theme.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -142,7 +141,6 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
             ],
           ),
         ),
-
         Expanded(
           flex: 1,
           child: AspectRatio(
@@ -202,7 +200,8 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
 
   Widget _buildFeedbackContent(
       BuildContext context, bool? isCorrect, ThemeData theme, Key key) {
-    final Color feedbackColor = isCorrect == true ? AppColors.success : AppColors.error;
+    final Color feedbackColor =
+        isCorrect == true ? AppColors.success : AppColors.error;
 
     final String feedbackText;
     final String feedbackEmoji;
