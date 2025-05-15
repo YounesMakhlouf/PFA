@@ -271,4 +271,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ttsRateNormal => 'Normal';
   @override
   String get ttsRateFast => 'Fast';
+  @override
+  String get hapticsEnabledSetting => 'Enable Haptic Feedback';
 }

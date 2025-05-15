@@ -6,6 +6,7 @@ import 'package:pfa/models/game.dart';
 import 'package:pfa/models/user.dart';
 import 'package:pfa/providers/active_child_notifier.dart';
 import 'package:pfa/providers/app_language_notifier.dart';
+import 'package:pfa/providers/haptics_enabled_notifier.dart';
 import 'package:pfa/providers/tts_speech_rate_notifier.dart';
 import 'package:pfa/services/audio_service.dart';
 import 'package:pfa/services/settings_service.dart';
@@ -99,11 +100,11 @@ final initialChildProfilesProvider = FutureProvider<List<Child>>((ref) async {
 });
 
 final activeChildProvider =
-StateNotifierProvider<ActiveChildNotifier, Child?>((ref) {
+    StateNotifierProvider<ActiveChildNotifier, Child?>((ref) {
   return ActiveChildNotifier(ref);
 });
 
-final childServiceProvider = Provider<ChildService>((ref){
+final childServiceProvider = Provider<ChildService>((ref) {
   final childRepository = ref.watch(childRepositoryProvider);
   return ChildService(childRepository: childRepository);
 });
@@ -139,7 +140,7 @@ final gameRepositoryProvider = Provider<GameRepository>((ref) {
 });
 final gameViewModelProvider = StateNotifierProvider.family<GameViewModel,
     GameState, String /* gameId */ >(
-      (ref, gameId) {
+  (ref, gameId) {
     final gameRepo = ref.read(gameRepositoryProvider);
     final sessionRepo = ref.read(gameSessionRepositoryProvider);
     final logger = ref.read(loggingServiceProvider);
@@ -161,12 +162,13 @@ final gameViewModelProvider = StateNotifierProvider.family<GameViewModel,
       sessionRepo,
       ttsService,
       audioService,
+      ref,
     );
   },
 );
 
 final gamesByCategoryProvider =
-FutureProvider.family<List<Game>, GameCategory>((ref, category) async {
+    FutureProvider.family<List<Game>, GameCategory>((ref, category) async {
   final logger = ref.read(loggingServiceProvider);
   logger.debug(
       "gamesByCategoryProvider: Fetching games for category $category...");
@@ -187,7 +189,7 @@ FutureProvider.family<List<Game>, GameCategory>((ref, category) async {
   }
 });
 final sharedPreferencesProvider =
-FutureProvider<SharedPreferences>((ref) async {
+    FutureProvider<SharedPreferences>((ref) async {
   return await SharedPreferences.getInstance();
 });
 
@@ -206,7 +208,7 @@ final ttsEnabledProvider = FutureProvider<bool>((ref) async {
 });
 
 final ttsSpeechRateProvider =
-StateNotifierProvider<TtsSpeechRateNotifier, double>((ref) {
+    StateNotifierProvider<TtsSpeechRateNotifier, double>((ref) {
   final settingsService = ref.watch(settingsServiceProvider);
   final ttsService = ref.watch(ttsServiceProvider);
   final logger = ref.watch(loggingServiceProvider);
@@ -218,7 +220,7 @@ final soundEffectsEnabledProvider = FutureProvider<bool>((ref) async {
 });
 
 final appLanguageProvider =
-StateNotifierProvider<AppLanguageNotifier, AppLanguage>((ref) {
+    StateNotifierProvider<AppLanguageNotifier, AppLanguage>((ref) {
   final settingsService = ref.watch(settingsServiceProvider);
   final logger = ref.watch(loggingServiceProvider);
   return AppLanguageNotifier(settingsService, logger);
@@ -227,4 +229,11 @@ StateNotifierProvider<AppLanguageNotifier, AppLanguage>((ref) {
 final localeProvider = Provider<Locale>((ref) {
   final appLanguage = ref.watch(appLanguageProvider);
   return Locale(appLanguage.code);
+});
+
+final hapticsEnabledProvider =
+    StateNotifierProvider<HapticsEnabledNotifier, bool>((ref) {
+  final settingsService = ref.watch(settingsServiceProvider);
+  final logger = ref.watch(loggingServiceProvider);
+  return HapticsEnabledNotifier(settingsService, logger);
 });
