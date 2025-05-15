@@ -89,6 +89,21 @@ class SettingsService {
     return enabled;
   }
 
+  Future<void> setHapticsEnabled(bool enabled) async {
+    final prefs = SharedPreferencesAsync();
+    await prefs.setBool(keyHapticFeedbackEnabled, enabled);
+    _logger.info("SettingsService: Haptic feedbacks enabled set to $enabled");
+  }
+
+  Future<bool> areHapticsEnabled({bool defaultValue = true}) async {
+    final prefs = SharedPreferencesAsync();
+    final enabled =
+        await prefs.getBool(keyHapticFeedbackEnabled) ?? defaultValue;
+    _logger.debug(
+        "SettingsService: Retrieved Haptic feedbacks enabled: $enabled (default: $defaultValue)");
+    return enabled;
+  }
+
   // Method to clear all app-specific settings (e.g., on logout or factory reset)
   Future<void> clearAllAppSettings() async {
     final prefs = SharedPreferencesAsync();

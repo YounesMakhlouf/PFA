@@ -17,6 +17,7 @@ class SettingsScreen extends ConsumerWidget {
     final soundEffectsEnabledAsync = ref.watch(soundEffectsEnabledProvider);
     final currentAppLanguage = ref.watch(appLanguageProvider);
     final currentSpeechRate = ref.watch(ttsSpeechRateProvider);
+    final hapticsEnabled = ref.watch(hapticsEnabledProvider);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settingsTitle)),
@@ -39,7 +40,17 @@ class SettingsScreen extends ConsumerWidget {
             error: (err, st) =>
                 ListTile(title: Text("Error loading TTS setting: $err")),
           ),
+          const Divider(),
 
+          // --- Haptics Enabled Setting ---
+          SwitchListTile(
+            title: Text(l10n.hapticsEnabledSetting),
+            value: hapticsEnabled,
+            onChanged: (bool value) {
+              ref.read(hapticsEnabledProvider.notifier).setHapticsEnabled(value);
+            },
+            secondary: const Icon(Icons.vibration),
+          ),
           const Divider(),
 
           // Sound Effects Setting

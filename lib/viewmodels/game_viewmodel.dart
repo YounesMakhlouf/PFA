@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/models/screen.dart';
+import 'package:pfa/providers/global_providers.dart';
 import 'package:pfa/repositories/game_repository.dart';
 import 'package:pfa/services/audio_service.dart';
 import 'package:pfa/services/logging_service.dart';
@@ -17,6 +19,7 @@ class GameViewModel extends StateNotifier<GameState> {
   final String _childId;
   final TtsService _ttsService;
   final AudioService _audioService;
+  final Ref _ref;
 
   // Store fetched screen details to avoid re-fetching if user goes back/forth quickly
   // This is a simple cache, could be more sophisticated.
@@ -31,6 +34,7 @@ class GameViewModel extends StateNotifier<GameState> {
     this._sessionRepository,
     this._ttsService,
     this._audioService,
+    this._ref,
   ) : super(GameState(status: GameStatus.initial)) {
     _logger.info(
         'GameViewModel initialized for game ID: $_gameId, child ID: $_childId');
@@ -263,6 +267,7 @@ class GameViewModel extends StateNotifier<GameState> {
     }
 
     bool isCorrectCurrently = false;
+    final bool hapticsAreEnabled = _ref.read(hapticsEnabledProvider);
     final screen = state.currentScreenData!.screen;
 
     if (screen is MultipleChoiceScreen) {
@@ -287,8 +292,14 @@ class GameViewModel extends StateNotifier<GameState> {
     _ttsService.speak(feedbackText);
     if (isCorrectCurrently) {
       _audioService.playSound(SoundType.correct);
+      if (hapticsAreEnabled) {
+        HapticFeedback.mediumImpact();
+      }
     } else {
       _audioService.playSound(SoundType.incorrect);
+      if (hapticsAreEnabled) {
+        HapticFeedback.lightImpact();
+      }
     }
     if (isCorrectCurrently) {
       // Delay moving to the next screen
