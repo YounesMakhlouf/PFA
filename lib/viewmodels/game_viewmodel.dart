@@ -236,7 +236,9 @@ class GameViewModel extends StateNotifier<GameState> {
       Option selectedOption, bool? isCorrectAnswer) async {
     if (isCorrectAnswer == null ||
         _currentGameSession == null ||
-        state.currentScreenData == null) return;
+        state.currentScreenData == null) {
+      return;
+    }
     final startTime = DateTime.now();
 
     await Future.delayed(const Duration(milliseconds: 200));

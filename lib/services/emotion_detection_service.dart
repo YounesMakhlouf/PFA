@@ -1,5 +1,4 @@
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
-import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 
 class EmotionDetectionService {
   late final FaceDetector _faceDetector;
@@ -23,10 +22,6 @@ class EmotionDetectionService {
 
     final face = faces.first;
     final smileProb = face.smilingProbability ?? -1;
-    final leftEyeOpenProb = face.leftEyeOpenProbability ?? -1;
-    final rightEyeOpenProb = face.rightEyeOpenProbability ?? -1;
-
-    print('Smile: $smileProb, Left Eye: $leftEyeOpenProb, Right Eye: $rightEyeOpenProb');
 
     return _mapEmotion(smileProb);
   }

@@ -103,8 +103,7 @@ Widget _buildGameGrid(
                   AppRoutes.multipleChoiceGame,
                   {'gameId': game.gameId},
                 )
-            : null,
-      );
+            : null,);
     },
   );
 }
