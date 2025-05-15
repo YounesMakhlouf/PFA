@@ -33,7 +33,7 @@ class EmotionDetectionService {
 
   String _mapEmotion(double smileProb) {
     if (smileProb > 0.7) {
-      return 'Happy';
+      return 'Joy';
     } else if (smileProb < 0.3 && smileProb >= 0) {
       return 'Neutral or Sad';
     } else {

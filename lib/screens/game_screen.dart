@@ -132,7 +132,6 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // 1/4 of the width for options
         Expanded(
           flex: 1,
           child: Column(
@@ -142,7 +141,6 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
           ),
         ),
 
-        // 3/4 of the width for camera
         Expanded(
           flex: 1,
           child: AspectRatio(

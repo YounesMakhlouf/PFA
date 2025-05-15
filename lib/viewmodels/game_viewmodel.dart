@@ -232,10 +232,10 @@ class GameViewModel extends StateNotifier<GameState> {
     final screen = state.currentScreenData!.screen;
 
     if (screen is MultipleChoiceScreen) {
-      if (state.currentScreenData!.options.length == 1) {
-        isCorrect = null;
+      if (_isDetecting) {
+        isCorrect = state.detectedEmotion == selectedOption.labelText;
       } else {
-        isCorrect = selectedOption.isCorrect ?? false;
+        isCorrect = selectedOption.isCorrect;
       }
     } else if (screen is MemoryScreen) {
       _logger.warning("Memory game logic not fully implemented.");
@@ -342,8 +342,16 @@ class GameViewModel extends StateNotifier<GameState> {
 
       final detectedEmotion = await _emotionService.detectEmotion(image.path);
       _logger.info('Detected Emotion: $detectedEmotion');
-
+      bool isCorrectEmotion =
+          detectedEmotion == state.currentScreenData?.options.first.labelText;
       state = state.copyWith(detectedEmotion: detectedEmotion);
+      if (isCorrectEmotion == true) {
+        state = state.copyWith(isCorrect: isCorrectEmotion);
+        Timer(const Duration(seconds: 1), () {
+          if (mounted) moveToNextScreen();
+        });
+      }
+      _logger.info('Is Correct Emotion: $isCorrectEmotion');
     }
   }
 
