@@ -90,7 +90,8 @@ Widget _buildGameGrid(
         filePath: game.pictureUrl,
       );
 
-      final translatedTitle = translationService.getTranslatedText(context, game.name);
+      final translatedTitle =
+          translationService.getTranslatedText(context, game.name);
 
       return GameCardWidget(
         title: translatedTitle,
@@ -103,8 +104,9 @@ Widget _buildGameGrid(
                   AppRoutes.multipleChoiceGame,
                   {'gameId': game.gameId},
                 )
-            : null,);
+            // ignore: dead_code
+            : null,
+      );
     },
   );
 }
-
