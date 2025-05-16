@@ -1,16 +1,16 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:pfa/constants/const.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pfa/config/app_theme.dart';
+import 'package:pfa/constants/const.dart';
+import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/models/screen.dart';
-import 'package:pfa/l10n/app_localizations.dart';
+import 'package:pfa/providers/global_providers.dart';
 import 'package:pfa/screens/error_screen.dart';
 import 'package:pfa/viewmodels/game_state.dart';
 import 'package:pfa/widgets/option_widget.dart';
-import 'package:pfa/config/app_theme.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:pfa/providers/global_providers.dart';
 
 class GameScreenWidget extends ConsumerStatefulWidget {
   final Game game;
@@ -75,8 +75,9 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           child: Text(
             translatedInstruction,
-            style: theme.textTheme.titleLarge
-                ?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: AppColors.textPrimary.withAlpha((0.85 * 255).round())),
             textAlign: TextAlign.center,
           ).animate().fadeIn(duration: 300.ms),
         ),
@@ -174,6 +175,7 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
             return OptionWidget(
               option: option,
               onTap: () => widget.onOptionSelected(option),
+              gameThemeColor: AppColors.primary,
               isStory: isStory,
             );
           }).toList(),
