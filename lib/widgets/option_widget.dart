@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pfa/config/app_theme.dart';
 import 'package:pfa/constants/const.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/models/screen.dart';
+import 'package:pfa/providers/global_providers.dart';
 import 'package:pfa/utils/supabase_utils.dart';
 
 class OptionWidget extends ConsumerWidget {
@@ -14,6 +15,7 @@ class OptionWidget extends ConsumerWidget {
   final bool isSelected; // for visual feedback in memory game
   final bool isDisabled;
   final bool isStory;
+  final double size;
 
   const OptionWidget({
     super.key,
@@ -22,11 +24,13 @@ class OptionWidget extends ConsumerWidget {
     this.gameThemeColor,
     this.isSelected = false,
     this.isDisabled = false,
+    this.size = 100.0,
     this.isStory = false,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final String? fullImageUrl = getSupabasePublicUrl(
       ref,
@@ -34,59 +38,57 @@ class OptionWidget extends ConsumerWidget {
       filePath: option.picturePath,
     );
     Widget content;
-    final Color effectiveButtonColor =
-        gameThemeColor ?? theme.colorScheme.primary;
-    final BorderRadius borderRadius =
-        theme.cardTheme.shape is RoundedRectangleBorder
-            ? (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius
-                as BorderRadius
-            : BorderRadius.circular(10);
+    final Color effectiveContentColor =
+        gameThemeColor ?? theme.colorScheme.onSurface;
+
+    final BorderRadius borderRadius = BorderRadius.circular(12);
 
     if (fullImageUrl != null) {
-      content = _buildImageOption(context, fullImageUrl, borderRadius, theme);
+      content = _buildImageOption(
+          context, fullImageUrl, borderRadius, theme, ref, size);
     } else {
-      content = _buildTextButtonOption(context, option.labelText ?? '',
-          effectiveButtonColor, borderRadius, theme);
+      content = _buildTextOption(
+          context, option.labelText ?? '', effectiveContentColor, theme, size);
     }
 
-    BoxDecoration decoration = BoxDecoration(
-      borderRadius: borderRadius,
-      border: isSelected
-          ? Border.all(color: theme.colorScheme.secondary, width: 3)
-          : null,
-      boxShadow: (!isStory &&
-              theme.cardTheme.elevation != null &&
-              theme.cardTheme.elevation! > 0)
-          ? const [
-              BoxShadow(
-                color: Color.fromRGBO(0, 0, 0, 0.25),
-                blurRadius: 4,
-                offset: Offset(0, 4),
-              ),
-            ]
-          : null,
-    );
+    // Add selection/disabled visual cues
+    BoxDecoration? selectionDecoration;
+    if (isSelected) {
+      selectionDecoration = BoxDecoration(
+        borderRadius: borderRadius,
+        border: Border.all(color: theme.colorScheme.primary, width: 3),
+        color: theme.colorScheme.primary.withAlpha((0.1 * 255).round()),
+      );
+    }
 
     // Use Semantics for accessibility
     return Semantics(
       button: true,
-      label: option.labelText ?? AppLocalizations.of(context).selectableOption,
-      value: isSelected ? AppLocalizations.of(context).selected : null,
+      label: option.labelText ?? l10n.selectableOption,
+      value: isSelected ? l10n.selected : null,
       enabled: !isDisabled,
+      explicitChildNodes: true,
       child: IgnorePointer(
         ignoring: isDisabled,
         child: Opacity(
           opacity: isDisabled ? 0.5 : 1.0,
-          child: Container(
-            decoration: decoration,
-            child: Material(
-              color: Colors.transparent,
-              borderRadius: borderRadius,
-              child: InkWell(
-                onTap: isDisabled ? null : onTap,
+          child: GestureDetector(
+            onTap: isDisabled
+                ? null
+                : () {
+                    final bool hapticsAreEnabled =
+                        ref.read(hapticsEnabledProvider);
+                    if (hapticsAreEnabled) {
+                      HapticFeedback.lightImpact();
+                    }
+                    onTap();
+                  },
+            child: Container(
+              width: size,
+              height: size,
+              decoration: selectionDecoration,
+              child: ClipRRect(
                 borderRadius: borderRadius,
-                splashColor: theme.splashColor,
-                highlightColor: theme.highlightColor,
                 child: content,
               ),
             ),
@@ -97,31 +99,39 @@ class OptionWidget extends ConsumerWidget {
   }
 
   Widget _buildImageOption(BuildContext context, String imageUrl,
-      BorderRadius borderRadius, ThemeData theme) {
-    final double size = isStory ? 180 : 100; // Bigger for story
-    return Container(
+      BorderRadius borderRadius, ThemeData theme, WidgetRef ref, double size) {
+    final logger = ref.read(loggingServiceProvider);
+    return SizedBox(
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        borderRadius: borderRadius,
-        color: isStory ? Colors.transparent : theme.cardTheme.color,
-      ),
       child: ClipRRect(
         borderRadius: borderRadius,
         child: CachedNetworkImage(
           imageUrl: imageUrl,
           fit: BoxFit.cover,
           placeholder: (context, url) => Container(
-            color: AppColors.lightGrey.withAlpha((0.3 * 255).round()),
-            child: const Center(
-                child: CircularProgressIndicator(strokeWidth: 2.0)),
+            color: theme.colorScheme.surfaceContainerHighest
+                .withAlpha((0.3 * 255).round()),
+            child: Center(
+                child: CircularProgressIndicator(
+                    strokeWidth: 2.0, color: theme.colorScheme.primary)),
           ),
-          errorWidget: (context, error, stackTrace) {
-            return Center(
-              child: Icon(
-                Icons.broken_image_outlined,
-                color: theme.colorScheme.error,
-                size: 40,
+          errorWidget: (context, url, error) {
+            logger.error("OptionWidget: Image Network Error", error);
+            return Container(
+              // Fallback visual within the bounds
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHighest
+                    .withAlpha((0.1 * 255).round()),
+                borderRadius: borderRadius,
+              ),
+              child: Center(
+                child: Icon(
+                  Icons.broken_image_outlined,
+                  color: theme.colorScheme.onSurfaceVariant
+                      .withAlpha((0.5 * 255).round()),
+                  size: size * 0.6,
+                ),
               ),
             );
           },
@@ -130,26 +140,23 @@ class OptionWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildTextButtonOption(BuildContext context, String text,
-      Color buttonColor, BorderRadius borderRadius, ThemeData theme) {
-    return Container(
-      width: 100,
-      height: 100,
-      decoration: BoxDecoration(
-        borderRadius: borderRadius,
-        color: theme.cardTheme.color,
-      ),
+  Widget _buildTextOption(BuildContext context, String text, Color contentColor,
+      ThemeData theme, double size) {
+    return SizedBox(
+      width: size,
+      height: size,
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
             text,
-            style: theme.textTheme.labelLarge?.copyWith(
-              color: theme.colorScheme.onSurface,
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: contentColor,
+              fontWeight: FontWeight.w600,
             ),
             textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,
-            maxLines: 2,
+            maxLines: 3,
           ),
         ),
       ),
