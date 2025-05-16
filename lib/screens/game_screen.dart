@@ -51,15 +51,17 @@ class GameScreenWidget extends StatelessWidget {
     }
 
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           child: Text(
             screenData.instruction ?? l10n.selectCorrectOption,
-            style: theme.textTheme.titleLarge
-                ?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: AppColors.textPrimary.withAlpha((0.85 * 255).round())),
             textAlign: TextAlign.center,
-          ),
+          ).animate().fadeIn(duration: 300.ms),
         ),
         Expanded(
           child: screenContent,
@@ -74,10 +76,26 @@ class GameScreenWidget extends StatelessWidget {
   // --- Builder for Multiple Choice UI ---
   Widget _buildMultipleChoiceUI(BuildContext context,
       MultipleChoiceScreen screen, ThemeData theme, List<Option> options) {
-    return Center(
-        child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: _buildOptionsArea(context, options)));
+    if (options.length <= 3) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: options.map((option) {
+            return OptionWidget(
+              option: option,
+              onTap: () => onOptionSelected(option),
+              gameThemeColor: AppColors.primary,
+            );
+          }).toList(),
+        ),
+      );
+    }
+
+    return SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: _buildOptionsArea(context, options));
   }
 
   Widget _buildMemoryUI(BuildContext context, MemoryScreen screen,
@@ -88,12 +106,13 @@ class GameScreenWidget extends StatelessWidget {
   Widget _buildOptionsArea(BuildContext context, List<Option> options) {
     return Wrap(
       alignment: WrapAlignment.center,
-      spacing: 60,
-      runSpacing: 60,
+      spacing: 24,
+      runSpacing: 24,
       children: options.map((option) {
         return OptionWidget(
           option: option,
           onTap: () => onOptionSelected(option),
+          gameThemeColor: AppColors.primary,
         );
       }).toList(),
     );
