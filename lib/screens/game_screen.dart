@@ -1,14 +1,18 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:pfa/constants/const.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/models/screen.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/screens/error_screen.dart';
+import 'package:pfa/viewmodels/game_state.dart';
 import 'package:pfa/widgets/option_widget.dart';
 import 'package:pfa/config/app_theme.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:pfa/providers/global_providers.dart';
 
-class GameScreenWidget extends StatelessWidget {
+class GameScreenWidget extends ConsumerStatefulWidget {
   final Game game;
   final Screen currentScreen;
   final List<Option> currentOptions;
@@ -29,26 +33,40 @@ class GameScreenWidget extends StatelessWidget {
   });
 
   @override
+  ConsumerState<GameScreenWidget> createState() => _GameScreenWidgetState();
+}
+
+class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
+  @override
+  void initState() {
+    super.initState();
+    final needsCamera = widget.game.category == GameCategory.EMOTIONS &&
+        widget.currentOptions.length == 1 &&
+        widget.currentOptions[0].isCorrect == true;
+
+    if (needsCamera) {
+      ref.read(gameViewModelProvider(widget.game.gameId).notifier).initCamera();
+      ref
+          .read(gameViewModelProvider(widget.game.gameId).notifier)
+          .startEmotionDetection();
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final screenData = currentScreen;
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
+    final translationService = ref.read(translationServiceProvider);
 
-    Widget screenContent;
-    if (screenData is MultipleChoiceScreen) {
-      screenContent =
-          _buildMultipleChoiceUI(context, screenData, theme, currentOptions);
-    } else if (screenData is MemoryScreen) {
-      screenContent =
-          _buildMemoryUI(context, screenData, theme, currentOptions);
-    } else {
-      screenContent = Center(
-        child: Text(
-          l10n.unknownScreenType,
-          style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.error),
-        ),
-      );
-    }
+    final translatedInstruction = widget.currentScreen.instruction != null
+        ? translationService.getTranslatedText(
+            context, widget.currentScreen.instruction!)
+        : l10n.selectCorrectOption;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -56,65 +74,111 @@ class GameScreenWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           child: Text(
-            screenData.instruction ?? l10n.selectCorrectOption,
-            style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary.withAlpha((0.85 * 255).round())),
+            translatedInstruction,
+            style: theme.textTheme.titleLarge
+                ?.copyWith(fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ).animate().fadeIn(duration: 300.ms),
         ),
-        Expanded(
-          child: screenContent,
-        ),
-        _buildFeedbackArea(context, isCorrect, theme),
+        Expanded(child: _buildScreenContent(context)),
+        _buildFeedbackArea(context, widget.isCorrect, theme),
         _buildProgressIndicator(
-            context, currentLevel, currentScreenNumber, theme),
+            context, widget.currentLevel, widget.currentScreenNumber, theme),
       ],
     );
   }
 
-  // --- Builder for Multiple Choice UI ---
-  Widget _buildMultipleChoiceUI(BuildContext context,
-      MultipleChoiceScreen screen, ThemeData theme, List<Option> options) {
-    if (options.length <= 3) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: options.map((option) {
-            return OptionWidget(
-              option: option,
-              onTap: () => onOptionSelected(option),
-              gameThemeColor: AppColors.primary,
-            );
-          }).toList(),
+  Widget _buildScreenContent(BuildContext context) {
+    final screen = widget.currentScreen;
+
+    if (screen is MultipleChoiceScreen) {
+      return _buildMultipleChoiceUI(context, screen);
+    } else if (screen is MemoryScreen) {
+      return const ErrorScreen(errorMessage: "not implemented yet");
+    } else {
+      return Center(
+        child: Text(
+          AppLocalizations.of(context).unknownScreenType,
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(color: AppColors.error),
         ),
       );
     }
-
-    return SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 16.0),
-        child: _buildOptionsArea(context, options));
   }
 
-  Widget _buildMemoryUI(BuildContext context, MemoryScreen screen,
-      ThemeData theme, List<Option> options) {
-    return ErrorScreen(errorMessage: "not implmented yet"); //TODO: implement
+  Widget _buildMultipleChoiceUI(
+      BuildContext context, MultipleChoiceScreen screen) {
+    final state = ref.watch(gameViewModelProvider(widget.game.gameId));
+
+    final bool shouldShowCamera =
+        widget.game.category == GameCategory.EMOTIONS &&
+            widget.currentOptions.length == 1 &&
+            widget.currentOptions[0].isCorrect == true;
+
+    return SizedBox(
+      child: shouldShowCamera
+          ? _buildCameraOptionRow(context, state)
+          : _buildOptionsArea(context, widget.currentOptions),
+    );
+  }
+
+  Widget _buildCameraOptionRow(BuildContext context, GameState state) {
+    final gameViewModel =
+        ref.watch(gameViewModelProvider(widget.game.gameId).notifier);
+    final cameraController = gameViewModel.cameraController;
+
+    final Option currentOption = widget.currentOptions.first;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(
+          flex: 1,
+          child: Column(
+            children: [
+              _buildOptionsArea(context, [currentOption])
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: AspectRatio(
+            aspectRatio: 4 / 3,
+            child: state.isCameraInitialized && cameraController != null
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: CameraPreview(cameraController),
+                  )
+                : const Center(child: CircularProgressIndicator()),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildOptionsArea(BuildContext context, List<Option> options) {
-    return Wrap(
-      alignment: WrapAlignment.center,
-      spacing: 24,
-      runSpacing: 24,
-      children: options.map((option) {
-        return OptionWidget(
-          option: option,
-          onTap: () => onOptionSelected(option),
-          gameThemeColor: AppColors.primary,
-        );
-      }).toList(),
+    final bool isStory = options.length == 1;
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        minHeight: MediaQuery.of(context).size.height * 0.4,
+      ),
+      child: Center(
+        child: Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 60,
+          runSpacing: 60,
+          children: options.map((option) {
+            return OptionWidget(
+              option: option,
+              onTap: () => widget.onOptionSelected(option),
+              isStory: isStory,
+            );
+          }).toList(),
+        ),
+      ),
     );
   }
 
@@ -136,11 +200,13 @@ class GameScreenWidget extends StatelessWidget {
   }
 
   Widget _buildFeedbackContent(
-      BuildContext context, bool isCorrect, ThemeData theme, Key key) {
-    final Color feedbackColor = isCorrect ? AppColors.success : AppColors.error;
+      BuildContext context, bool? isCorrect, ThemeData theme, Key key) {
+    final Color feedbackColor =
+        isCorrect == true ? AppColors.success : AppColors.error;
 
     final String feedbackText;
     final String feedbackEmoji;
+    if (isCorrect == null) return const SizedBox.shrink();
 
     if (isCorrect) {
       feedbackText = AppLocalizations.of(context).correct;
@@ -159,10 +225,13 @@ class GameScreenWidget extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-          color: feedbackColor.withAlpha((0.15 * 255).round()),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-              color: feedbackColor.withAlpha((0.5 * 255).round()), width: 1.5)),
+        color: feedbackColor.withAlpha((0.15 * 255).round()),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: feedbackColor.withAlpha((0.5 * 255).round()),
+          width: 1.5,
+        ),
+      ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -195,15 +264,16 @@ class GameScreenWidget extends StatelessWidget {
   Widget _buildProgressIndicator(
       BuildContext context, int level, int screenNum, ThemeData theme) {
     final l10n = AppLocalizations.of(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12.0),
       child: Text(
         '${l10n.level}: $level / ${l10n.screen}: $screenNum',
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: theme.textTheme.bodyMedium?.color
-                  ?.withAlpha((0.7 * 255).round()),
-              fontWeight: FontWeight.bold,
-            ),
+        style: theme.textTheme.bodyMedium?.copyWith(
+          color:
+              theme.textTheme.bodyMedium?.color?.withAlpha((0.7 * 255).round()),
+          fontWeight: FontWeight.bold,
+        ),
         textAlign: TextAlign.center,
       ),
     );

@@ -23,6 +23,7 @@ class AppRoutes {
   static const String multipleChoiceGame = '/game/multiple-choice';
   static const String stats = '/stats';
   static const String settings = '/settings';
+  static const String emotionDetectionGame = '/game/emotion-detection';
 
   static Map<String, WidgetBuilder> get routes {
     return {

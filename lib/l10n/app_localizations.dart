@@ -205,7 +205,7 @@ AppLocalizations _lookupAppLocalizations(Locale locale) {
     case 'fr':
       return AppLocalizationsFr();
   }
-
+  
   throw FlutterError(
       'AppLocalizations.delegate failed to load unsupported locale "$locale"');
 }

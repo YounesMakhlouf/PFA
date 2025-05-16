@@ -11,6 +11,7 @@ import 'package:pfa/providers/tts_speech_rate_notifier.dart';
 import 'package:pfa/services/audio_service.dart';
 import 'package:pfa/services/settings_service.dart';
 import 'package:pfa/services/tts_service.dart';
+import 'package:pfa/services/translation_service.dart';
 import 'package:pfa/viewmodels/game_state.dart';
 import 'package:pfa/viewmodels/game_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,6 +28,10 @@ import '../services/child_stats_service.dart';
 
 final loggingServiceProvider = Provider<LoggingService>((ref) {
   return LoggingService();
+});
+
+final translationServiceProvider = Provider<TranslationService>((ref) {
+  return TranslationService();
 });
 
 final supabaseServiceProvider = Provider<SupabaseService>((ref) {

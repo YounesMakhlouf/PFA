@@ -14,6 +14,7 @@ class OptionWidget extends ConsumerWidget {
   final Color? gameThemeColor;
   final bool isSelected; // for visual feedback in memory game
   final bool isDisabled;
+  final bool isStory;
   final double size;
 
   const OptionWidget({
@@ -24,6 +25,7 @@ class OptionWidget extends ConsumerWidget {
     this.isSelected = false,
     this.isDisabled = false,
     this.size = 100.0,
+    this.isStory = false,
   });
 
   @override
