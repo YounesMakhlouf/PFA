@@ -28,6 +28,6 @@ extension HexColorParsing on String? {
 Color getContrastingForegroundColor(Color backgroundColor) {
   // Determine foreground based on background luminance
   return backgroundColor.computeLuminance() > 0.5
-      ? AppColors.textPrimary
-      : AppColors.textLight;
+      ? AppColors.textPrimaryOnLight
+      : AppColors.textPrimaryOnDark;
 }

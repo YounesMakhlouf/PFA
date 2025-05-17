@@ -77,7 +77,8 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
             translatedInstruction,
             style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary.withAlpha((0.85 * 255).round())),
+                color: AppColors.textPrimaryOnLight
+                    .withAlpha((0.85 * 255).round())),
             textAlign: TextAlign.center,
           ).animate().fadeIn(duration: 300.ms),
         ),

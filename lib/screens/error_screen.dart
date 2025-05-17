@@ -29,8 +29,7 @@ class ErrorScreen extends StatelessWidget {
               const SizedBox(height: 16),
               Text(
                 l10n.applicationError,
-                style: textTheme.headlineSmall ??
-                    textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                style: textTheme.headlineSmall ?? textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),

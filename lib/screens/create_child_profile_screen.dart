@@ -62,8 +62,8 @@ class _CreateChildProfileScreenState
           data: Theme.of(context).copyWith(
             colorScheme: Theme.of(context).colorScheme.copyWith(
                   primary: AppColors.primary,
-                  onPrimary: AppColors.textLight,
-                  onSurface: AppColors.textPrimary,
+                  onPrimary: AppColors.textPrimaryOnLight,
+                  onSurface: AppColors.textPrimaryOnLight,
                 ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
@@ -160,7 +160,7 @@ class _CreateChildProfileScreenState
         title: Text(l10n.createChildProfileTitle),
         automaticallyImplyLeading: false, // No back button in this flow
         backgroundColor: AppColors.background,
-        foregroundColor: AppColors.textPrimary,
+        foregroundColor: AppColors.textPrimaryOnLight,
         elevation: 0,
       ),
       backgroundColor: AppColors.background,
@@ -223,7 +223,7 @@ class _CreateChildProfileScreenState
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10)),
                     filled: true,
-                    fillColor: AppColors.textLight,
+                    fillColor: AppColors.textPrimaryOnLight,
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -246,7 +246,7 @@ class _CreateChildProfileScreenState
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10)),
                     filled: true,
-                    fillColor: AppColors.textLight,
+                    fillColor: AppColors.textPrimaryOnLight,
                   ),
                   textInputAction: TextInputAction.next,
                   textCapitalization: TextCapitalization.words,
@@ -259,7 +259,7 @@ class _CreateChildProfileScreenState
                   l10n.birthdateLabelOptional,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       color:
-                          AppColors.textPrimary.withAlpha((0.7 * 255).round())),
+                          AppColors.textPrimaryOnLight.withAlpha((0.7 * 255).round())),
                 ),
                 const SizedBox(height: 8),
                 OutlinedButton.icon(
@@ -273,13 +273,13 @@ class _CreateChildProfileScreenState
                   onPressed: () => _selectDate(context),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    foregroundColor: AppColors.textPrimary,
+                    foregroundColor: AppColors.textPrimaryOnLight,
                     side: BorderSide(
                         color:
                             AppColors.primary.withAlpha((0.5 * 255).round())),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    backgroundColor: AppColors.textLight,
+                    backgroundColor: AppColors.textPrimaryOnLight,
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -289,7 +289,7 @@ class _CreateChildProfileScreenState
                   l10n.specialConditionsLabelOptional,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       color:
-                          AppColors.textPrimary.withAlpha((0.7 * 255).round())),
+                          AppColors.textPrimaryOnLight.withAlpha((0.7 * 255).round())),
                 ),
                 const SizedBox(height: 8),
                 Wrap(
@@ -315,7 +315,7 @@ class _CreateChildProfileScreenState
                       labelStyle: TextStyle(
                         color: isSelected
                             ? AppColors.primary
-                            : AppColors.textPrimary,
+                            : AppColors.textPrimaryOnLight,
                         fontWeight:
                             isSelected ? FontWeight.bold : FontWeight.normal,
                       ),
@@ -339,7 +339,7 @@ class _CreateChildProfileScreenState
                           height: 20,
                           width: 20,
                           child: CircularProgressIndicator(
-                              strokeWidth: 2, color: AppColors.textLight),
+                              strokeWidth: 2, color: AppColors.textPrimaryOnLight),
                         )
                       : Text(l10n.createProfileButton),
                 ),

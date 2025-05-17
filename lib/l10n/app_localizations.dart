@@ -177,6 +177,8 @@ abstract class AppLocalizations {
   String get ttsRateNormal;
   String get ttsRateFast;
   String get hapticsEnabledSetting;
+  String get settingsSectionAudio;
+  String get settingsSectionGeneral;
 }
 
 class _AppLocalizationsDelegate
@@ -205,7 +207,7 @@ AppLocalizations _lookupAppLocalizations(Locale locale) {
     case 'fr':
       return AppLocalizationsFr();
   }
-  
+
   throw FlutterError(
       'AppLocalizations.delegate failed to load unsupported locale "$locale"');
 }

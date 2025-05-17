@@ -148,8 +148,7 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
                       const SizedBox(height: 24),
                       Text(
                         l10n.congratulationsAllLevelsComplete,
-                        style: theme.textTheme.headlineSmall
-                            ?.copyWith(color: AppColors.textPrimary),
+                        style: theme.textTheme.headlineSmall,
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 32),
@@ -210,7 +209,6 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
 
         final gameThemeColor = gameState.game?.themeColorCode
             .parseToColor(fallbackColor: fallbackColor);
-        final appBarForegroundColor = theme.colorScheme.onPrimary;
 
         return Scaffold(
           appBar: AppBar(
@@ -219,21 +217,19 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
                   context, gameState.game!.name),
             ),
             backgroundColor: gameThemeColor?.withAlpha((0.9 * 255).round()),
-            foregroundColor: appBarForegroundColor,
             elevation: theme.appBarTheme.elevation,
             actions: [
               if (gameState.currentScreenData?.screen.instruction != null &&
                   gameState.currentScreenData!.screen.instruction!.isNotEmpty)
                 IconButton(
-                  icon: Icon(Icons.volume_up_outlined,
-                      color: appBarForegroundColor),
+                  icon: Icon(Icons.volume_up_outlined),
                   tooltip: l10n.repeatInstructionTooltip,
                   onPressed: () =>
                       gameViewModel.repeatCurrentScreenInstruction(),
                 ),
             ],
             leading: IconButton(
-              icon: Icon(Icons.close, color: appBarForegroundColor),
+              icon: Icon(Icons.close),
               tooltip: l10n.exitGameTooltip,
               onPressed: () async {
                 final bool? shouldExit = await showDialog<bool>(

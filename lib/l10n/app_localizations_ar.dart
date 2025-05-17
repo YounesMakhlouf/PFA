@@ -272,4 +272,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ttsRateFast => 'سريع';
   @override
   String get hapticsEnabledSetting => 'تمكين ردود الفعل اللمسية';
+  @override
+  String get settingsSectionAudio => 'الصوت والتعليقات';
+  @override
+  String get settingsSectionGeneral => 'عام';
 }

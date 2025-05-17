@@ -69,7 +69,7 @@ class _HomePageState extends ConsumerState<HomeScreen> {
         appBar: AppBar(
           title: Text(activeChild.firstName),
           backgroundColor: AppColors.background,
-          foregroundColor: AppColors.textPrimary,
+          foregroundColor: AppColors.textPrimaryOnLight,
           elevation: 0,
           actions: [
             PopupMenuButton<String>(

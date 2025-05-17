@@ -277,4 +277,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ttsRateFast => 'Rapide';
   @override
   String get hapticsEnabledSetting => 'Activer le retour haptique';
+  @override
+  String get settingsSectionAudio => 'Audio et Retours';
+  @override
+  String get settingsSectionGeneral => 'Général';
 }

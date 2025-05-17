@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pfa/config/app_theme.dart';
 import 'package:pfa/constants/const.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/config/routes.dart';
@@ -95,6 +96,7 @@ Widget _buildGameGrid(
 
       return GameCardWidget(
         title: translatedTitle,
+        backgroundColor: AppTheme.lightTheme.colorScheme.primaryContainer,
         imagePath: fullImageUrl,
         isEnabled: isEnabled,
         onTap: isEnabled

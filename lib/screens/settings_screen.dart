@@ -8,10 +8,25 @@ import 'package:pfa/providers/global_providers.dart';
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
+  Widget _buildSectionHeader(BuildContext context, String title) {
+    return Padding(
+      padding:
+          const EdgeInsets.only(top: 24.0, bottom: 8.0, left: 8.0, right: 8.0),
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final settingsService = ref.read(settingsServiceProvider);
+    final theme = Theme.of(context);
 
     final ttsEnabledAsync = ref.watch(ttsEnabledProvider);
     final soundEffectsEnabledAsync = ref.watch(soundEffectsEnabledProvider);
@@ -24,6 +39,7 @@ class SettingsScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
+          _buildSectionHeader(context, l10n.settingsSectionAudio),
           // TTS Setting
           ttsEnabledAsync.when(
             data: (isEnabled) => SwitchListTile(
@@ -33,6 +49,7 @@ class SettingsScreen extends ConsumerWidget {
                 await settingsService.setTtsEnabled(value);
                 ref.invalidate(ttsEnabledProvider);
               },
+              secondary: const Icon(Icons.record_voice_over_outlined),
             ),
             loading: () => const ListTile(
                 title: Text("Loading TTS setting..."),
@@ -40,19 +57,6 @@ class SettingsScreen extends ConsumerWidget {
             error: (err, st) =>
                 ListTile(title: Text("Error loading TTS setting: $err")),
           ),
-          const Divider(),
-
-          // --- Haptics Enabled Setting ---
-          SwitchListTile(
-            title: Text(l10n.hapticsEnabledSetting),
-            value: hapticsEnabled,
-            onChanged: (bool value) {
-              ref.read(hapticsEnabledProvider.notifier).setHapticsEnabled(value);
-            },
-            secondary: const Icon(Icons.vibration),
-          ),
-          const Divider(),
-
           // Sound Effects Setting
           soundEffectsEnabledAsync.when(
             data: (isEnabled) => SwitchListTile(
@@ -62,6 +66,7 @@ class SettingsScreen extends ConsumerWidget {
                 await settingsService.setSoundEffectsEnabled(value);
                 ref.invalidate(soundEffectsEnabledProvider);
               },
+              secondary: const Icon(Icons.volume_up_outlined),
             ),
             loading: () => const ListTile(
                 title: Text("Loading sound effects setting..."),
@@ -69,11 +74,66 @@ class SettingsScreen extends ConsumerWidget {
             error: (err, st) => ListTile(
                 title: Text("Error loading sound effects setting: $err")),
           ),
+          // --- Haptics Enabled Setting ---
+          SwitchListTile(
+            title: Text(l10n.hapticsEnabledSetting),
+            value: hapticsEnabled,
+            onChanged: (bool value) {
+              ref
+                  .read(hapticsEnabledProvider.notifier)
+                  .setHapticsEnabled(value);
+            },
+            secondary: const Icon(Icons.vibration),
+          ),
+          // --- TTS Speech Rate Setting ---
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.ttsSpeechRateSetting,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                Slider(
+                  value: currentSpeechRate,
+                  min: 0.0,
+                  max: 1.0,
+                  divisions: 10,
+                  label: currentSpeechRate.toStringAsFixed(1),
+                  activeColor: Theme.of(context).colorScheme.primary,
+                  inactiveColor: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withAlpha((0.3 * 255).round()),
+                  onChanged: (double value) {
+                    ref
+                        .read(ttsSpeechRateProvider.notifier)
+                        .updateSpeechRate(value);
+                  },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(l10n.ttsRateSlow,
+                        style: Theme.of(context).textTheme.bodySmall),
+                    Text(l10n.ttsRateNormal,
+                        style: Theme.of(context).textTheme.bodySmall),
+                    Text(l10n.ttsRateFast,
+                        style: Theme.of(context).textTheme.bodySmall),
+                  ],
+                )
+              ],
+            ),
+          ),
           const Divider(),
+          _buildSectionHeader(context, l10n.settingsSectionGeneral),
           ListTile(
-            leading: const Icon(Icons.language),
-            title: Text(l10n.languageSetting),
+            leading:
+                Icon(Icons.language_outlined, color: theme.colorScheme.primary),
+            title: Text(l10n.languageSetting, style: theme.textTheme.bodyLarge),
             subtitle: Text(currentAppLanguage.displayName(context)),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () async {
               final AppLanguage? selectedLanguage =
                   await showDialog<AppLanguage>(
@@ -114,49 +174,8 @@ class SettingsScreen extends ConsumerWidget {
               }
             },
           ),
-          const Divider(),
 
-          // --- TTS Speech Rate Setting ---
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.ttsSpeechRateSetting,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                Slider(
-                  value: currentSpeechRate,
-                  min: 0.0,
-                  max: 1.0,
-                  divisions: 10,
-                  label: currentSpeechRate.toStringAsFixed(1),
-                  activeColor: Theme.of(context).colorScheme.primary,
-                  inactiveColor: Theme.of(context)
-                      .colorScheme
-                      .primary
-                      .withAlpha((0.3 * 255).round()),
-                  onChanged: (double value) {
-                    ref
-                        .read(ttsSpeechRateProvider.notifier)
-                        .updateSpeechRate(value);
-                  },
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(l10n.ttsRateSlow,
-                        style: Theme.of(context).textTheme.bodySmall),
-                    Text(l10n.ttsRateNormal,
-                        style: Theme.of(context).textTheme.bodySmall),
-                    Text(l10n.ttsRateFast,
-                        style: Theme.of(context).textTheme.bodySmall),
-                  ],
-                )
-              ],
-            ),
-          ),
+          const SizedBox(height: 30),
         ],
       ),
     );
