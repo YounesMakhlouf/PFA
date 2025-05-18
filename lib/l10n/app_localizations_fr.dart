@@ -86,8 +86,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get unknownScreenType => 'Type d\'écran inconnu';
   @override
   String get applicationError => 'Erreur d\'Application';
-  @override
-  String get retry => 'Réessayer';
+
   @override
   String errorLoadingGamesDetails(Object error) =>
       'Erreur lors du chargement des jeux : $error';
@@ -281,4 +280,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsSectionAudio => 'Audio et Retours';
   @override
   String get settingsSectionGeneral => 'Général';
+  @override
+  String get oopsSomethingWentWrong => "Oups ! Quelque chose s'est mal passé";
+  @override
+  String get retryButton => 'Réessayer';
+  @override
+  String get closeAppButton => "Fermer l'application";
+  @override
+  String get errorScreenContactSupport => 'Si le problème persiste, veuillez contacter le support ou réessayer plus tard.';
 }

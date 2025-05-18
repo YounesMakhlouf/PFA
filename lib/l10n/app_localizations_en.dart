@@ -87,8 +87,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get applicationError => 'Application Error';
   @override
-  String get retry => 'Retry';
-  @override
   String errorLoadingGamesDetails(Object error) =>
       'Error loading games: $error';
   @override
@@ -277,4 +275,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsSectionAudio => 'Audio & Feedback';
   @override
   String get settingsSectionGeneral => 'General';
+  @override
+  String get oopsSomethingWentWrong => 'Oops! Something went wrong.';
+  @override
+  String get retryButton => 'Try Again';
+  @override
+  String get closeAppButton => 'Close App';
+  @override
+  String get errorScreenContactSupport => 'If the problem persists, please contact support or try again later.';
 }

@@ -74,8 +74,8 @@ class GameCardWidget extends StatelessWidget {
         margin: theme.cardTheme.margin,
         child: InkWell(
           onTap: isEnabled ? onTap : null,
-          splashColor: effectiveForegroundColor.withOpacity(0.1),
-          highlightColor: effectiveForegroundColor.withOpacity(0.05),
+          splashColor: effectiveForegroundColor.withValues(alpha: 0.1),
+          highlightColor: effectiveForegroundColor.withValues(alpha: 0.05),
           borderRadius: theme.cardTheme.shape is RoundedRectangleBorder
               ? (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius
                   as BorderRadius

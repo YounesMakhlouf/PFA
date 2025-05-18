@@ -44,23 +44,23 @@ class AppTheme {
       onPrimaryContainer: AppColors.textPrimaryOnLight,
       secondary: AppColors.secondary,
       onSecondary: AppColors.textPrimaryOnLight,
-      secondaryContainer: AppColors.secondary.withOpacity(0.2),
+      secondaryContainer: AppColors.secondary.withValues(alpha: 0.2),
       onSecondaryContainer: AppColors.textPrimaryOnLight,
       tertiary: AppColors.tertiary,
       onTertiary: AppColors.textPrimaryOnDark,
-      tertiaryContainer: AppColors.tertiary.withOpacity(0.2),
+      tertiaryContainer: AppColors.tertiary.withValues(alpha: 0.2),
       onTertiaryContainer: AppColors.textPrimaryOnLight,
       error: AppColors.error,
       onError: AppColors.onError,
-      errorContainer: AppColors.error.withOpacity(0.15),
+      errorContainer: AppColors.error.withValues(alpha: 0.15),
       onErrorContainer: AppColors.error,
       surface: AppColors.surface,
       onSurface: AppColors.textPrimaryOnLight,
       surfaceContainerHighest: AppColors.surfaceVariant,
       onSurfaceVariant: AppColors.textSecondaryOnLight,
       outline: AppColors.outline,
-      outlineVariant: AppColors.outline.withOpacity(0.5),
-      shadow: Colors.black.withOpacity(0.1),
+      outlineVariant: AppColors.outline.withValues(alpha: 0.5),
+      shadow: Colors.black.withValues(alpha: 0.1),
       brightness: Brightness.light,
     );
     final textTheme = base.textTheme
@@ -206,7 +206,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+        fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
         hintStyle:
             textTheme.bodyLarge?.copyWith(color: colorScheme.onSurfaceVariant),
         labelStyle:
@@ -219,7 +219,8 @@ class AppTheme {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.7)),
+          borderSide:
+              BorderSide(color: colorScheme.outline.withValues(alpha: 0.7)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -238,16 +239,16 @@ class AppTheme {
       ),
       sliderTheme: SliderThemeData(
         activeTrackColor: colorScheme.primary,
-        inactiveTrackColor: colorScheme.primary.withOpacity(0.3),
+        inactiveTrackColor: colorScheme.primary.withValues(alpha: 0.3),
         thumbColor: colorScheme.primary,
-        overlayColor: colorScheme.primary.withOpacity(0.2),
+        overlayColor: colorScheme.primary.withValues(alpha: 0.2),
         valueIndicatorColor: colorScheme.secondary,
         valueIndicatorTextStyle:
             textTheme.bodySmall?.copyWith(color: colorScheme.onSecondary),
       ),
       chipTheme: ChipThemeData(
         backgroundColor: colorScheme.secondaryContainer,
-        disabledColor: AppColors.disabled.withOpacity(0.1),
+        disabledColor: AppColors.disabled.withValues(alpha: 0.1),
         selectedColor: colorScheme.primary,
         secondarySelectedColor: colorScheme.primary,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),

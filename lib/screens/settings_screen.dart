@@ -86,93 +86,103 @@ class SettingsScreen extends ConsumerWidget {
             secondary: const Icon(Icons.vibration),
           ),
           // --- TTS Speech Rate Setting ---
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.ttsSpeechRateSetting,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                Slider(
-                  value: currentSpeechRate,
-                  min: 0.0,
-                  max: 1.0,
-                  divisions: 10,
-                  label: currentSpeechRate.toStringAsFixed(1),
-                  activeColor: Theme.of(context).colorScheme.primary,
-                  inactiveColor: Theme.of(context)
-                      .colorScheme
-                      .primary
-                      .withAlpha((0.3 * 255).round()),
-                  onChanged: (double value) {
-                    ref
-                        .read(ttsSpeechRateProvider.notifier)
-                        .updateSpeechRate(value);
-                  },
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(l10n.ttsRateSlow,
-                        style: Theme.of(context).textTheme.bodySmall),
-                    Text(l10n.ttsRateNormal,
-                        style: Theme.of(context).textTheme.bodySmall),
-                    Text(l10n.ttsRateFast,
-                        style: Theme.of(context).textTheme.bodySmall),
-                  ],
-                )
-              ],
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.speed_outlined, color: theme.colorScheme.primary, size: 24),
+                      const SizedBox(width: 16),
+                      Text(
+                        l10n.ttsSpeechRateSetting,
+                        style: theme.textTheme.bodyLarge,
+                      ),
+                    ],
+                  ),
+                  Slider(
+                    value: currentSpeechRate,
+                    min: 0.0,
+                    max: 1.0,
+                    divisions: 10,
+                    label: currentSpeechRate.toStringAsFixed(1),
+                    activeColor: Theme.of(context).colorScheme.primary,
+                    inactiveColor: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withAlpha((0.3 * 255).round()),
+                    onChanged: (double value) {
+                      ref
+                          .read(ttsSpeechRateProvider.notifier)
+                          .updateSpeechRate(value);
+                    },
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(l10n.ttsRateSlow,
+                          style: Theme.of(context).textTheme.bodySmall),
+                      Text(l10n.ttsRateNormal,
+                          style: Theme.of(context).textTheme.bodySmall),
+                      Text(l10n.ttsRateFast,
+                          style: Theme.of(context).textTheme.bodySmall),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
           const Divider(),
           _buildSectionHeader(context, l10n.settingsSectionGeneral),
-          ListTile(
-            leading:
-                Icon(Icons.language_outlined, color: theme.colorScheme.primary),
-            title: Text(l10n.languageSetting, style: theme.textTheme.bodyLarge),
-            subtitle: Text(currentAppLanguage.displayName(context)),
-            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-            onTap: () async {
-              final AppLanguage? selectedLanguage =
-                  await showDialog<AppLanguage>(
-                context: context,
-                builder: (BuildContext dialogContext) {
-                  return SimpleDialog(
-                    title: Text(l10n.selectLanguageDialogTitle),
-                    children: AppLanguage.values.map((lang) {
-                      return SimpleDialogOption(
-                        onPressed: () {
-                          Navigator.pop(dialogContext, lang);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Text(
-                            lang.displayName(context),
-                            style: TextStyle(
-                              fontWeight: lang == currentAppLanguage
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
-                              color: lang == currentAppLanguage
-                                  ? AppColors.primary
-                                  : null,
+          Card(
+            child: ListTile(
+              leading:
+                  Icon(Icons.language_outlined, color: theme.colorScheme.primary),
+              title: Text(l10n.languageSetting, style: theme.textTheme.bodyLarge),
+              subtitle: Text(currentAppLanguage.displayName(context)),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () async {
+                final AppLanguage? selectedLanguage =
+                    await showDialog<AppLanguage>(
+                  context: context,
+                  builder: (BuildContext dialogContext) {
+                    return SimpleDialog(
+                      title: Text(l10n.selectLanguageDialogTitle),
+                      children: AppLanguage.values.map((lang) {
+                        return SimpleDialogOption(
+                          onPressed: () {
+                            Navigator.pop(dialogContext, lang);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Text(
+                              lang.displayName(context),
+                              style: TextStyle(
+                                fontWeight: lang == currentAppLanguage
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                                color: lang == currentAppLanguage
+                                    ? AppColors.primary
+                                    : null,
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    }).toList(),
-                  );
-                },
-              );
-
-              if (selectedLanguage != null &&
-                  selectedLanguage != currentAppLanguage) {
-                ref
-                    .read(appLanguageProvider.notifier)
-                    .updateLanguage(selectedLanguage);
-              }
-            },
+                        );
+                      }).toList(),
+                    );
+                  },
+                );
+            
+                if (selectedLanguage != null &&
+                    selectedLanguage != currentAppLanguage) {
+                  ref
+                      .read(appLanguageProvider.notifier)
+                      .updateLanguage(selectedLanguage);
+                }
+              },
+            ),
           ),
 
           const SizedBox(height: 30),

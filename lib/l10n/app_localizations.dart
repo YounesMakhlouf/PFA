@@ -79,9 +79,13 @@ abstract class AppLocalizations {
   String get speakingDifficulties;
 
   // Error messages
+  String get oopsSomethingWentWrong;
+  String get retryButton;
+  String get closeAppButton;
+  String get errorScreenContactSupport;
+  String get errorScreenRestartInstruction;
   String get unknownScreenType;
   String get applicationError;
-  String get retry;
   String errorLoadingGamesDetails(Object error);
   String errorLoadingCategoryGamesDetails(String categoryName, Object error);
   String errorLoadingProfileDetails(Object error);
@@ -134,7 +138,6 @@ abstract class AppLocalizations {
   String get createProfileButton;
   String profileCreatedSuccess(String firstName);
   String get errorCreatingProfile;
-  String get errorScreenRestartInstruction;
   String get selectChildProfileTitle;
   String get whoIsPlayingPrompt;
   String get addChildProfileButton;

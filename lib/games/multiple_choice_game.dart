@@ -108,7 +108,7 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
                   ElevatedButton.icon(
                       icon: const Icon(Icons.refresh),
                       onPressed: () => gameViewModel.restartGame(),
-                      label: Text(l10n.retry),
+                      label: Text(l10n.retryButton),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: colorScheme.errorContainer,
                           foregroundColor: colorScheme.onErrorContainer)),
