@@ -94,7 +94,8 @@ class SettingsScreen extends ConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.speed_outlined, color: theme.colorScheme.primary, size: 24),
+                      Icon(Icons.speed_outlined,
+                          color: theme.colorScheme.primary, size: 24),
                       const SizedBox(width: 16),
                       Text(
                         l10n.ttsSpeechRateSetting,
@@ -138,9 +139,10 @@ class SettingsScreen extends ConsumerWidget {
           _buildSectionHeader(context, l10n.settingsSectionGeneral),
           Card(
             child: ListTile(
-              leading:
-                  Icon(Icons.language_outlined, color: theme.colorScheme.primary),
-              title: Text(l10n.languageSetting, style: theme.textTheme.bodyLarge),
+              leading: Icon(Icons.language_outlined,
+                  color: theme.colorScheme.primary),
+              title:
+                  Text(l10n.languageSetting, style: theme.textTheme.bodyLarge),
               subtitle: Text(currentAppLanguage.displayName(context)),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () async {
@@ -164,7 +166,7 @@ class SettingsScreen extends ConsumerWidget {
                                     ? FontWeight.bold
                                     : FontWeight.normal,
                                 color: lang == currentAppLanguage
-                                    ? AppColors.primary
+                                    ? theme.colorScheme.primary
                                     : null,
                               ),
                             ),
@@ -174,7 +176,7 @@ class SettingsScreen extends ConsumerWidget {
                     );
                   },
                 );
-            
+
                 if (selectedLanguage != null &&
                     selectedLanguage != currentAppLanguage) {
                   ref
