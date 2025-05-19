@@ -77,11 +77,8 @@ class _HomePageState extends ConsumerState<HomeScreen> {
               tooltip: l10n.manageProfilesTooltip,
               onSelected: (value) {
                 if (value == 'switch') {
-                  final profiles =
-                      ref.read(initialChildProfilesProvider).valueOrNull ?? [];
                   logger.info("Navigating to SelectChildProfileScreen");
-                  Navigator.pushNamed(context, AppRoutes.selectChildProfile,
-                      arguments: {"profiles": profiles});
+                  Navigator.pushNamed(context, AppRoutes.selectChildProfile);
                 } else if (value == 'view_stats') {
                   logger.info(
                       "Navigating to StatsScreen for child: ${activeChild.childId}");
