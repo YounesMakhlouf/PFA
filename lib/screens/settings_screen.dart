@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pfa/config/app_theme.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/models/enums.dart';
 import 'package:pfa/providers/global_providers.dart';
