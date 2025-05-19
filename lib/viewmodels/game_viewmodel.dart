@@ -271,16 +271,18 @@ class GameViewModel extends StateNotifier<GameState> {
     final screen = state.currentScreenData!.screen;
 
     if (screen is MultipleChoiceScreen) {
-      if (_isDetecting) {
-        isCorrectCurrently = state.detectedEmotion == selectedOption.labelText;
-      } else {
-        isCorrectCurrently = selectedOption.isCorrect;
-      }
+      isCorrectCurrently = selectedOption.isCorrect;
     } else if (screen is MemoryScreen) {
       _logger.warning("Memory game logic not fully implemented.");
     } else {
       _logger.error("Unsupported screen type in checkAnswer.");
       state = state.copyWith(isCorrect: false, clearErrorMessage: true);
+      return;
+    }
+    if (isCorrectCurrently == null) {
+      Timer(const Duration(seconds: 1), () {
+        if (mounted) moveToNextScreen();
+      });
       return;
     }
 
