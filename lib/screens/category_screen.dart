@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pfa/config/app_theme.dart';
+import 'package:pfa/config/routes.dart';
 import 'package:pfa/constants/const.dart';
 import 'package:pfa/l10n/app_localizations.dart';
-import 'package:pfa/config/routes.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/providers/global_providers.dart';
 import 'package:pfa/screens/error_screen.dart';
@@ -25,9 +26,6 @@ class CategoryGamesScreen extends ConsumerWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text(category.localizedName(context)),
-          backgroundColor: theme.appBarTheme.backgroundColor,
-          foregroundColor: theme.appBarTheme.foregroundColor,
-          elevation: theme.appBarTheme.elevation,
         ),
         backgroundColor: theme.scaffoldBackgroundColor,
         body: SafeArea(
@@ -44,8 +42,15 @@ class CategoryGamesScreen extends ConsumerWidget {
               "CategoryGamesScreen: Displaying ${games.length} games for $category.");
           if (games.isEmpty) {
             return Center(
-                child: Text(l10n.noGamesInCategoryAvailable(
-                    category.localizedName(context))));
+                child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text(
+                l10n.noGamesInCategoryAvailable(
+                    category.localizedName(context)),
+                textAlign: TextAlign.center,
+                style: theme.textTheme.titleMedium,
+              ),
+            ));
           }
 
           return _buildGameGrid(context, ref, l10n, theme, games);
@@ -74,8 +79,9 @@ Widget _buildGameGrid(
 
   return GridView.builder(
     padding: const EdgeInsets.all(16.0),
-    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 2,
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount:
+          MediaQuery.of(context).orientation == Orientation.portrait ? 2 : 3,
       mainAxisSpacing: 16.0,
       crossAxisSpacing: 16.0,
       childAspectRatio: 0.85,
@@ -95,6 +101,7 @@ Widget _buildGameGrid(
 
       return GameCardWidget(
         title: translatedTitle,
+        backgroundColor: AppTheme.lightTheme.colorScheme.primaryContainer,
         imagePath: fullImageUrl,
         isEnabled: isEnabled,
         onTap: isEnabled

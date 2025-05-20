@@ -38,7 +38,7 @@ class OnboardingScreen extends ConsumerWidget {
               child: Text(
                 l10n.onboardingDesc1,
                 textAlign: TextAlign.center,
-                style: theme.textTheme.titleMedium?.copyWith(height: 1.5),
+                style: theme.textTheme.titleMedium,
               ),
             ),
           ),

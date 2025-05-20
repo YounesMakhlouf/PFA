@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pfa/models/game.dart';
-import 'package:pfa/models/user.dart';
 import 'package:pfa/screens/auth_gate.dart';
 import 'package:pfa/screens/category_screen.dart';
 import 'package:pfa/screens/create_child_profile_screen.dart';
@@ -32,15 +31,7 @@ class AppRoutes {
       home: (context) => const HomeScreen(),
       createChildProfile: (context) => const CreateChildProfileScreen(),
       settings: (context) => const SettingsScreen(),
-      selectChildProfile: (context) {
-        final args =
-            ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-        final profiles = args?['profiles'] as List<Child>?;
-        if (profiles == null) {
-          return ErrorScreen(errorMessage: "Profiles missing");
-        }
-        return SelectChildProfileScreen(profiles: profiles);
-      },
+      selectChildProfile: (context) => const SelectChildProfileScreen(),
       categoryGames: (context) {
         final args =
             ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;

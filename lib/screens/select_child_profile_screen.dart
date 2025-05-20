@@ -10,9 +10,7 @@ import 'package:pfa/screens/generic_loading_screen.dart';
 import 'package:pfa/widgets/avatar_display.dart';
 
 class SelectChildProfileScreen extends ConsumerStatefulWidget {
-  final List<Child> profiles;
-
-  const SelectChildProfileScreen({required this.profiles, super.key});
+  const SelectChildProfileScreen({super.key});
 
   @override
   ConsumerState<SelectChildProfileScreen> createState() =>
@@ -60,6 +58,7 @@ class _SelectChildProfileScreenState
                     l10n.whoIsPlayingPrompt,
                     style: theme.textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.onSurface,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -99,12 +98,12 @@ class _SelectChildProfileScreenState
                           padding: const EdgeInsets.symmetric(vertical: 16.0),
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: profiles.length <= 2
-                                ? profiles.length
-                                : 2, // Show 1 or 2 per row
+                            crossAxisCount: profiles.length == 1
+                                ? 1
+                                : (profiles.length <= 4 ? 2 : 3),
                             mainAxisSpacing: 20,
                             crossAxisSpacing: 20,
-                            childAspectRatio: 0.9,
+                            childAspectRatio: profiles.length == 1 ? 1.2 : 0.9,
                           ),
                           itemCount: profiles.length,
                           itemBuilder: (context, index) {
@@ -124,19 +123,16 @@ class _SelectChildProfileScreenState
                       },
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 32),
                   ElevatedButton.icon(
                     icon: const Icon(Icons.add_circle_outline),
                     label: Text(l10n.addChildProfileButton),
                     onPressed: _navigateToAddProfile,
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      foregroundColor: theme.colorScheme.primary,
-                      side: BorderSide(
-                          color: theme.colorScheme.primary
-                              .withAlpha((0.5 * 255).round())),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                    style: theme.elevatedButtonTheme.style?.copyWith(
+                      backgroundColor: WidgetStateProperty.all(
+                          theme.colorScheme.secondaryContainer),
+                      foregroundColor: WidgetStateProperty.all(
+                          theme.colorScheme.onSecondaryContainer),
                     ),
                   ),
                 ],
@@ -151,12 +147,12 @@ class _SelectChildProfileScreenState
   Widget _buildProfileCard(
       BuildContext context, ThemeData theme, Child profile) {
     return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () => _selectProfile(profile),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: theme.cardTheme.shape is RoundedRectangleBorder
+            ? (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius
+                as BorderRadius
+            : BorderRadius.circular(16),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -165,13 +161,14 @@ class _SelectChildProfileScreenState
             children: [
               AvatarDisplay(
                 avatarUrl: profile.avatarUrl,
-                radius: 40,
+                radius: 45,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
               Text(
                 profile.firstName,
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.onSurface,
                 ),
                 textAlign: TextAlign.center,
                 maxLines: 1,

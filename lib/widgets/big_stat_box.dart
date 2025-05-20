@@ -75,7 +75,7 @@ class StatsContainer extends StatelessWidget {
 
   /// Colors the text based on value
   TextStyle _statTextStyle({required double? value, required bool higherIsBetter}) {
-    if (value == null) return const TextStyle(color: AppColors.textPrimary);
+    if (value == null) return const TextStyle(color: AppColors.textPrimaryOnLight);
     final color = (higherIsBetter ? value > 50 : value < 50)
         ? AppColors.success
         : AppColors.error;

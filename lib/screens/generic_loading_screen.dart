@@ -68,9 +68,6 @@ class GenericLoadingScreen extends ConsumerWidget {
       appBar: showAppBar
           ? AppBar(
               title: Text(appBarTitle ?? l10n.loading),
-              backgroundColor: theme.appBarTheme.backgroundColor,
-              foregroundColor: theme.appBarTheme.foregroundColor,
-              elevation: theme.appBarTheme.elevation,
               automaticallyImplyLeading: false,
             )
           : null,

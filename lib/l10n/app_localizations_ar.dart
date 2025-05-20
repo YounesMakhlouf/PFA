@@ -87,8 +87,6 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get applicationError => 'خطأ في التطبيق';
   @override
-  String get retry => 'إعادة المحاولة';
-  @override
   String errorLoadingGamesDetails(Object error) =>
       'خطأ في تحميل الألعاب: $error';
   @override
@@ -272,4 +270,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ttsRateFast => 'سريع';
   @override
   String get hapticsEnabledSetting => 'تمكين ردود الفعل اللمسية';
+  @override
+  String get settingsSectionAudio => 'الصوت والتعليقات';
+  @override
+  String get settingsSectionGeneral => 'عام';
+  @override
+  String get oopsSomethingWentWrong => 'عفواً! حدث خطأ ما.';
+  @override
+  String get retryButton => 'حاول مرة أخرى';
+  @override
+  String get closeAppButton => 'إغلاق التطبيق';
+  @override
+  String get errorScreenContactSupport => 'إذا استمرت المشكلة، يرجى الاتصال بالدعم أو المحاولة مرة أخرى لاحقًا.';
 }
