@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pfa/config/app_theme.dart';
 import '../l10n/app_localizations.dart';
 
 class TimeFilterDropdown extends StatelessWidget {
@@ -14,33 +13,59 @@ class TimeFilterDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String all = AppLocalizations
-        .of(context)
-        .all;
-    String week = AppLocalizations
-        .of(context)
-        .periodThisWeek;
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    final TextTheme textTheme = theme.textTheme;
+    final l10n = AppLocalizations.of(context);
+
+    final List<DropdownMenuItem<String>> dropdownItems = [
+      DropdownMenuItem(
+          value: 'all', child: Text(l10n.all, style: textTheme.bodyLarge)),
+      DropdownMenuItem(
+          value: 'week',
+          child: Text(l10n.periodThisWeek, style: textTheme.bodyLarge)),
+    ];
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: AppColors.lightGrey,
+        color: theme.inputDecorationTheme.fillColor,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: AppColors.lightGrey,
-          width: 1.0,
+          color: theme.inputDecorationTheme.enabledBorder?.borderSide.color ??
+              colorScheme.outline.withValues(alpha: 0.7),
+          width:
+              theme.inputDecorationTheme.enabledBorder?.borderSide.width ?? 1.0,
         ),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: value,
-          items: [
-            DropdownMenuItem(value: 'all', child: Text(all, style: Theme.of(context).textTheme.bodyLarge)),
-            DropdownMenuItem(value: 'week', child: Text(week,style: Theme.of(context).textTheme.bodyLarge)),
-          ],
+          items: dropdownItems,
           onChanged: onChanged,
-          icon: const Icon(Icons.arrow_drop_down_rounded),
-          borderRadius: BorderRadius.circular(8),
-          dropdownColor: AppColors.lightGrey,
+          icon: Icon(
+            Icons.arrow_drop_down_rounded,
+            color: colorScheme.onSurfaceVariant,
+          ),
+          iconSize: 28,
+          isExpanded: true,
+          dropdownColor: theme.cardTheme.color ?? colorScheme.surface,
+          borderRadius: BorderRadius.circular(8.0),
+          elevation: theme.popupMenuTheme.elevation?.toInt() ?? 4,
+          style: textTheme.bodyLarge?.copyWith(color: colorScheme.onSurface),
+          selectedItemBuilder: (BuildContext context) {
+            return dropdownItems.map<Widget>((DropdownMenuItem<String> item) {
+              return Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  (item.child as Text).data!,
+                  style: textTheme.bodyLarge
+                      ?.copyWith(color: colorScheme.onSurface),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              );
+            }).toList();
+          },
         ),
       ),
     );

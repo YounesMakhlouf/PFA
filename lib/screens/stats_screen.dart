@@ -10,7 +10,7 @@ import '../models/stats_summary.dart';
 import '../providers/global_providers.dart';
 import '../services/child_stats_service.dart';
 import '../widgets/accuracy_bar_chart.dart';
-import '../widgets/big_stat_box.dart';
+import '../widgets/stats_container.dart';
 import '../widgets/category_filter_dropdown.dart';
 import '../widgets/time_filter_dropdown.dart';
 
@@ -162,37 +162,44 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
           opacity: _loadingStats ? 0.5 : 1.0,
           child: AbsorbPointer(
             absorbing: _loadingStats,
-            child: StatsContainer(
-              title: l10n.categoryStatsTitle,
-              headerTrailing: Row(
-                children: [
-                  SizedBox(
-                    width: 150,
-                    child: TimeFilterDropdown(
-                      value: _timeFilter,
-                      onChanged: _handleTimeFilterChange,
-                    ),
+            child: Card(
+              elevation: theme.cardTheme.elevation,
+              shape: theme.cardTheme.shape,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: StatsContainer(
+                  title: l10n.categoryStatsTitle,
+                  headerTrailing: Row(
+                    children: [
+                      SizedBox(
+                        width: 120,
+                        child: TimeFilterDropdown(
+                          value: _timeFilter,
+                          onChanged: _handleTimeFilterChange,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      SizedBox(
+                        width: 120,
+                        child: CategoryDropdown(
+                          value: _selectedCategory,
+                          categories: categoryOptions,
+                          onChanged: _handleCategoryChange,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 8),
-                  SizedBox(
-                    width: 150,
-                    child: CategoryDropdown(
-                      value: _selectedCategory,
-                      categories: categoryOptions,
-                      onChanged: _handleCategoryChange,
-                    ),
-                  ),
-                ],
+                  accuracy: _stats?.accuracy != null
+                      ? '${_stats!.accuracy.toStringAsFixed(1)}%'
+                      : '--%',
+                  avgTime: _stats?.avgTime != null
+                      ? _formatMilliseconds(_stats!.avgTime.toInt())
+                      : '--:--',
+                  hintsUsed: _stats?.hintUsageRatio != null
+                      ? '${_stats!.hintUsageRatio.toStringAsFixed(1)}%'
+                      : '-.-',
+                ),
               ),
-              accuracy: _stats?.accuracy != null
-                  ? '${_stats!.accuracy.toStringAsFixed(1)}%'
-                  : '--%',
-              avgTime: _stats?.avgTime != null
-                  ? _formatMilliseconds(_stats!.avgTime.toInt())
-                  : '--:--',
-              hintsUsed: _stats?.hintUsageRatio != null
-                  ? '${_stats!.hintUsageRatio.toStringAsFixed(1)}%'
-                  : '-.-',
             ),
           ),
         ),

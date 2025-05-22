@@ -1,44 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:pfa/config/app_theme.dart';
 
 class StatItem extends StatelessWidget {
   final String title;
   final String value;
   final TextStyle? valueStyle;
+  final IconData? icon;
+  final Color? iconColor;
 
   const StatItem({
     required this.title,
     required this.value,
     this.valueStyle,
+    this.icon,
+    this.iconColor,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8),
-        padding: const EdgeInsets.all(12),
-        constraints: const BoxConstraints(minHeight: 80),
-        decoration: BoxDecoration(
-          border: Border.all(color: AppColors.disabled),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              value,
-              style: valueStyle ?? Theme.of(context).textTheme.titleMedium,
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    final TextTheme textTheme = theme.textTheme;
+
+    final TextStyle effectiveValueStyle = valueStyle ??
+        textTheme.headlineSmall!.copyWith(
+          fontWeight: FontWeight.w700,
+          color: colorScheme.onSurface,
+        );
+    final Color effectiveIconColor =
+        iconColor ?? effectiveValueStyle.color ?? colorScheme.primary;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+      constraints: const BoxConstraints(minHeight: 90),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (icon != null) ...[
+            Icon(
+              icon,
+              size: 28,
+              color: effectiveIconColor,
             ),
-            const SizedBox(height: 4),
-            Text(
-                title,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodySmall
-            ),
+            const SizedBox(height: 6),
           ],
-        ),
+          Text(
+            value,
+            style: effectiveValueStyle,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
       ),
     );
   }

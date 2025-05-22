@@ -49,6 +49,7 @@ class CategoryCardWidget extends StatelessWidget {
               children: [
                 // Icon Area
                 Expanded(
+                  flex: 2,
                   child: Center(
                     child: Icon(
                       category.icon,
@@ -59,8 +60,8 @@ class CategoryCardWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 // Title Area
-                FittedBox(
-                  fit: BoxFit.scaleDown,
+                Flexible(
+                  flex: 1,
                   child: Text(
                     title,
                     style: theme.textTheme.titleMedium?.copyWith(

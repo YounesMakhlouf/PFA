@@ -15,31 +15,31 @@ class AvatarDisplay extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO: Implement logic to handle both asset paths and Supabase URLs
+    final logger = ref.read(loggingServiceProvider);
     ImageProvider? imageProvider;
-    if (avatarUrl != null && avatarUrl!.startsWith('assets/')) {
-      try {
-        imageProvider = AssetImage(avatarUrl!);
-      } catch (e) {
-        ref
-            .read(loggingServiceProvider)
-            .warning("Failed to load avatar asset $avatarUrl", e);
+    if (avatarUrl != null && avatarUrl!.isNotEmpty) {
+      if (avatarUrl!.startsWith('assets/')) {
+        try {
+          imageProvider = AssetImage(avatarUrl!);
+          logger.debug("AvatarDisplay: Using local asset: $avatarUrl");
+        } catch (e) {
+          logger.warning("Failed to load avatar asset $avatarUrl", e);
+        }
       }
     }
 
     return CircleAvatar(
       radius: radius,
-      backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-      foregroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
+      backgroundColor: Colors.transparent,
       backgroundImage: imageProvider,
       onBackgroundImageError: imageProvider != null
           ? (_, __) {
-              ref
-                  .read(loggingServiceProvider)
-                  .error("Error loading background image asset: $avatarUrl");
+              logger.error(
+                  "AvatarDisplay: Error loading background image asset: $avatarUrl");
             }
           : null,
       child: imageProvider == null
-          ? Icon(Icons.person, size: radius * 1.2) // Fallback Icon
+          ? Icon(Icons.person, size: radius * 1.1) // Fallback Icon
           : null,
     );
   }
