@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:pfa/constants/const.dart';
 import 'package:pfa/models/enums.dart';
 import 'package:pfa/models/game.dart';
@@ -43,7 +44,8 @@ final supabaseServiceProvider = Provider<SupabaseService>((ref) {
 final ttsServiceProvider = Provider<TtsService>((ref) {
   final logger = ref.watch(loggingServiceProvider);
   final settingsService = ref.watch(settingsServiceProvider);
-  return TtsService(logger, settingsService, ref);
+  final flutterTts = FlutterTts();
+  return TtsService(logger, settingsService, ref, flutterTts);
 });
 
 final audioPlayerProvider = Provider<AudioPlayer>((ref) {
@@ -215,7 +217,6 @@ final sharedPreferencesAsyncProvider = Provider<SharedPreferencesAsync>((ref) {
   return SharedPreferencesAsync();
 });
 
-// Updated Provider for Settings Service
 final settingsServiceProvider = Provider<SettingsService>((ref) {
   final logger = ref.watch(loggingServiceProvider);
   final prefs = ref.watch(sharedPreferencesAsyncProvider);
