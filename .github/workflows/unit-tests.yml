@@ -46,32 +46,6 @@ jobs:
       - name: Run unit tests
         run: flutter test --machine --coverage > tests.output
 
-      - name: Verify and Show lcov.info content
-        if: always() # Run this step even if previous steps fail, for debugging
-        run: |
-          echo "--- Checking for lcov.info ---"
-          ls -la coverage/
-          if [ -f "coverage/lcov.info" ]; then
-            echo "--- lcov.info content START ---"
-            head -n 20 coverage/lcov.info # Print first 20 lines
-            echo "--- ... ---"
-            tail -n 20 coverage/lcov.info # Print last 20 lines
-            echo "--- lcov.info content END ---"
-          else
-            echo "--- lcov.info NOT FOUND ---"
-          fi
-          echo "--- Checking for tests.output ---"
-          ls -l tests.output
-          if [ -f "tests.output" ]; then
-            echo "--- tests.output content START ---"
-            head -n 20 tests.output
-            echo "--- ... ---"
-            echo "--- tests.output content END ---"
-          else
-            echo "--- tests.output NOT FOUND ---"
-          fi
-        shell: bash
-
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
