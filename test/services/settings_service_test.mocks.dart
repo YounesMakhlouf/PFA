@@ -139,7 +139,6 @@ class MockLoggingService extends _i1.Mock implements _i2.LoggingService {
 /// A class which mocks [SharedPreferencesAsync].
 ///
 /// See the documentation for Mockito's code generation for more information.
-// ignore: must_be_immutable
 class MockSharedPreferencesAsync extends _i1.Mock
     implements _i4.SharedPreferencesAsync {
   MockSharedPreferencesAsync() {
