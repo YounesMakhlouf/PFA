@@ -10,6 +10,9 @@ import 'child_service_test.mocks.dart';
 void main() {
   late MockChildRepository mockChildRepository;
   late ChildService childService;
+  var repositoryError = 'Repository error';
+  var shouldThrowException =
+      'should throw an exception if repository throws an exception';
 
   setUp(() {
     mockChildRepository = MockChildRepository();
@@ -35,10 +38,9 @@ void main() {
         verify(mockChildRepository.getEducatorsForChild(childId)).called(1);
       });
 
-      test('should throw an exception if repository throws an exception',
-          () async {
+      test(shouldThrowException, () async {
         when(mockChildRepository.getEducatorsForChild(childId))
-            .thenThrow(Exception('Repository error'));
+            .thenThrow(Exception(repositoryError));
 
         expect(
           () => childService.getEducators(childId: childId),
@@ -62,10 +64,9 @@ void main() {
             .called(1);
       });
 
-      test('should throw an exception if repository throws an exception',
-          () async {
+      test(shouldThrowException, () async {
         when(mockChildRepository.addEducatorByEmail(childId, educatorEmail))
-            .thenThrow(Exception('Repository error'));
+            .thenThrow(Exception(repositoryError));
 
         expect(
           () => childService.addEducator(
@@ -92,10 +93,9 @@ void main() {
             .called(1);
       });
 
-      test('should throw an exception if repository throws an exception',
-          () async {
+      test(shouldThrowException, () async {
         when(mockChildRepository.removeEducatorByEmail(childId, educatorEmail))
-            .thenThrow(Exception('Repository error'));
+            .thenThrow(Exception(repositoryError));
 
         expect(
           () => childService.removeEducator(
