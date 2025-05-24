@@ -44,7 +44,7 @@ jobs:
 
       # 6. Run unit tests
       - name: Run unit tests
-        run: flutter test
+        run: flutter test --coverage
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
