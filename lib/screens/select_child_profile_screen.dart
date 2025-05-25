@@ -160,7 +160,7 @@ class _SelectChildProfileScreenState
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               AvatarDisplay(
-                avatarUrl: profile.avatarUrl,
+                avatarUrlOrPath: profile.avatarUrl,
                 radius: 45,
               ),
               const SizedBox(height: 16),
