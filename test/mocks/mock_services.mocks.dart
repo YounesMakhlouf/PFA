@@ -7,7 +7,9 @@ import 'dart:async' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i5;
+import 'package:pfa/models/enums.dart' as _i8;
 import 'package:pfa/services/logging_service.dart' as _i6;
+import 'package:pfa/services/settings_service.dart' as _i7;
 import 'package:pfa/services/supabase_service.dart' as _i3;
 import 'package:supabase_flutter/supabase_flutter.dart' as _i2;
 
@@ -281,4 +283,149 @@ class MockLoggingService extends _i1.Mock implements _i6.LoggingService {
           ),
         ),
       ) as String);
+}
+
+/// A class which mocks [SettingsService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSettingsService extends _i1.Mock implements _i7.SettingsService {
+  MockSettingsService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.Future<void> setLastActiveChildId(String? childId) => (super.noSuchMethod(
+        Invocation.method(
+          #setLastActiveChildId,
+          [childId],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<String?> getLastActiveChildId() => (super.noSuchMethod(
+        Invocation.method(
+          #getLastActiveChildId,
+          [],
+        ),
+        returnValue: _i4.Future<String?>.value(),
+      ) as _i4.Future<String?>);
+
+  @override
+  _i4.Future<void> setTtsEnabled(bool? enabled) => (super.noSuchMethod(
+        Invocation.method(
+          #setTtsEnabled,
+          [enabled],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<bool> isTtsEnabled({bool? defaultValue = true}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #isTtsEnabled,
+          [],
+          {#defaultValue: defaultValue},
+        ),
+        returnValue: _i4.Future<bool>.value(false),
+      ) as _i4.Future<bool>);
+
+  @override
+  _i4.Future<void> setTtsSpeechRate(double? rate) => (super.noSuchMethod(
+        Invocation.method(
+          #setTtsSpeechRate,
+          [rate],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<double> getTtsSpeechRate({double? defaultValue = 0.5}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getTtsSpeechRate,
+          [],
+          {#defaultValue: defaultValue},
+        ),
+        returnValue: _i4.Future<double>.value(0.0),
+      ) as _i4.Future<double>);
+
+  @override
+  _i4.Future<void> setSoundEffectsEnabled(bool? enabled) => (super.noSuchMethod(
+        Invocation.method(
+          #setSoundEffectsEnabled,
+          [enabled],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<bool> areSoundEffectsEnabled({bool? defaultValue = true}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #areSoundEffectsEnabled,
+          [],
+          {#defaultValue: defaultValue},
+        ),
+        returnValue: _i4.Future<bool>.value(false),
+      ) as _i4.Future<bool>);
+
+  @override
+  _i4.Future<void> setHapticsEnabled(bool? enabled) => (super.noSuchMethod(
+        Invocation.method(
+          #setHapticsEnabled,
+          [enabled],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<bool> areHapticsEnabled({bool? defaultValue = true}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #areHapticsEnabled,
+          [],
+          {#defaultValue: defaultValue},
+        ),
+        returnValue: _i4.Future<bool>.value(false),
+      ) as _i4.Future<bool>);
+
+  @override
+  _i4.Future<void> setAppLanguage(_i8.AppLanguage? language) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setAppLanguage,
+          [language],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<_i8.AppLanguage> getAppLanguage(
+          {_i8.AppLanguage? defaultValue = _i8.AppLanguage.arabic}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAppLanguage,
+          [],
+          {#defaultValue: defaultValue},
+        ),
+        returnValue: _i4.Future<_i8.AppLanguage>.value(_i8.AppLanguage.english),
+      ) as _i4.Future<_i8.AppLanguage>);
+
+  @override
+  _i4.Future<void> clearAllAppSettings() => (super.noSuchMethod(
+        Invocation.method(
+          #clearAllAppSettings,
+          [],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 }
