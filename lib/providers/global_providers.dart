@@ -1,5 +1,7 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:pfa/constants/const.dart';
 import 'package:pfa/models/enums.dart';
 import 'package:pfa/models/game.dart';
@@ -42,13 +44,21 @@ final supabaseServiceProvider = Provider<SupabaseService>((ref) {
 final ttsServiceProvider = Provider<TtsService>((ref) {
   final logger = ref.watch(loggingServiceProvider);
   final settingsService = ref.watch(settingsServiceProvider);
-  return TtsService(logger, settingsService, ref);
+  final flutterTts = FlutterTts();
+  return TtsService(logger, settingsService, ref, flutterTts);
+});
+
+final audioPlayerProvider = Provider<AudioPlayer>((ref) {
+  final player = AudioPlayer();
+  ref.onDispose(() => player.dispose());
+  return player;
 });
 
 final audioServiceProvider = Provider<AudioService>((ref) {
   final logger = ref.watch(loggingServiceProvider);
   final settingsService = ref.watch(settingsServiceProvider);
-  final audioService = AudioService(logger, settingsService);
+  final audioPlayer = ref.watch(audioPlayerProvider);
+  final audioService = AudioService(logger, settingsService, audioPlayer);
   ref.onDispose(() => audioService.dispose());
   return audioService;
 });
@@ -203,9 +213,14 @@ final onboardingCompletedProvider = FutureProvider<bool>((ref) async {
   return prefs.getBool(onboardingCompletedKey) ?? false;
 });
 
+final sharedPreferencesAsyncProvider = Provider<SharedPreferencesAsync>((ref) {
+  return SharedPreferencesAsync();
+});
+
 final settingsServiceProvider = Provider<SettingsService>((ref) {
   final logger = ref.watch(loggingServiceProvider);
-  return SettingsService(logger);
+  final prefs = ref.watch(sharedPreferencesAsyncProvider);
+  return SettingsService(logger, prefs);
 });
 
 final ttsEnabledProvider = FutureProvider<bool>((ref) async {

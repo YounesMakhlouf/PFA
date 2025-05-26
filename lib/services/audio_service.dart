@@ -6,11 +6,11 @@ enum SoundType { correct, incorrect, levelComplete, uiClick, gameComplete }
 
 class AudioService {
   final LoggingService _logger;
-  final AudioPlayer _feedbackPlayer = AudioPlayer();
+  final AudioPlayer _feedbackPlayer;
   final SettingsService _settingsService;
   bool _isInitialized = false;
 
-  AudioService(this._logger, this._settingsService) {
+  AudioService(this._logger, this._settingsService, this._feedbackPlayer) {
     _initialize();
   }
 

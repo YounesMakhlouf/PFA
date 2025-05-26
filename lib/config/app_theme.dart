@@ -10,11 +10,6 @@ class AppColors {
   static const Color surfaceVariant = Color(0xFFDCE4E8);
   static const Color outline = Color(0xFFC4C7C5); // Borders, dividers
 
-  // Specific UI elements
-  static const Color cardBackground = AppColors.surface;
-  static const Color statBoxBackground = Color(0x99FFFFFF);
-  static const Color lightGrey = Color(0xFFEEEEEE); // for buttons, borders...
-
   // Text Colors
   static const Color textPrimaryOnLight = Color(0xFF1F2937);
   static const Color textSecondaryOnLight = Color(0xFF4B5563);

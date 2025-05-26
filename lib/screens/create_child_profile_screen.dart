@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/models/user.dart';
 import 'package:pfa/providers/global_providers.dart';
+import 'package:pfa/widgets/avatar_display.dart';
 
 class CreateChildProfileScreen extends ConsumerStatefulWidget {
   const CreateChildProfileScreen({super.key});
@@ -152,7 +153,6 @@ class _CreateChildProfileScreenState
 
   @override
   Widget build(BuildContext context) {
-    final logger = ref.read(loggingServiceProvider);
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
 
@@ -206,15 +206,9 @@ class _CreateChildProfileScreenState
                                 ]
                               : [],
                         ),
-                        child: CircleAvatar(
+                        child: AvatarDisplay(
+                          avatarUrlOrPath: path,
                           radius: 45,
-                          backgroundColor:
-                              theme.colorScheme.surfaceContainerHighest,
-                          // Placeholder background
-                          backgroundImage: AssetImage(path),
-                          onBackgroundImageError: (_, __) {
-                            logger.error("Failed to load avatar asset: $path");
-                          },
                         ),
                       ),
                     );
