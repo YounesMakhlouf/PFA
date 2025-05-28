@@ -120,7 +120,7 @@ class _CreateChildProfileScreenState
         scaffoldMessenger.showSnackBar(
           SnackBar(
             content: Text(
-                AppLocalizations.of(context).profileCreatedSuccess(firstName)),
+                AppLocalizations.of(context)!.profileCreatedSuccess(firstName)),
             backgroundColor: Theme.of(context).colorScheme.tertiary,
           ),
         );
@@ -136,7 +136,7 @@ class _CreateChildProfileScreenState
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                  '${AppLocalizations.of(context).errorCreatingProfile} ${e.toString().replaceFirst("Exception: ", "")}'),
+                  '${AppLocalizations.of(context)!.errorCreatingProfile} ${e.toString().replaceFirst("Exception: ", "")}'),
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
           );
@@ -154,7 +154,7 @@ class _CreateChildProfileScreenState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
