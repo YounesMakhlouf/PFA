@@ -92,21 +92,14 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
 
   Widget _buildScreenContent(BuildContext context) {
     final screen = widget.currentScreen;
+    final l10n = AppLocalizations.of(context);
 
     if (screen is MultipleChoiceScreen) {
       return _buildMultipleChoiceUI(context, screen);
     } else if (screen is MemoryScreen) {
-      return const ErrorScreen(errorMessage: "not implemented yet");
+      return ErrorScreen(errorMessage: l10n.featureNotImplemented);
     } else {
-      return Center(
-        child: Text(
-          AppLocalizations.of(context).unknownScreenType,
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium
-              ?.copyWith(color: AppColors.error),
-        ),
-      );
+      return ErrorScreen(errorMessage: l10n.unknownScreenType);
     }
   }
 

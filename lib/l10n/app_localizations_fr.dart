@@ -105,6 +105,28 @@ class AppLocalizationsFr extends AppLocalizations {
   String noGamesInCategoryAvailable(String categoryName) =>
       'Aucun jeu disponible dans la catégorie $categoryName pour le moment.';
 
+  @override
+  String get authenticating => 'Authentification en cours...';
+
+  @override
+  String appFailedToInitialize(String error) =>
+      'L\'application n\'a pas pu s\'initialiser: $error';
+
+  @override
+  String get featureNotImplemented =>
+      'Cette fonctionnalité n\'est pas encore implémentée.';
+
+  @override
+  String get errorCategoryMissing => 'Erreur : Catégorie manquante.';
+
+  @override
+  String get errorGameCategoryOrIdMissing =>
+      'Erreur : Catégorie de jeu ou identifiant manquant.';
+
+  @override
+  String get errorChildIdMissing =>
+      'Erreur : Identifiant de l\'enfant manquant';
+
   // Game feedback
   @override
   String get correct => 'Correct !';
@@ -287,5 +309,6 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get closeAppButton => "Fermer l'application";
   @override
-  String get errorScreenContactSupport => 'Si le problème persiste, veuillez contacter le support ou réessayer plus tard.';
+  String get errorScreenContactSupport =>
+      'Si le problème persiste, veuillez contacter le support ou réessayer plus tard.';
 }

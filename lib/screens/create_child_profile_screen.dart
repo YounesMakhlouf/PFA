@@ -272,7 +272,7 @@ class _CreateChildProfileScreenState
                                     .format(_selectedBirthdate!),
                             style: theme.textTheme.bodyLarge,
                           ),
-                          Icon(Icons.calendar_today_outlined, size: 20),
+                          const Icon(Icons.calendar_today_outlined, size: 20),
                         ],
                       ),
                     ),

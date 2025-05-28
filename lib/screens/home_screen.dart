@@ -64,7 +64,7 @@ class _HomePageState extends ConsumerState<HomeScreen> {
     if (activeChild == null) {
       logger.warning(
           "HomeScreen build: Active child is null. Showing loading. Check AuthGate logic.");
-      return const GenericLoadingScreen(message: "Initializing...");
+      return GenericLoadingScreen(message: l10n.loadingProfilesMessage);
     }
 
     return Scaffold(

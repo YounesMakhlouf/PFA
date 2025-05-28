@@ -26,8 +26,8 @@ class AuthGate extends ConsumerWidget {
           final profilesAsync = ref.watch(initialChildProfilesProvider);
           return profilesAsync.when(loading: () {
             logger.debug("AuthGate: Loading initial profiles...");
-            return const GenericLoadingScreen(
-                message: "Loading initial profiles..");
+            return GenericLoadingScreen(
+                message: AppLocalizations.of(context).loadingProfilesMessage);
           }, error: (err, st) {
             logger.error("AuthGate: Error loading initial profiles", err, st);
             return ErrorScreen(
@@ -80,7 +80,8 @@ class AuthGate extends ConsumerWidget {
       },
       loading: () {
         logger.debug("AuthGate: Auth state loading...");
-        return GenericLoadingScreen(message: "Authenticating"); //TODO: Localize
+        return GenericLoadingScreen(
+            message: AppLocalizations.of(context).authenticating);
       },
       error: (error, stackTrace) {
         logger.error("AuthGate: Error in auth stream", error, stackTrace);

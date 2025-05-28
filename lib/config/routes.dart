@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/screens/auth_gate.dart';
 import 'package:pfa/screens/category_screen.dart';
@@ -37,7 +38,8 @@ class AppRoutes {
             ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
         final category = args?['category'] as GameCategory?;
         if (category == null) {
-          return ErrorScreen(errorMessage: "Error: Category missing");
+          return ErrorScreen(
+              errorMessage: AppLocalizations.of(context).errorCategoryMissing);
         }
         return CategoryGamesScreen(category: category);
       },
@@ -48,7 +50,8 @@ class AppRoutes {
 
         if (gameId == null) {
           return ErrorScreen(
-            errorMessage: 'Error: Game category or ID missing',
+            errorMessage:
+                AppLocalizations.of(context).errorGameCategoryOrIdMissing,
           );
         }
         return MultipleChoiceGame(gameId: gameId);
@@ -59,7 +62,8 @@ class AppRoutes {
         final childUuid = args?['childUuid'] as String?;
 
         if (childUuid == null) {
-          return ErrorScreen(errorMessage: "Child identifier is missing");
+          return ErrorScreen(
+              errorMessage: AppLocalizations.of(context).errorChildIdMissing);
         }
 
         return StatsScreen(childUuid: childUuid);

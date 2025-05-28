@@ -65,7 +65,7 @@ class AppInitializer extends ConsumerWidget {
         ref
             .read(loggingServiceProvider)
             .error("Error checking onboarding status", err, stack);
-        return MyApp(showOnboarding: true);
+        return const MyApp(showOnboarding: true);
       },
     );
   }
