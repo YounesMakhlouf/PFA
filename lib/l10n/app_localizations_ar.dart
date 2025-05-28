@@ -104,6 +104,24 @@ class AppLocalizationsAr extends AppLocalizations {
   String noGamesInCategoryAvailable(String categoryName) =>
       'لا توجد ألعاب متاحة في فئة $categoryName حالياً.';
 
+  @override
+  String get authenticating => 'جاري المصادقة...';
+
+  @override
+  String appFailedToInitialize(String error) => 'فشل تهيئة التطبيق: $error';
+
+  @override
+  String get featureNotImplemented => 'هذه الميزة لم تنفذ بعد.';
+
+  @override
+  String get errorCategoryMissing => 'خطأ: الفئة مفقودة.';
+
+  @override
+  String get errorGameCategoryOrIdMissing => 'خطأ: فئة اللعبة أو المعرف مفقود.';
+
+  @override
+  String get errorChildIdMissing => 'خطأ: معرف الطفل مفقود';
+
   // Game feedback
   @override
   String get correct => 'صحيح!';
@@ -281,5 +299,6 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get closeAppButton => 'إغلاق التطبيق';
   @override
-  String get errorScreenContactSupport => 'إذا استمرت المشكلة، يرجى الاتصال بالدعم أو المحاولة مرة أخرى لاحقًا.';
+  String get errorScreenContactSupport =>
+      'إذا استمرت المشكلة، يرجى الاتصال بالدعم أو المحاولة مرة أخرى لاحقًا.';
 }

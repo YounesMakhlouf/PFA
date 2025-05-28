@@ -92,6 +92,12 @@ abstract class AppLocalizations {
   String errorCheckingAuthDetails(Object error);
   String get noGameCategoriesAvailable;
   String noGamesInCategoryAvailable(String categoryName);
+  String get authenticating;
+  String appFailedToInitialize(String error);
+  String get featureNotImplemented;
+  String get errorCategoryMissing;
+  String get errorGameCategoryOrIdMissing;
+  String get errorChildIdMissing;
 
   // Game feedback
   String get correct;

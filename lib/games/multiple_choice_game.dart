@@ -222,14 +222,14 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
               if (gameState.currentScreenData?.screen.instruction != null &&
                   gameState.currentScreenData!.screen.instruction!.isNotEmpty)
                 IconButton(
-                  icon: Icon(Icons.volume_up_outlined),
+                  icon: const Icon(Icons.volume_up_outlined),
                   tooltip: l10n.repeatInstructionTooltip,
                   onPressed: () =>
                       gameViewModel.repeatCurrentScreenInstruction(),
                 ),
             ],
             leading: IconButton(
-              icon: Icon(Icons.close),
+              icon: const Icon(Icons.close),
               tooltip: l10n.exitGameTooltip,
               onPressed: () async {
                 final bool? shouldExit = await showDialog<bool>(
