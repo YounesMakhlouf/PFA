@@ -56,7 +56,7 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
     final gameViewModel =
         ref.read(gameViewModelProvider(widget.gameId).notifier);
     final logger = ref.read(loggingServiceProvider);
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final translationService = ref.read(translationServiceProvider);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;

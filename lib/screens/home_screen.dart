@@ -32,7 +32,7 @@ class _HomePageState extends ConsumerState<HomeScreen> {
     final logger = ref.read(loggingServiceProvider);
     final supabaseService = ref.read(supabaseServiceProvider);
     final scaffoldMessenger = ScaffoldMessenger.of(context);
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     logger.info('Logout button tapped');
@@ -53,7 +53,7 @@ class _HomePageState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final logger = ref.read(loggingServiceProvider);
 

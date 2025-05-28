@@ -35,7 +35,7 @@ enum SpecialCondition {
 
 extension SpecialConditionExtension on SpecialCondition {
   String displayName(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     switch (this) {
       case SpecialCondition.AUTISM:
         return l10n.autism;

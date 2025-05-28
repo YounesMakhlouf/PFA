@@ -36,7 +36,7 @@ class _SelectChildProfileScreenState
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final logger = ref.read(loggingServiceProvider);
     final profilesAsync = ref.watch(initialChildProfilesProvider);

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import '../l10n/app_localizations.dart';
 
 String getLocalizedCategory(String key, BuildContext context) {
-  final loc = AppLocalizations.of(context);
+  final loc = AppLocalizations.of(context)!;
   switch (key) {
     case 'NUMBERS':
       return loc.numbers;

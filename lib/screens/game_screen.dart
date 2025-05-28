@@ -60,7 +60,7 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final translationService = ref.read(translationServiceProvider);
 
     final translatedInstruction = widget.currentScreen.instruction != null
@@ -92,7 +92,7 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
 
   Widget _buildScreenContent(BuildContext context) {
     final screen = widget.currentScreen;
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     if (screen is MultipleChoiceScreen) {
       return _buildMultipleChoiceUI(context, screen);
@@ -205,10 +205,10 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
     if (isCorrect == null) return const SizedBox.shrink();
 
     if (isCorrect) {
-      feedbackText = AppLocalizations.of(context).correct;
+      feedbackText = AppLocalizations.of(context)!.correct;
       feedbackEmoji = (positiveEmojisList..shuffle()).first;
     } else {
-      feedbackText = AppLocalizations.of(context).tryAgain;
+      feedbackText = AppLocalizations.of(context)!.tryAgain;
       feedbackEmoji = (neutralEmojisList..shuffle()).first;
     }
     final String fullFeedbackText = '$feedbackText $feedbackEmoji';
@@ -259,7 +259,7 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
 
   Widget _buildProgressIndicator(
       BuildContext context, int level, int screenNum, ThemeData theme) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12.0),

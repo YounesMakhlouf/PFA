@@ -56,7 +56,7 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -100,12 +100,12 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
       );
       if (_stats == null && !_loadingStats) {
         setState(
-            () => _statsError = AppLocalizations.of(context).applicationError);
+            () => _statsError = AppLocalizations.of(context)!.applicationError);
       }
       setState(() => _stats = stats);
     } catch (e) {
       setState(
-          () => _statsError = AppLocalizations.of(context).applicationError);
+          () => _statsError = AppLocalizations.of(context)!.applicationError);
     } finally {
       setState(() => _loadingStats = false);
     }
@@ -134,7 +134,7 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
 
       setState(() => _categoryAccuracies = sortedResult);
     } catch (e) {
-      setState(() => _chartError = AppLocalizations.of(context).statsError);
+      setState(() => _chartError = AppLocalizations.of(context)!.statsError);
     } finally {
       setState(() => _loadingChart = false);
     }

@@ -34,7 +34,7 @@ void main() {
       // Verify title (localized name of the category)
       // We need to get the AppLocalizations instance for the test environment
       final element = tester.element(find.byType(CategoryCardWidget));
-      final l10n = AppLocalizations.of(element);
+      final l10n = AppLocalizations.of(element)!;
       expect(find.text(l10n.colorsAndShapes), findsOneWidget);
       expect(find.byIcon(Icons.palette), findsOneWidget);
     });
@@ -132,7 +132,7 @@ void main() {
       ));
 
       final element = tester.element(find.byType(CategoryCardWidget));
-      final l10n = AppLocalizations.of(element);
+      final l10n = AppLocalizations.of(element)!;
       expect(find.text(l10n.logicalThinking), findsOneWidget);
       expect(find.byIcon(Icons.psychology), findsOneWidget);
     });

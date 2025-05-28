@@ -39,7 +39,7 @@ class AppRoutes {
         final category = args?['category'] as GameCategory?;
         if (category == null) {
           return ErrorScreen(
-              errorMessage: AppLocalizations.of(context).errorCategoryMissing);
+              errorMessage: AppLocalizations.of(context)!.errorCategoryMissing);
         }
         return CategoryGamesScreen(category: category);
       },
@@ -51,7 +51,7 @@ class AppRoutes {
         if (gameId == null) {
           return ErrorScreen(
             errorMessage:
-                AppLocalizations.of(context).errorGameCategoryOrIdMissing,
+                AppLocalizations.of(context)!.errorGameCategoryOrIdMissing,
           );
         }
         return MultipleChoiceGame(gameId: gameId);
@@ -63,7 +63,7 @@ class AppRoutes {
 
         if (childUuid == null) {
           return ErrorScreen(
-              errorMessage: AppLocalizations.of(context).errorChildIdMissing);
+              errorMessage: AppLocalizations.of(context)!.errorChildIdMissing);
         }
 
         return StatsScreen(childUuid: childUuid);
