@@ -1,0 +1,150 @@
+@startuml
+' Basic styling for clarity
+skinparam classAttributeIconSize 0
+hide empty members
+skinparam shadowing false
+skinparam defaultFontName Segoe UI
+skinparam class {
+    BackgroundColor PaleTurquoise
+    ArrowColor Navy
+    BorderColor Navy
+}
+skinparam enum {
+    BackgroundColor LightYellow
+    ArrowColor Olive
+    BorderColor Olive
+}
+skinparam abstract {
+    BackgroundColor LightGray
+}
+skinparam note {
+    BackgroundColor LightGrey
+    BorderColor Grey
+}
+
+' --- Enumerations ---
+
+enum SpecialCondition {
+  AUTISM
+  ADHD
+  DYSLEXIA
+  DYSCALCULIA
+  SPEAKING_DIFFICULTIES
+}
+
+enum GameCategory {
+  LOGICAL_THINKING
+  EDUCATION
+  RELAXATION
+  EMOTIONS
+  NUMBERS
+  COLORS_SHAPES
+  ANIMALS
+  FRUITS_VEGETABLES
+}
+
+enum GameType {
+  MULTIPLE_CHOICE
+  MEMORY_MATCH
+  PUZZLE
+  STORY
+  IDENTIFY_INTRUDER
+}
+
+' --- User Hierarchy ---
+
+abstract class User {
+ email
+ password
+}
+
+class Educator extends User {
+  speciality
+}
+
+class Child{
+  firstName
+  lastName
+  birthdate
+  specialConditions: SpecialCondition[]
+}
+
+' --- Game Structure ---
+
+class Game {
+  gameId
+  name
+  picture
+  instruction
+  category: GameCategory
+  type: GameType
+  --
+  + getLevels(): Level[]
+}
+
+class Level {
+  levelNumber
+  --
+  + getScreens(): Screen[]
+}
+
+abstract class Screen {
+  screenNumber
+  --
+  getOptions(): Option[]
+  checkAnswer(selectedOptions: Option[]): Boolean
+}
+
+class MultipleChoiceScreen extends Screen {
+  --
+  getOptions(): Option[]
+  checkAnswer(selectedOptions: Option[]): Boolean
+}
+
+class MemoryScreen extends Screen {
+  --
+  getOptions(): Option[]
+  checkAnswer(selectedOptions: Option[]): Boolean
+}
+
+class Option {
+  labelText
+  picture
+}
+
+' --- Progress Tracking ---
+
+class GameSession {
+  startTime
+  endTime
+  overallResult
+}
+
+class ScreenAttempt {
+  attemptId
+  timestamp
+  isCorrect
+  timeTaken
+  hintsUsed
+}
+
+
+' --- Relationships ---
+Educator "1" -- "0..*" Game : creates
+Educator "1" -- "0..*"Child : cares for
+User "1" -- "1..*" Child: parent
+
+' Game Structure Relationships
+Game "1" *-- "1..*" Level
+Level "1" *-- "1..*" Screen
+Screen "1" o-- "1..*" Option
+
+MultipleChoiceScreen "1" -- "1..*" Option : identifies correct >
+
+' Progress Tracking Relationships
+Child "1" -- "0..*" GameSession : plays >
+Game "1" -- "0..*" GameSession : records sessions for >
+GameSession "1" *-- "1..*" ScreenAttempt : >
+Screen "1" -- "0..*" ScreenAttempt : attempted on >
+Option "1" -- "0..*" ScreenAttempt : selected in >
+@enduml
