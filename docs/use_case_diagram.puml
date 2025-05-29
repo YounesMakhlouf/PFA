@@ -1,0 +1,48 @@
+@startuml
+left to right direction
+actor User
+actor Educator
+actor Parent
+actor Child
+
+User <|-- Educator
+User <|-- Parent
+
+rectangle "Web App" as Web {
+  (Login) as LoginWeb
+  (CreateGame)
+  (ViewStats) as ViewStatsWeb
+}
+
+rectangle "Mobile App" as Mobile {
+  (Register)
+  (Login) as LoginMobile
+  (AddChildProfile)
+  (ManagePreferences)
+  (ViewStats) as ViewStatsMobile
+  (AssignEducator)
+  (RemoveEducator)
+  (Play)
+}
+
+Parent --> Register
+Parent -up-> LoginMobile
+Parent --> AddChildProfile
+Parent --> ManagePreferences
+Parent --> ViewStatsMobile
+Parent --> AssignEducator
+Parent --> RemoveEducator
+
+Child --> Play
+
+
+Educator --> LoginWeb
+Educator --> (CreateGame)
+Educator --> ViewStatsWeb
+
+
+
+' Place Mobile App below Web App by linking a use case downward
+LoginWeb -down-> LoginMobile #white
+
+@enduml
