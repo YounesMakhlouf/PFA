@@ -400,9 +400,9 @@ class GameViewModel extends StateNotifier<GameState> {
 
       final detectedEmotion = await _emotionService.detectEmotion(image.path);
       _logger.info('Detected Emotion: $detectedEmotion');
-      bool isCorrectEmotion =
-          detectedEmotion == state.currentScreenData?.options.first.labelText;
-      state = state.copyWith(detectedEmotion: detectedEmotion);
+      bool isCorrectEmotion = detectedEmotion.name ==
+          state.currentScreenData?.options.first.labelText;
+      state = state.copyWith(detectedEmotion: detectedEmotion.name);
       if (isCorrectEmotion == true) {
         state = state.copyWith(isCorrect: isCorrectEmotion);
         Timer(const Duration(seconds: 1), () {
