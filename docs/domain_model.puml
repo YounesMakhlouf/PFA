@@ -1,5 +1,6 @@
 @startuml
 ' Basic styling for clarity
+top to bottom direction
 skinparam classAttributeIconSize 0
 hide empty members
 skinparam shadowing false
@@ -22,7 +23,21 @@ skinparam note {
     BorderColor Grey
 }
 
+' --- Anchors to position layout manually ---
+class _EnumAnchor <<layout>>
+class _GameAnchor <<layout>>
+class _ProgressAnchor <<layout>>
+hide  _EnumAnchor
+hide  _GameAnchor
+hide  _ProgressAnchor
+hide _GameCategory
+hide _GameType
+hide _SpecialCondition
+
 ' --- Enumerations ---
+_EnumAnchor -down-> SpecialCondition
+_EnumAnchor -down-> GameCategory
+_EnumAnchor -down-> GameType
 
 enum SpecialCondition {
   AUTISM
@@ -52,7 +67,6 @@ enum GameType {
 }
 
 ' --- User Hierarchy ---
-
 abstract class User {
  email
  password
@@ -62,7 +76,7 @@ class Educator extends User {
   speciality
 }
 
-class Child{
+class Child {
   firstName
   lastName
   birthdate
@@ -70,41 +84,39 @@ class Child{
 }
 
 ' --- Game Structure ---
-
 class Game {
-  gameId
   name
   picture
   instruction
   category: GameCategory
   type: GameType
   --
-  + getLevels(): Level[]
+  + getLevels()
 }
 
 class Level {
   levelNumber
   --
-  + getScreens(): Screen[]
+  + getScreens()
 }
 
 abstract class Screen {
   screenNumber
   --
-  getOptions(): Option[]
-  checkAnswer(selectedOptions: Option[]): Boolean
+  + getOptions()
+  + checkAnswer(selectedOptions)
 }
 
 class MultipleChoiceScreen extends Screen {
   --
-  getOptions(): Option[]
-  checkAnswer(selectedOptions: Option[]): Boolean
+  + getOptions()
+  + checkAnswer(selectedOptions)
 }
 
 class MemoryScreen extends Screen {
   --
-  getOptions(): Option[]
-  checkAnswer(selectedOptions: Option[]): Boolean
+  +getOptions()
+  +checkAnswer(selectedOptions)
 }
 
 class Option {
@@ -113,7 +125,6 @@ class Option {
 }
 
 ' --- Progress Tracking ---
-
 class GameSession {
   startTime
   endTime
@@ -121,24 +132,21 @@ class GameSession {
 }
 
 class ScreenAttempt {
-  attemptId
   timestamp
   isCorrect
   timeTaken
   hintsUsed
 }
 
-
 ' --- Relationships ---
 Educator "1" -- "0..*" Game : creates
-Educator "1" -- "0..*"Child : cares for
-User "1" -- "1..*" Child: parent
+Educator "1" -- "0..*" Child : cares for
+User "1" -- "1..*" Child : parent
 
 ' Game Structure Relationships
 Game "1" *-- "1..*" Level
 Level "1" *-- "1..*" Screen
 Screen "1" o-- "1..*" Option
-
 MultipleChoiceScreen "1" -- "1..*" Option : identifies correct >
 
 ' Progress Tracking Relationships
@@ -147,4 +155,5 @@ Game "1" -- "0..*" GameSession : records sessions for >
 GameSession "1" *-- "1..*" ScreenAttempt : >
 Screen "1" -- "0..*" ScreenAttempt : attempted on >
 Option "1" -- "0..*" ScreenAttempt : selected in >
+
 @enduml
