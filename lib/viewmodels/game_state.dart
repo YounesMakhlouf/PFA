@@ -56,6 +56,7 @@ class GameState {
     int? currentScreenIndex,
     bool? isCorrect,
     bool clearIsCorrect = false,
+    bool clearDetectedEmotion = false,
     String? errorMessage,
     bool clearErrorMessage = false,
 

@@ -402,9 +402,9 @@ class GameViewModel extends StateNotifier<GameState> {
       _logger.info('Detected Emotion: $detectedEmotion');
       bool isCorrectEmotion = detectedEmotion.name ==
           state.currentScreenData?.options.first.labelText;
-      state = state.copyWith(detectedEmotion: detectedEmotion.name);
+      state = state.copyWith(clearDetectedEmotion: true ,detectedEmotion: detectedEmotion.name);
       if (isCorrectEmotion == true) {
-        state = state.copyWith(isCorrect: isCorrectEmotion);
+        state = state.copyWith(clearIsCorrect: true, isCorrect: isCorrectEmotion);
         Timer(const Duration(seconds: 1), () {
           if (mounted) moveToNextScreen();
         });
