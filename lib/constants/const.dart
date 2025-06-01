@@ -15,3 +15,12 @@ const String keySoundEffectsEnabled = 'soundEffectsEnabled';
 const String keyAppLanguage = 'appLanguage';
 const String keyTtsSpeechRate = 'ttsSpeechRate';
 const String keyHapticFeedbackEnabled = 'hapticFeedbackEnabled';
+// Smile probability thresholds
+const double smileHigh = 0.7; // Strong smile → Joy
+const double smileLow = 0.3;  // Weak/no smile → Sadness
+const double smileNeutralMin = 0.3;
+const double smileNeutralMax = 0.7;
+
+// Head rotation thresholds (in degrees)
+const double headTiltZ = 20.0; // Head roll → Surprise
+const double headTurnY = 30.0; // Head yaw → Anger or frustration
