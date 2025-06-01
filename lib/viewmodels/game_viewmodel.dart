@@ -12,6 +12,7 @@ import 'package:pfa/repositories/game_session_repository.dart';
 import 'package:pfa/services/audio_service.dart';
 import 'package:pfa/services/emotion_detection_service.dart';
 import 'package:pfa/services/logging_service.dart';
+import 'package:pfa/services/translation_service.dart';
 import 'package:pfa/services/tts_service.dart';
 import 'package:pfa/viewmodels/game_state.dart';
 
@@ -23,6 +24,7 @@ class GameViewModel extends StateNotifier<GameState> {
   final GameRepository _gameRepository;
   final LoggingService _logger;
   final GameSessionRepository _sessionRepository;
+  final TranslationService _translationService;
 
   bool _isDetecting = false;
   final TtsService _ttsService;
@@ -39,16 +41,17 @@ class GameViewModel extends StateNotifier<GameState> {
   CameraController? _cameraController;
 
   GameViewModel(
-    this._gameId,
-    this._childId,
-    this._gameRepository,
-    this._logger,
-    this._sessionRepository,
-    this._ttsService,
-    this._audioService,
-    this._ref,
-    this._l10n,
-  ) : super(GameState(status: GameStatus.initial)) {
+      this._gameId,
+      this._childId,
+      this._gameRepository,
+      this._logger,
+      this._sessionRepository,
+      this._ttsService,
+      this._audioService,
+      this._ref,
+      this._l10n,
+      this._translationService)
+      : super(GameState(status: GameStatus.initial)) {
     _logger.info(
         'GameViewModel initialized for game ID: $_gameId, child ID: $_childId');
     initializeGame();
@@ -206,12 +209,14 @@ class GameViewModel extends StateNotifier<GameState> {
           currentScreenData: screenData,
           status: GameStatus.playing,
           clearIsCorrect: true);
-
-      final instructionToSpeak = screenData.screen.instruction;
-      if (instructionToSpeak != null && instructionToSpeak.isNotEmpty) {
-        _logger.debug(
-            'GameViewModel: Speaking screen instruction: "$instructionToSpeak"');
-        _ttsService.speak(instructionToSpeak);
+      if (screenData.screen.instruction != null) {
+        final instructionToSpeak = _translationService
+            .getLocalizedTextFromAppLocale(screenData.screen.instruction!);
+        if (instructionToSpeak.isNotEmpty) {
+          _logger.debug(
+              'GameViewModel: Speaking screen instruction: "$instructionToSpeak"');
+          _ttsService.speak(instructionToSpeak);
+        }
       }
     } catch (e, stackTrace) {
       _logger.error('Error loading screen $screenIdToLoad', e, stackTrace);
@@ -223,11 +228,15 @@ class GameViewModel extends StateNotifier<GameState> {
 
   void repeatCurrentScreenInstruction() {
     if (state.status == GameStatus.playing && state.currentScreenData != null) {
-      final instructionToSpeak = state.currentScreenData!.screen.instruction;
-      if (instructionToSpeak != null && instructionToSpeak.isNotEmpty) {
-        _logger.debug(
-            'GameViewModel: Re-speaking screen instruction: "$instructionToSpeak"');
-        _ttsService.speak(instructionToSpeak);
+      if (state.currentScreenData!.screen.instruction != null) {
+        final instructionToSpeak =
+            _translationService.getLocalizedTextFromAppLocale(
+                state.currentScreenData!.screen.instruction!);
+        if (instructionToSpeak.isNotEmpty) {
+          _logger.debug(
+              'GameViewModel: Re-speaking screen instruction: "$instructionToSpeak"');
+          _ttsService.speak(instructionToSpeak);
+        }
       }
     } else {
       _logger.warning(
