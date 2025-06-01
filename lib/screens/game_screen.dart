@@ -20,6 +20,7 @@ class GameScreenWidget extends ConsumerStatefulWidget {
   final int currentScreenNumber;
   final bool? isCorrect;
   final Function(Option) onOptionSelected;
+
   // Memory Game specific state
   final List<Option> selectedMemoryCards;
   final bool isMemoryPairAttempted;
@@ -71,8 +72,8 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
     final translationService = ref.read(translationServiceProvider);
 
     final translatedInstruction = widget.currentScreen.instruction != null
-        ? translationService.getTranslatedText(
-            context, widget.currentScreen.instruction!)
+        ? translationService
+            .getLocalizedTextFromAppLocale(widget.currentScreen.instruction!)
         : l10n.selectCorrectOption;
 
     return Column(

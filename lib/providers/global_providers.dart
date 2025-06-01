@@ -11,19 +11,19 @@ import 'package:pfa/providers/active_child_notifier.dart';
 import 'package:pfa/providers/app_language_notifier.dart';
 import 'package:pfa/providers/haptics_enabled_notifier.dart';
 import 'package:pfa/providers/tts_speech_rate_notifier.dart';
+import 'package:pfa/repositories/child_repository.dart';
+import 'package:pfa/repositories/game_repository.dart';
+import 'package:pfa/repositories/game_session_repository.dart';
 import 'package:pfa/services/audio_service.dart';
+import 'package:pfa/services/logging_service.dart';
 import 'package:pfa/services/settings_service.dart';
-import 'package:pfa/services/tts_service.dart';
+import 'package:pfa/services/supabase_service.dart';
 import 'package:pfa/services/translation_service.dart';
+import 'package:pfa/services/tts_service.dart';
 import 'package:pfa/viewmodels/game_state.dart';
 import 'package:pfa/viewmodels/game_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:pfa/services/logging_service.dart';
-import 'package:pfa/services/supabase_service.dart';
-import 'package:pfa/repositories/child_repository.dart';
-import 'package:pfa/repositories/game_repository.dart';
-import 'package:pfa/repositories/game_session_repository.dart';
 
 import '../repositories/child_stats_repository.dart';
 import '../services/child_service.dart';
@@ -34,7 +34,7 @@ final loggingServiceProvider = Provider<LoggingService>((ref) {
 });
 
 final translationServiceProvider = Provider<TranslationService>((ref) {
-  return TranslationService();
+  return TranslationService(ref);
 });
 
 final supabaseServiceProvider = Provider<SupabaseService>((ref) {
@@ -163,25 +163,19 @@ final gameViewModelProvider = StateNotifierProvider.family<GameViewModel,
     final ttsService = ref.read(ttsServiceProvider);
     final audioService = ref.read(audioServiceProvider);
     final activeChild = ref.watch(activeChildProvider);
-    final Locale currentLocale = WidgetsBinding.instance.platformDispatcher.locale;
+    final Locale currentLocale =
+        WidgetsBinding.instance.platformDispatcher.locale;
     final AppLocalizations l10n = lookupAppLocalizations(currentLocale);
+    final TranslationService translationService =
+        ref.read(translationServiceProvider);
     if (activeChild == null) {
       logger.error(
           "GameViewModelProvider: Attempted to create GameViewModel for game '$gameId' but no active child is set. This indicates a UI flow error.");
       throw StateError(
           "Cannot initialize GameViewModel: No active child selected. Please select a child profile first.");
     }
-    return GameViewModel(
-      gameId,
-      activeChild.childId,
-      gameRepo,
-      logger,
-      sessionRepo,
-      ttsService,
-      audioService,
-      ref,
-      l10n,
-    );
+    return GameViewModel(gameId, activeChild.childId, gameRepo, logger,
+        sessionRepo, ttsService, audioService, ref, l10n, translationService);
   },
 );
 

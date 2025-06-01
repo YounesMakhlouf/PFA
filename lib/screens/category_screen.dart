@@ -97,7 +97,7 @@ Widget _buildGameGrid(
       );
 
       final translatedTitle =
-          translationService.getTranslatedText(context, game.name);
+          translationService.getLocalizedTextFromAppLocale(game.name);
 
       return GameCardWidget(
         title: translatedTitle,

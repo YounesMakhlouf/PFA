@@ -15,3 +15,5 @@ const String keySoundEffectsEnabled = 'soundEffectsEnabled';
 const String keyAppLanguage = 'appLanguage';
 const String keyTtsSpeechRate = 'ttsSpeechRate';
 const String keyHapticFeedbackEnabled = 'hapticFeedbackEnabled';
+
+const String defaultLanguageCode = 'ar';

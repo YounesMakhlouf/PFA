@@ -75,8 +75,8 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
       case GameStatus.loadingLevel:
       case GameStatus.loadingScreen:
         return GenericLoadingScreen(
-            message: translationService.getTranslatedText(
-                context, gameState.game!.name));
+            message: translationService
+                .getLocalizedTextFromAppLocale(gameState.game!.name));
 
       case GameStatus.error:
         return Scaffold(
@@ -218,8 +218,8 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              translationService.getTranslatedText(
-                  context, gameState.game!.name),
+              translationService
+                  .getLocalizedTextFromAppLocale(gameState.game!.name),
             ),
             backgroundColor: gameThemeColor?.withAlpha((0.9 * 255).round()),
             elevation: theme.appBarTheme.elevation,
