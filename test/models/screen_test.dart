@@ -72,7 +72,7 @@ void main() {
 
       expect(option.optionId, 'opt-uuid-4');
       expect(option.screenId, 'screen-uuid-3');
-      expect(option.isCorrect, isNull);
+      expect(option.isCorrect, false);
       expect(option.labelText, isNull);
       expect(option.picturePath, isNull);
       expect(option.audioPath, isNull);
@@ -103,7 +103,8 @@ void main() {
         'screen_id': 'mc-screen-2',
         'level_id': 'level-xyz',
         'screen_number': 3,
-        'type': 'MULTIPLE_CHOICE', // Type comes from DB
+        'type': 'MULTIPLE_CHOICE',
+        // Type comes from DB
         'instruction': 'Which animal says "Moo"?',
       };
       final screen = MultipleChoiceScreen.fromJson(json);
@@ -129,8 +130,7 @@ void main() {
       expect(screen.screenId, 'mem-screen-1');
       expect(screen.levelId, 'level-abc');
       expect(screen.screenNumber, 2);
-      expect(screen.type,
-          ScreenType.MEMORY_MATCH); // Check type set by constructor
+      expect(screen.type, ScreenType.MEMORY); // Check type set by constructor
       expect(screen.instruction, 'Match the pairs!');
     });
 
@@ -139,7 +139,7 @@ void main() {
         'screen_id': 'mem-screen-2',
         'level_id': 'level-xyz',
         'screen_number': 1,
-        'type': 'MEMORY_MATCH',
+        'type': 'MEMORY',
         'instruction': 'Find the matching fruits.',
       };
       final screen = MemoryScreen.fromJson(json);
@@ -148,7 +148,7 @@ void main() {
       expect(screen.screenId, 'mem-screen-2');
       expect(screen.levelId, 'level-xyz');
       expect(screen.screenNumber, 1);
-      expect(screen.type, ScreenType.MEMORY_MATCH);
+      expect(screen.type, ScreenType.MEMORY);
       expect(screen.instruction, 'Find the matching fruits.');
     });
   });
@@ -157,18 +157,18 @@ void main() {
     test('should have correct enum values and UNKNOWN fallback', () {
       expect(ScreenType.values.length, 3);
       expect(ScreenType.values, contains(ScreenType.MULTIPLE_CHOICE));
-      expect(ScreenType.values, contains(ScreenType.MEMORY_MATCH));
+      expect(ScreenType.values, contains(ScreenType.MEMORY));
       expect(ScreenType.values, contains(ScreenType.UNKNOWN));
       expect(ScreenTypeExtension.fromString('MULTIPLE_CHOICE'),
           ScreenType.MULTIPLE_CHOICE);
-      expect(ScreenTypeExtension.fromString('MEMORY'),
+      expect(ScreenTypeExtension.fromString('WRONG_SCREEN_TYPE'),
           ScreenType.UNKNOWN); // Test invalid value
       expect(ScreenTypeExtension.fromString(null), ScreenType.UNKNOWN);
     });
 
     test('toJson should return correct string name', () {
       expect(ScreenType.MULTIPLE_CHOICE.toJson(), 'MULTIPLE_CHOICE');
-      expect(ScreenType.MEMORY_MATCH.toJson(), 'MEMORY_MATCH');
+      expect(ScreenType.MEMORY.toJson(), 'MEMORY');
     });
   });
 }

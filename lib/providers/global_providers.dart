@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:pfa/constants/const.dart';
+import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/models/enums.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/models/user.dart';
@@ -162,7 +163,8 @@ final gameViewModelProvider = StateNotifierProvider.family<GameViewModel,
     final ttsService = ref.read(ttsServiceProvider);
     final audioService = ref.read(audioServiceProvider);
     final activeChild = ref.watch(activeChildProvider);
-
+    final Locale currentLocale = WidgetsBinding.instance.platformDispatcher.locale;
+    final AppLocalizations l10n = lookupAppLocalizations(currentLocale);
     if (activeChild == null) {
       logger.error(
           "GameViewModelProvider: Attempted to create GameViewModel for game '$gameId' but no active child is set. This indicates a UI flow error.");
@@ -178,6 +180,7 @@ final gameViewModelProvider = StateNotifierProvider.family<GameViewModel,
       ttsService,
       audioService,
       ref,
+      l10n,
     );
   },
 );

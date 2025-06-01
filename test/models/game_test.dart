@@ -146,8 +146,8 @@ void main() {
         expect(GameType.values.length, 6);
         expect(GameType.values, contains(GameType.MULTIPLE_CHOICE));
         expect(GameType.values, contains(GameType.UNKNOWN));
-        expect(GameTypeExtension.fromString('MEMORY_MATCH'),
-            GameType.MEMORY_MATCH);
+        expect(GameTypeExtension.fromString('MEMORY'),
+            GameType.MEMORY);
         expect(GameTypeExtension.fromString('INVALID_TYPE'), GameType.UNKNOWN);
         expect(GameTypeExtension.fromString(null), GameType.UNKNOWN);
       });

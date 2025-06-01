@@ -20,6 +20,10 @@ class GameScreenWidget extends ConsumerStatefulWidget {
   final int currentScreenNumber;
   final bool? isCorrect;
   final Function(Option) onOptionSelected;
+  // Memory Game specific state
+  final List<Option> selectedMemoryCards;
+  final bool isMemoryPairAttempted;
+  final Set<String> matchedPairIds;
 
   const GameScreenWidget({
     super.key,
@@ -30,6 +34,9 @@ class GameScreenWidget extends ConsumerStatefulWidget {
     required this.currentScreenNumber,
     required this.onOptionSelected,
     this.isCorrect,
+    this.selectedMemoryCards = const [],
+    this.isMemoryPairAttempted = false,
+    this.matchedPairIds = const {},
   });
 
   @override
@@ -82,7 +89,7 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
             textAlign: TextAlign.center,
           ).animate().fadeIn(duration: 300.ms),
         ),
-        Expanded(child: _buildScreenContent(context)),
+        Expanded(child: Center(child: _buildScreenContent(context))),
         _buildFeedbackArea(context, widget.isCorrect, theme),
         _buildProgressIndicator(
             context, widget.currentLevel, widget.currentScreenNumber, theme),
@@ -97,7 +104,7 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
     if (screen is MultipleChoiceScreen) {
       return _buildMultipleChoiceUI(context, screen);
     } else if (screen is MemoryScreen) {
-      return ErrorScreen(errorMessage: l10n.featureNotImplemented);
+      return _buildMemoryUI(context, screen);
     } else {
       return ErrorScreen(errorMessage: l10n.unknownScreenType);
     }
@@ -150,6 +157,67 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildMemoryUI(BuildContext context, MemoryScreen screen) {
+    final theme = Theme.of(context);
+    final options = widget.currentOptions;
+
+    int crossAxisCount = 6;
+    if (options.length > 12) {
+      crossAxisCount = 4;
+    } else if (options.length > 6) {
+      crossAxisCount = 3;
+    } else if (options.length <= 2) {
+      crossAxisCount = options.length;
+    }
+
+    double childAspectRatio = 1.0;
+    if (MediaQuery.of(context).size.height < 400 && options.length > 8) {
+      // Very short screen
+      childAspectRatio = 1.2; // Make cards wider
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: crossAxisCount,
+          mainAxisSpacing: 12,
+          crossAxisSpacing: 12,
+          childAspectRatio: childAspectRatio,
+        ),
+        itemCount: options.length,
+        itemBuilder: (context, index) {
+          final option = options[index];
+
+          final bool isSelected = widget.selectedMemoryCards
+              .any((selected) => selected.optionId == option.optionId);
+          final bool isMatched = option.pairId != null &&
+              widget.matchedPairIds.contains(option.pairId!);
+          final bool isRevealed = isSelected || isMatched;
+          // Disable further taps if:
+          // 1. A pair attempt is in progress AND this card is not one of the selected ones
+          // 2. This card is already matched
+          final bool isDisabled =
+              (widget.isMemoryPairAttempted && !isSelected) || isMatched;
+
+          return OptionWidget(
+            option: option,
+            onTap: () => widget.onOptionSelected(option),
+            gameThemeColor: theme.colorScheme.primary,
+            size: 80,
+            isSelected: isSelected,
+            isDisabled: isDisabled,
+            isRevealed: isRevealed,
+            isMatched: isMatched,
+          ).animate().fadeIn(
+              duration: 300.ms, delay: (index * 50).ms); // Staggered fade-in
+        },
+      ),
     );
   }
 

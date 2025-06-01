@@ -915,6 +915,18 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'لم يتم العثور على إحصائيات للمرشحات المحددة.'**
   String get noStatsFound;
+
+  /// No description provided for @matchFound.
+  ///
+  /// In ar, this message translates to:
+  /// **'وجد تطابق!'**
+  String get matchFound;
+
+  /// No description provided for @noMatchTryAgain.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد تطابق. حاول مرة أخرى!'**
+  String get noMatchTryAgain;
 }
 
 class _AppLocalizationsDelegate

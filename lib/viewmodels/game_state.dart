@@ -25,6 +25,13 @@ class GameState {
   final String? errorMessage;
   final List<String> screenIdsInCurrentLevel;
 
+  // --- Memory Game Specific State ---
+  final List<Option>
+      selectedMemoryCards; // Holds up to 2 selected cards for a pair attempt
+  final bool isMemoryPairAttempted; // True after 2 cards are selected
+  final Set<String>
+      matchedPairIds; // Stores pairIds of successfully matched pairs on current screen
+
   // Camera-related light state
   final bool isCameraInitialized;
   final String? detectedEmotion;
@@ -40,6 +47,9 @@ class GameState {
     this.isCorrect,
     this.errorMessage,
     this.screenIdsInCurrentLevel = const [],
+    this.selectedMemoryCards = const [],
+    this.isMemoryPairAttempted = false,
+    this.matchedPairIds = const {},
     this.isCameraInitialized = false,
     this.detectedEmotion,
   });
@@ -56,12 +66,16 @@ class GameState {
     int? currentScreenIndex,
     bool? isCorrect,
     bool clearIsCorrect = false,
+    List<Option>? selectedMemoryCards,
+    bool? isMemoryPairAttempted,
+    Set<String>? matchedPairIds,
     String? errorMessage,
     bool clearErrorMessage = false,
 
     // Camera state
     bool? isCameraInitialized,
     String? detectedEmotion,
+    bool clearDetectedEmotion = false,
   }) {
     return GameState(
       status: status ?? this.status,
@@ -76,10 +90,16 @@ class GameState {
       currentLevelIndex: currentLevelIndex ?? this.currentLevelIndex,
       currentScreenIndex: currentScreenIndex ?? this.currentScreenIndex,
       isCorrect: clearIsCorrect ? null : (isCorrect ?? this.isCorrect),
+      selectedMemoryCards: selectedMemoryCards ?? this.selectedMemoryCards,
+      isMemoryPairAttempted:
+          isMemoryPairAttempted ?? this.isMemoryPairAttempted,
+      matchedPairIds: matchedPairIds ?? this.matchedPairIds,
       errorMessage:
           clearErrorMessage ? null : (errorMessage ?? this.errorMessage),
       isCameraInitialized: isCameraInitialized ?? this.isCameraInitialized,
-      detectedEmotion: detectedEmotion ?? this.detectedEmotion,
+      detectedEmotion: clearDetectedEmotion
+          ? null
+          : (detectedEmotion ?? this.detectedEmotion),
     );
   }
 

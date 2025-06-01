@@ -93,7 +93,7 @@ extension GameCategoryExtension on GameCategory {
 
 enum GameType {
   MULTIPLE_CHOICE,
-  MEMORY_MATCH,
+  MEMORY,
   PUZZLE,
   STORY,
   IDENTIFY_INTRUDER,

@@ -3,15 +3,25 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
+import 'dart:async' as _i6;
 
+import 'package:flutter_riverpod/flutter_riverpod.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i5;
-import 'package:pfa/models/enums.dart' as _i8;
-import 'package:pfa/services/logging_service.dart' as _i6;
-import 'package:pfa/services/settings_service.dart' as _i7;
-import 'package:pfa/services/supabase_service.dart' as _i3;
-import 'package:supabase_flutter/supabase_flutter.dart' as _i2;
+import 'package:mockito/src/dummies.dart' as _i10;
+import 'package:pfa/l10n/app_localizations.dart' as _i15;
+import 'package:pfa/models/enums.dart' as _i18;
+import 'package:pfa/models/game.dart' as _i7;
+import 'package:pfa/models/game_session.dart' as _i2;
+import 'package:pfa/models/level.dart' as _i8;
+import 'package:pfa/repositories/game_repository.dart' as _i5;
+import 'package:pfa/repositories/game_session_repository.dart' as _i11;
+import 'package:pfa/services/audio_service.dart' as _i13;
+import 'package:pfa/services/emotion_detection_service.dart' as _i14;
+import 'package:pfa/services/logging_service.dart' as _i9;
+import 'package:pfa/services/settings_service.dart' as _i17;
+import 'package:pfa/services/supabase_service.dart' as _i16;
+import 'package:pfa/services/tts_service.dart' as _i12;
+import 'package:supabase_flutter/supabase_flutter.dart' as _i4;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -27,9 +37,8 @@ import 'package:supabase_flutter/supabase_flutter.dart' as _i2;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeSupabaseClient_0 extends _i1.SmartFake
-    implements _i2.SupabaseClient {
-  _FakeSupabaseClient_0(
+class _FakeGameSession_0 extends _i1.SmartFake implements _i2.GameSession {
+  _FakeGameSession_0(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -38,8 +47,8 @@ class _FakeSupabaseClient_0 extends _i1.SmartFake
         );
 }
 
-class _FakeAuthResponse_1 extends _i1.SmartFake implements _i2.AuthResponse {
-  _FakeAuthResponse_1(
+class _FakeScreenAttempt_1 extends _i1.SmartFake implements _i2.ScreenAttempt {
+  _FakeScreenAttempt_1(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -48,135 +57,131 @@ class _FakeAuthResponse_1 extends _i1.SmartFake implements _i2.AuthResponse {
         );
 }
 
-/// A class which mocks [SupabaseService].
+class _FakeProviderContainer_2 extends _i1.SmartFake
+    implements _i3.ProviderContainer {
+  _FakeProviderContainer_2(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeKeepAliveLink_3 extends _i1.SmartFake implements _i3.KeepAliveLink {
+  _FakeKeepAliveLink_3(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeProviderSubscription_4<State1> extends _i1.SmartFake
+    implements _i3.ProviderSubscription<State1> {
+  _FakeProviderSubscription_4(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeSupabaseClient_5 extends _i1.SmartFake
+    implements _i4.SupabaseClient {
+  _FakeSupabaseClient_5(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeAuthResponse_6 extends _i1.SmartFake implements _i4.AuthResponse {
+  _FakeAuthResponse_6(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+/// A class which mocks [GameRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSupabaseService extends _i1.Mock implements _i3.SupabaseService {
-  MockSupabaseService() {
+class MockGameRepository extends _i1.Mock implements _i5.GameRepository {
+  MockGameRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i2.SupabaseClient get client => (super.noSuchMethod(
-        Invocation.getter(#client),
-        returnValue: _FakeSupabaseClient_0(
-          this,
-          Invocation.getter(#client),
-        ),
-      ) as _i2.SupabaseClient);
-
-  @override
-  bool get isAuthenticated => (super.noSuchMethod(
-        Invocation.getter(#isAuthenticated),
-        returnValue: false,
-      ) as bool);
-
-  @override
-  _i4.Future<void> initialize() => (super.noSuchMethod(
+  _i6.Future<_i7.Game?> getGameById(String? gameId) => (super.noSuchMethod(
         Invocation.method(
-          #initialize,
+          #getGameById,
+          [gameId],
+        ),
+        returnValue: _i6.Future<_i7.Game?>.value(),
+      ) as _i6.Future<_i7.Game?>);
+
+  @override
+  _i6.Future<List<_i7.Game>> getAvailableGames() => (super.noSuchMethod(
+        Invocation.method(
+          #getAvailableGames,
           [],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i6.Future<List<_i7.Game>>.value(<_i7.Game>[]),
+      ) as _i6.Future<List<_i7.Game>>);
 
   @override
-  String getPublicUrl({
-    required String? bucketId,
-    required String? filePath,
-  }) =>
+  _i6.Future<List<_i7.Game>> getGamesByCategory(_i7.GameCategory? category) =>
       (super.noSuchMethod(
         Invocation.method(
-          #getPublicUrl,
-          [],
-          {
-            #bucketId: bucketId,
-            #filePath: filePath,
-          },
+          #getGamesByCategory,
+          [category],
         ),
-        returnValue: _i5.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getPublicUrl,
-            [],
-            {
-              #bucketId: bucketId,
-              #filePath: filePath,
-            },
-          ),
-        ),
-      ) as String);
+        returnValue: _i6.Future<List<_i7.Game>>.value(<_i7.Game>[]),
+      ) as _i6.Future<List<_i7.Game>>);
 
   @override
-  _i4.Future<_i2.AuthResponse> signUp({
-    required String? email,
-    required String? password,
-  }) =>
+  _i6.Future<List<_i8.Level>> getLevelsForGame(String? gameId) =>
       (super.noSuchMethod(
         Invocation.method(
-          #signUp,
-          [],
-          {
-            #email: email,
-            #password: password,
-          },
+          #getLevelsForGame,
+          [gameId],
         ),
-        returnValue: _i4.Future<_i2.AuthResponse>.value(_FakeAuthResponse_1(
-          this,
-          Invocation.method(
-            #signUp,
-            [],
-            {
-              #email: email,
-              #password: password,
-            },
-          ),
-        )),
-      ) as _i4.Future<_i2.AuthResponse>);
+        returnValue: _i6.Future<List<_i8.Level>>.value(<_i8.Level>[]),
+      ) as _i6.Future<List<_i8.Level>>);
 
   @override
-  _i4.Future<_i2.AuthResponse> signIn({
-    required String? email,
-    required String? password,
-  }) =>
+  _i6.Future<_i5.ScreenWithOptionsMenu?> getScreenWithDetails(
+          String? screenId) =>
       (super.noSuchMethod(
         Invocation.method(
-          #signIn,
-          [],
-          {
-            #email: email,
-            #password: password,
-          },
+          #getScreenWithDetails,
+          [screenId],
         ),
-        returnValue: _i4.Future<_i2.AuthResponse>.value(_FakeAuthResponse_1(
-          this,
-          Invocation.method(
-            #signIn,
-            [],
-            {
-              #email: email,
-              #password: password,
-            },
-          ),
-        )),
-      ) as _i4.Future<_i2.AuthResponse>);
+        returnValue: _i6.Future<_i5.ScreenWithOptionsMenu?>.value(),
+      ) as _i6.Future<_i5.ScreenWithOptionsMenu?>);
 
   @override
-  _i4.Future<void> signOut() => (super.noSuchMethod(
+  _i6.Future<List<String>> getScreenIdsForLevel(String? levelId) =>
+      (super.noSuchMethod(
         Invocation.method(
-          #signOut,
-          [],
+          #getScreenIdsForLevel,
+          [levelId],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i6.Future<List<String>>.value(<String>[]),
+      ) as _i6.Future<List<String>>);
 }
 
 /// A class which mocks [LoggingService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLoggingService extends _i1.Mock implements _i6.LoggingService {
+class MockLoggingService extends _i1.Mock implements _i9.LoggingService {
   MockLoggingService() {
     _i1.throwOnMissingStub(this);
   }
@@ -257,7 +262,7 @@ class MockLoggingService extends _i1.Mock implements _i6.LoggingService {
             error,
           ],
         ),
-        returnValue: _i5.dummyValue<String>(
+        returnValue: _i10.dummyValue<String>(
           this,
           Invocation.method(
             #formatError,
@@ -275,7 +280,7 @@ class MockLoggingService extends _i1.Mock implements _i6.LoggingService {
           #handleNetworkError,
           [error],
         ),
-        returnValue: _i5.dummyValue<String>(
+        returnValue: _i10.dummyValue<String>(
           this,
           Invocation.method(
             #handleNetworkError,
@@ -285,147 +290,2054 @@ class MockLoggingService extends _i1.Mock implements _i6.LoggingService {
       ) as String);
 }
 
+/// A class which mocks [GameSessionRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGameSessionRepository extends _i1.Mock
+    implements _i11.GameSessionRepository {
+  MockGameSessionRepository() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.Future<List<_i2.GameSession>> getSessionsByChildId(String? childId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getSessionsByChildId,
+          [childId],
+        ),
+        returnValue:
+            _i6.Future<List<_i2.GameSession>>.value(<_i2.GameSession>[]),
+      ) as _i6.Future<List<_i2.GameSession>>);
+
+  @override
+  _i6.Future<_i2.GameSession?> getSessionById(String? sessionId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getSessionById,
+          [sessionId],
+        ),
+        returnValue: _i6.Future<_i2.GameSession?>.value(),
+      ) as _i6.Future<_i2.GameSession?>);
+
+  @override
+  _i6.Future<List<_i2.ScreenAttempt>> getAttemptsForSession(
+          String? sessionId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAttemptsForSession,
+          [sessionId],
+        ),
+        returnValue:
+            _i6.Future<List<_i2.ScreenAttempt>>.value(<_i2.ScreenAttempt>[]),
+      ) as _i6.Future<List<_i2.ScreenAttempt>>);
+
+  @override
+  _i6.Future<_i2.GameSession> createSession({
+    required String? childId,
+    required String? gameId,
+    required String? levelId,
+    DateTime? startTime,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #createSession,
+          [],
+          {
+            #childId: childId,
+            #gameId: gameId,
+            #levelId: levelId,
+            #startTime: startTime,
+          },
+        ),
+        returnValue: _i6.Future<_i2.GameSession>.value(_FakeGameSession_0(
+          this,
+          Invocation.method(
+            #createSession,
+            [],
+            {
+              #childId: childId,
+              #gameId: gameId,
+              #levelId: levelId,
+              #startTime: startTime,
+            },
+          ),
+        )),
+      ) as _i6.Future<_i2.GameSession>);
+
+  @override
+  _i6.Future<_i2.ScreenAttempt> addAttemptToSession({
+    required String? sessionId,
+    required String? screenId,
+    required bool? isCorrect,
+    required int? timeTakenMs,
+    List<String>? selectedOptionIds,
+    DateTime? timestamp,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #addAttemptToSession,
+          [],
+          {
+            #sessionId: sessionId,
+            #screenId: screenId,
+            #isCorrect: isCorrect,
+            #timeTakenMs: timeTakenMs,
+            #selectedOptionIds: selectedOptionIds,
+            #timestamp: timestamp,
+          },
+        ),
+        returnValue: _i6.Future<_i2.ScreenAttempt>.value(_FakeScreenAttempt_1(
+          this,
+          Invocation.method(
+            #addAttemptToSession,
+            [],
+            {
+              #sessionId: sessionId,
+              #screenId: screenId,
+              #isCorrect: isCorrect,
+              #timeTakenMs: timeTakenMs,
+              #selectedOptionIds: selectedOptionIds,
+              #timestamp: timestamp,
+            },
+          ),
+        )),
+      ) as _i6.Future<_i2.ScreenAttempt>);
+
+  @override
+  _i6.Future<bool> endSession({
+    required String? sessionId,
+    required bool? completed,
+    DateTime? endTime,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #endSession,
+          [],
+          {
+            #sessionId: sessionId,
+            #completed: completed,
+            #endTime: endTime,
+          },
+        ),
+        returnValue: _i6.Future<bool>.value(false),
+      ) as _i6.Future<bool>);
+}
+
+/// A class which mocks [TtsService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockTtsService extends _i1.Mock implements _i12.TtsService {
+  MockTtsService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.Future<void> changeSpeechRate(double? newRate) => (super.noSuchMethod(
+        Invocation.method(
+          #changeSpeechRate,
+          [newRate],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+
+  @override
+  _i6.Future<void> speak(String? text) => (super.noSuchMethod(
+        Invocation.method(
+          #speak,
+          [text],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+
+  @override
+  _i6.Future<void> stop() => (super.noSuchMethod(
+        Invocation.method(
+          #stop,
+          [],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+}
+
+/// A class which mocks [AudioService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockAudioService extends _i1.Mock implements _i13.AudioService {
+  MockAudioService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.Future<void> playSound(
+    _i13.SoundType? soundType, {
+    double? volume = 1.0,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #playSound,
+          [soundType],
+          {#volume: volume},
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+
+  @override
+  _i6.Future<void> dispose() => (super.noSuchMethod(
+        Invocation.method(
+          #dispose,
+          [],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+}
+
+/// A class which mocks [EmotionDetectionService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockEmotionDetectionService extends _i1.Mock
+    implements _i14.EmotionDetectionService {
+  MockEmotionDetectionService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.Future<String> detectEmotion(String? imagePath) => (super.noSuchMethod(
+        Invocation.method(
+          #detectEmotion,
+          [imagePath],
+        ),
+        returnValue: _i6.Future<String>.value(_i10.dummyValue<String>(
+          this,
+          Invocation.method(
+            #detectEmotion,
+            [imagePath],
+          ),
+        )),
+      ) as _i6.Future<String>);
+
+  @override
+  void dispose() => super.noSuchMethod(
+        Invocation.method(
+          #dispose,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+}
+
+/// A class which mocks [AppLocalizations].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockAppLocalizations extends _i1.Mock implements _i15.AppLocalizations {
+  MockAppLocalizations() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  String get localeName => (super.noSuchMethod(
+        Invocation.getter(#localeName),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#localeName),
+        ),
+      ) as String);
+
+  @override
+  String get appTitle => (super.noSuchMethod(
+        Invocation.getter(#appTitle),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#appTitle),
+        ),
+      ) as String);
+
+  @override
+  String get learningGames => (super.noSuchMethod(
+        Invocation.getter(#learningGames),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#learningGames),
+        ),
+      ) as String);
+
+  @override
+  String get logicalThinking => (super.noSuchMethod(
+        Invocation.getter(#logicalThinking),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#logicalThinking),
+        ),
+      ) as String);
+
+  @override
+  String get education => (super.noSuchMethod(
+        Invocation.getter(#education),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#education),
+        ),
+      ) as String);
+
+  @override
+  String get relaxation => (super.noSuchMethod(
+        Invocation.getter(#relaxation),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#relaxation),
+        ),
+      ) as String);
+
+  @override
+  String get emotions => (super.noSuchMethod(
+        Invocation.getter(#emotions),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#emotions),
+        ),
+      ) as String);
+
+  @override
+  String get numbers => (super.noSuchMethod(
+        Invocation.getter(#numbers),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#numbers),
+        ),
+      ) as String);
+
+  @override
+  String get colorsAndShapes => (super.noSuchMethod(
+        Invocation.getter(#colorsAndShapes),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#colorsAndShapes),
+        ),
+      ) as String);
+
+  @override
+  String get animals => (super.noSuchMethod(
+        Invocation.getter(#animals),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#animals),
+        ),
+      ) as String);
+
+  @override
+  String get fruitsAndVegetables => (super.noSuchMethod(
+        Invocation.getter(#fruitsAndVegetables),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#fruitsAndVegetables),
+        ),
+      ) as String);
+
+  @override
+  String get statsTitle => (super.noSuchMethod(
+        Invocation.getter(#statsTitle),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#statsTitle),
+        ),
+      ) as String);
+
+  @override
+  String get globalStatsTitle => (super.noSuchMethod(
+        Invocation.getter(#globalStatsTitle),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#globalStatsTitle),
+        ),
+      ) as String);
+
+  @override
+  String get categoryStatsTitle => (super.noSuchMethod(
+        Invocation.getter(#categoryStatsTitle),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#categoryStatsTitle),
+        ),
+      ) as String);
+
+  @override
+  String get accuracy => (super.noSuchMethod(
+        Invocation.getter(#accuracy),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#accuracy),
+        ),
+      ) as String);
+
+  @override
+  String get averageTime => (super.noSuchMethod(
+        Invocation.getter(#averageTime),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#averageTime),
+        ),
+      ) as String);
+
+  @override
+  String get hintsUsed => (super.noSuchMethod(
+        Invocation.getter(#hintsUsed),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#hintsUsed),
+        ),
+      ) as String);
+
+  @override
+  String get all => (super.noSuchMethod(
+        Invocation.getter(#all),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#all),
+        ),
+      ) as String);
+
+  @override
+  String get periodThisWeek => (super.noSuchMethod(
+        Invocation.getter(#periodThisWeek),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#periodThisWeek),
+        ),
+      ) as String);
+
+  @override
+  String get statsError => (super.noSuchMethod(
+        Invocation.getter(#statsError),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#statsError),
+        ),
+      ) as String);
+
+  @override
+  String get viewStats => (super.noSuchMethod(
+        Invocation.getter(#viewStats),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#viewStats),
+        ),
+      ) as String);
+
+  @override
+  String get chooseCorrectColor => (super.noSuchMethod(
+        Invocation.getter(#chooseCorrectColor),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#chooseCorrectColor),
+        ),
+      ) as String);
+
+  @override
+  String get red => (super.noSuchMethod(
+        Invocation.getter(#red),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#red),
+        ),
+      ) as String);
+
+  @override
+  String get green => (super.noSuchMethod(
+        Invocation.getter(#green),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#green),
+        ),
+      ) as String);
+
+  @override
+  String get blue => (super.noSuchMethod(
+        Invocation.getter(#blue),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#blue),
+        ),
+      ) as String);
+
+  @override
+  String get yellow => (super.noSuchMethod(
+        Invocation.getter(#yellow),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#yellow),
+        ),
+      ) as String);
+
+  @override
+  String get purple => (super.noSuchMethod(
+        Invocation.getter(#purple),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#purple),
+        ),
+      ) as String);
+
+  @override
+  String get autism => (super.noSuchMethod(
+        Invocation.getter(#autism),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#autism),
+        ),
+      ) as String);
+
+  @override
+  String get adhd => (super.noSuchMethod(
+        Invocation.getter(#adhd),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#adhd),
+        ),
+      ) as String);
+
+  @override
+  String get dyslexia => (super.noSuchMethod(
+        Invocation.getter(#dyslexia),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#dyslexia),
+        ),
+      ) as String);
+
+  @override
+  String get dyscalculia => (super.noSuchMethod(
+        Invocation.getter(#dyscalculia),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#dyscalculia),
+        ),
+      ) as String);
+
+  @override
+  String get speakingDifficulties => (super.noSuchMethod(
+        Invocation.getter(#speakingDifficulties),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#speakingDifficulties),
+        ),
+      ) as String);
+
+  @override
+  String get unknownCategory => (super.noSuchMethod(
+        Invocation.getter(#unknownCategory),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#unknownCategory),
+        ),
+      ) as String);
+
+  @override
+  String get unknownScreenType => (super.noSuchMethod(
+        Invocation.getter(#unknownScreenType),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#unknownScreenType),
+        ),
+      ) as String);
+
+  @override
+  String get applicationError => (super.noSuchMethod(
+        Invocation.getter(#applicationError),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#applicationError),
+        ),
+      ) as String);
+
+  @override
+  String get noGameCategoriesAvailable => (super.noSuchMethod(
+        Invocation.getter(#noGameCategoriesAvailable),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#noGameCategoriesAvailable),
+        ),
+      ) as String);
+
+  @override
+  String get authenticating => (super.noSuchMethod(
+        Invocation.getter(#authenticating),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#authenticating),
+        ),
+      ) as String);
+
+  @override
+  String get featureNotImplemented => (super.noSuchMethod(
+        Invocation.getter(#featureNotImplemented),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#featureNotImplemented),
+        ),
+      ) as String);
+
+  @override
+  String get errorCategoryMissing => (super.noSuchMethod(
+        Invocation.getter(#errorCategoryMissing),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#errorCategoryMissing),
+        ),
+      ) as String);
+
+  @override
+  String get errorGameCategoryOrIdMissing => (super.noSuchMethod(
+        Invocation.getter(#errorGameCategoryOrIdMissing),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#errorGameCategoryOrIdMissing),
+        ),
+      ) as String);
+
+  @override
+  String get errorChildIdMissing => (super.noSuchMethod(
+        Invocation.getter(#errorChildIdMissing),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#errorChildIdMissing),
+        ),
+      ) as String);
+
+  @override
+  String get correct => (super.noSuchMethod(
+        Invocation.getter(#correct),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#correct),
+        ),
+      ) as String);
+
+  @override
+  String get tryAgain => (super.noSuchMethod(
+        Invocation.getter(#tryAgain),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#tryAgain),
+        ),
+      ) as String);
+
+  @override
+  String get level => (super.noSuchMethod(
+        Invocation.getter(#level),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#level),
+        ),
+      ) as String);
+
+  @override
+  String get screen => (super.noSuchMethod(
+        Invocation.getter(#screen),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#screen),
+        ),
+      ) as String);
+
+  @override
+  String get memoryGameUnderDevelopment => (super.noSuchMethod(
+        Invocation.getter(#memoryGameUnderDevelopment),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#memoryGameUnderDevelopment),
+        ),
+      ) as String);
+
+  @override
+  String get goBack => (super.noSuchMethod(
+        Invocation.getter(#goBack),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#goBack),
+        ),
+      ) as String);
+
+  @override
+  String get selectableOption => (super.noSuchMethod(
+        Invocation.getter(#selectableOption),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#selectableOption),
+        ),
+      ) as String);
+
+  @override
+  String get selected => (super.noSuchMethod(
+        Invocation.getter(#selected),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#selected),
+        ),
+      ) as String);
+
+  @override
+  String get selectCorrectOption => (super.noSuchMethod(
+        Invocation.getter(#selectCorrectOption),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#selectCorrectOption),
+        ),
+      ) as String);
+
+  @override
+  String get signIn => (super.noSuchMethod(
+        Invocation.getter(#signIn),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#signIn),
+        ),
+      ) as String);
+
+  @override
+  String get signUp => (super.noSuchMethod(
+        Invocation.getter(#signUp),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#signUp),
+        ),
+      ) as String);
+
+  @override
+  String get enterEmail => (super.noSuchMethod(
+        Invocation.getter(#enterEmail),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#enterEmail),
+        ),
+      ) as String);
+
+  @override
+  String get validEmailError => (super.noSuchMethod(
+        Invocation.getter(#validEmailError),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#validEmailError),
+        ),
+      ) as String);
+
+  @override
+  String get enterPassword => (super.noSuchMethod(
+        Invocation.getter(#enterPassword),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#enterPassword),
+        ),
+      ) as String);
+
+  @override
+  String get passwordLengthError => (super.noSuchMethod(
+        Invocation.getter(#passwordLengthError),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#passwordLengthError),
+        ),
+      ) as String);
+
+  @override
+  String get forgotPassword => (super.noSuchMethod(
+        Invocation.getter(#forgotPassword),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#forgotPassword),
+        ),
+      ) as String);
+
+  @override
+  String get dontHaveAccount => (super.noSuchMethod(
+        Invocation.getter(#dontHaveAccount),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#dontHaveAccount),
+        ),
+      ) as String);
+
+  @override
+  String get haveAccount => (super.noSuchMethod(
+        Invocation.getter(#haveAccount),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#haveAccount),
+        ),
+      ) as String);
+
+  @override
+  String get sendPasswordReset => (super.noSuchMethod(
+        Invocation.getter(#sendPasswordReset),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#sendPasswordReset),
+        ),
+      ) as String);
+
+  @override
+  String get passwordResetSent => (super.noSuchMethod(
+        Invocation.getter(#passwordResetSent),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#passwordResetSent),
+        ),
+      ) as String);
+
+  @override
+  String get backToSignIn => (super.noSuchMethod(
+        Invocation.getter(#backToSignIn),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#backToSignIn),
+        ),
+      ) as String);
+
+  @override
+  String get unexpectedError => (super.noSuchMethod(
+        Invocation.getter(#unexpectedError),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#unexpectedError),
+        ),
+      ) as String);
+
+  @override
+  String get requiredFieldError => (super.noSuchMethod(
+        Invocation.getter(#requiredFieldError),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#requiredFieldError),
+        ),
+      ) as String);
+
+  @override
+  String get confirmPasswordError => (super.noSuchMethod(
+        Invocation.getter(#confirmPasswordError),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#confirmPasswordError),
+        ),
+      ) as String);
+
+  @override
+  String get confirmPassword => (super.noSuchMethod(
+        Invocation.getter(#confirmPassword),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#confirmPassword),
+        ),
+      ) as String);
+
+  @override
+  String get createChildProfileTitle => (super.noSuchMethod(
+        Invocation.getter(#createChildProfileTitle),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#createChildProfileTitle),
+        ),
+      ) as String);
+
+  @override
+  String get selectAvatarPrompt => (super.noSuchMethod(
+        Invocation.getter(#selectAvatarPrompt),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#selectAvatarPrompt),
+        ),
+      ) as String);
+
+  @override
+  String get firstNameLabel => (super.noSuchMethod(
+        Invocation.getter(#firstNameLabel),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#firstNameLabel),
+        ),
+      ) as String);
+
+  @override
+  String get enterFirstNameHint => (super.noSuchMethod(
+        Invocation.getter(#enterFirstNameHint),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#enterFirstNameHint),
+        ),
+      ) as String);
+
+  @override
+  String get errorFirstNameRequired => (super.noSuchMethod(
+        Invocation.getter(#errorFirstNameRequired),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#errorFirstNameRequired),
+        ),
+      ) as String);
+
+  @override
+  String get lastNameLabelOptional => (super.noSuchMethod(
+        Invocation.getter(#lastNameLabelOptional),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#lastNameLabelOptional),
+        ),
+      ) as String);
+
+  @override
+  String get enterLastNameHintOptional => (super.noSuchMethod(
+        Invocation.getter(#enterLastNameHintOptional),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#enterLastNameHintOptional),
+        ),
+      ) as String);
+
+  @override
+  String get birthdateLabelOptional => (super.noSuchMethod(
+        Invocation.getter(#birthdateLabelOptional),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#birthdateLabelOptional),
+        ),
+      ) as String);
+
+  @override
+  String get selectDateButton => (super.noSuchMethod(
+        Invocation.getter(#selectDateButton),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#selectDateButton),
+        ),
+      ) as String);
+
+  @override
+  String get specialConditionsLabelOptional => (super.noSuchMethod(
+        Invocation.getter(#specialConditionsLabelOptional),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#specialConditionsLabelOptional),
+        ),
+      ) as String);
+
+  @override
+  String get createProfileButton => (super.noSuchMethod(
+        Invocation.getter(#createProfileButton),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#createProfileButton),
+        ),
+      ) as String);
+
+  @override
+  String get errorCreatingProfile => (super.noSuchMethod(
+        Invocation.getter(#errorCreatingProfile),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#errorCreatingProfile),
+        ),
+      ) as String);
+
+  @override
+  String get logout => (super.noSuchMethod(
+        Invocation.getter(#logout),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#logout),
+        ),
+      ) as String);
+
+  @override
+  String get errorScreenRestartInstruction => (super.noSuchMethod(
+        Invocation.getter(#errorScreenRestartInstruction),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#errorScreenRestartInstruction),
+        ),
+      ) as String);
+
+  @override
+  String get selectChildProfileTitle => (super.noSuchMethod(
+        Invocation.getter(#selectChildProfileTitle),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#selectChildProfileTitle),
+        ),
+      ) as String);
+
+  @override
+  String get whoIsPlayingPrompt => (super.noSuchMethod(
+        Invocation.getter(#whoIsPlayingPrompt),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#whoIsPlayingPrompt),
+        ),
+      ) as String);
+
+  @override
+  String get addChildProfileButton => (super.noSuchMethod(
+        Invocation.getter(#addChildProfileButton),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#addChildProfileButton),
+        ),
+      ) as String);
+
+  @override
+  String get manageProfilesTooltip => (super.noSuchMethod(
+        Invocation.getter(#manageProfilesTooltip),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#manageProfilesTooltip),
+        ),
+      ) as String);
+
+  @override
+  String get switchChildProfileButton => (super.noSuchMethod(
+        Invocation.getter(#switchChildProfileButton),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#switchChildProfileButton),
+        ),
+      ) as String);
+
+  @override
+  String get onlyOneProfileExists => (super.noSuchMethod(
+        Invocation.getter(#onlyOneProfileExists),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#onlyOneProfileExists),
+        ),
+      ) as String);
+
+  @override
+  String get loading => (super.noSuchMethod(
+        Invocation.getter(#loading),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#loading),
+        ),
+      ) as String);
+
+  @override
+  String get gameOver => (super.noSuchMethod(
+        Invocation.getter(#gameOver),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#gameOver),
+        ),
+      ) as String);
+
+  @override
+  String get congratulationsAllLevelsComplete => (super.noSuchMethod(
+        Invocation.getter(#congratulationsAllLevelsComplete),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#congratulationsAllLevelsComplete),
+        ),
+      ) as String);
+
+  @override
+  String get playAgain => (super.noSuchMethod(
+        Invocation.getter(#playAgain),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#playAgain),
+        ),
+      ) as String);
+
+  @override
+  String get backToGames => (super.noSuchMethod(
+        Invocation.getter(#backToGames),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#backToGames),
+        ),
+      ) as String);
+
+  @override
+  String get exitGameTooltip => (super.noSuchMethod(
+        Invocation.getter(#exitGameTooltip),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#exitGameTooltip),
+        ),
+      ) as String);
+
+  @override
+  String get exitGameConfirmationTitle => (super.noSuchMethod(
+        Invocation.getter(#exitGameConfirmationTitle),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#exitGameConfirmationTitle),
+        ),
+      ) as String);
+
+  @override
+  String get exitGameConfirmationMessage => (super.noSuchMethod(
+        Invocation.getter(#exitGameConfirmationMessage),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#exitGameConfirmationMessage),
+        ),
+      ) as String);
+
+  @override
+  String get cancelButton => (super.noSuchMethod(
+        Invocation.getter(#cancelButton),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#cancelButton),
+        ),
+      ) as String);
+
+  @override
+  String get exitButton => (super.noSuchMethod(
+        Invocation.getter(#exitButton),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#exitButton),
+        ),
+      ) as String);
+
+  @override
+  String get repeatInstructionTooltip => (super.noSuchMethod(
+        Invocation.getter(#repeatInstructionTooltip),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#repeatInstructionTooltip),
+        ),
+      ) as String);
+
+  @override
+  String get onboardingDesc1 => (super.noSuchMethod(
+        Invocation.getter(#onboardingDesc1),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#onboardingDesc1),
+        ),
+      ) as String);
+
+  @override
+  String get onboardingDesc2 => (super.noSuchMethod(
+        Invocation.getter(#onboardingDesc2),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#onboardingDesc2),
+        ),
+      ) as String);
+
+  @override
+  String get onboardingSkipButton => (super.noSuchMethod(
+        Invocation.getter(#onboardingSkipButton),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#onboardingSkipButton),
+        ),
+      ) as String);
+
+  @override
+  String get onboardingGetStartedButton => (super.noSuchMethod(
+        Invocation.getter(#onboardingGetStartedButton),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#onboardingGetStartedButton),
+        ),
+      ) as String);
+
+  @override
+  String get loadingProfilesMessage => (super.noSuchMethod(
+        Invocation.getter(#loadingProfilesMessage),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#loadingProfilesMessage),
+        ),
+      ) as String);
+
+  @override
+  String get noProfilesFoundMessage => (super.noSuchMethod(
+        Invocation.getter(#noProfilesFoundMessage),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#noProfilesFoundMessage),
+        ),
+      ) as String);
+
+  @override
+  String get settingsTitle => (super.noSuchMethod(
+        Invocation.getter(#settingsTitle),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#settingsTitle),
+        ),
+      ) as String);
+
+  @override
+  String get ttsEnabledSetting => (super.noSuchMethod(
+        Invocation.getter(#ttsEnabledSetting),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#ttsEnabledSetting),
+        ),
+      ) as String);
+
+  @override
+  String get soundEffectsEnabledSetting => (super.noSuchMethod(
+        Invocation.getter(#soundEffectsEnabledSetting),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#soundEffectsEnabledSetting),
+        ),
+      ) as String);
+
+  @override
+  String get loadingSetting => (super.noSuchMethod(
+        Invocation.getter(#loadingSetting),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#loadingSetting),
+        ),
+      ) as String);
+
+  @override
+  String get errorLoadingSetting => (super.noSuchMethod(
+        Invocation.getter(#errorLoadingSetting),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#errorLoadingSetting),
+        ),
+      ) as String);
+
+  @override
+  String get languageSetting => (super.noSuchMethod(
+        Invocation.getter(#languageSetting),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#languageSetting),
+        ),
+      ) as String);
+
+  @override
+  String get selectLanguageDialogTitle => (super.noSuchMethod(
+        Invocation.getter(#selectLanguageDialogTitle),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#selectLanguageDialogTitle),
+        ),
+      ) as String);
+
+  @override
+  String get ttsSpeechRateSetting => (super.noSuchMethod(
+        Invocation.getter(#ttsSpeechRateSetting),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#ttsSpeechRateSetting),
+        ),
+      ) as String);
+
+  @override
+  String get ttsRateSlow => (super.noSuchMethod(
+        Invocation.getter(#ttsRateSlow),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#ttsRateSlow),
+        ),
+      ) as String);
+
+  @override
+  String get ttsRateNormal => (super.noSuchMethod(
+        Invocation.getter(#ttsRateNormal),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#ttsRateNormal),
+        ),
+      ) as String);
+
+  @override
+  String get ttsRateFast => (super.noSuchMethod(
+        Invocation.getter(#ttsRateFast),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#ttsRateFast),
+        ),
+      ) as String);
+
+  @override
+  String get hapticsEnabledSetting => (super.noSuchMethod(
+        Invocation.getter(#hapticsEnabledSetting),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#hapticsEnabledSetting),
+        ),
+      ) as String);
+
+  @override
+  String get settingsSectionAudio => (super.noSuchMethod(
+        Invocation.getter(#settingsSectionAudio),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#settingsSectionAudio),
+        ),
+      ) as String);
+
+  @override
+  String get settingsSectionGeneral => (super.noSuchMethod(
+        Invocation.getter(#settingsSectionGeneral),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#settingsSectionGeneral),
+        ),
+      ) as String);
+
+  @override
+  String get oopsSomethingWentWrong => (super.noSuchMethod(
+        Invocation.getter(#oopsSomethingWentWrong),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#oopsSomethingWentWrong),
+        ),
+      ) as String);
+
+  @override
+  String get retryButton => (super.noSuchMethod(
+        Invocation.getter(#retryButton),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#retryButton),
+        ),
+      ) as String);
+
+  @override
+  String get closeAppButton => (super.noSuchMethod(
+        Invocation.getter(#closeAppButton),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#closeAppButton),
+        ),
+      ) as String);
+
+  @override
+  String get errorScreenContactSupport => (super.noSuchMethod(
+        Invocation.getter(#errorScreenContactSupport),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#errorScreenContactSupport),
+        ),
+      ) as String);
+
+  @override
+  String get imageOption => (super.noSuchMethod(
+        Invocation.getter(#imageOption),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#imageOption),
+        ),
+      ) as String);
+
+  @override
+  String get loadingUserData => (super.noSuchMethod(
+        Invocation.getter(#loadingUserData),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#loadingUserData),
+        ),
+      ) as String);
+
+  @override
+  String get noGameCategoriesAvailableMessage => (super.noSuchMethod(
+        Invocation.getter(#noGameCategoriesAvailableMessage),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#noGameCategoriesAvailableMessage),
+        ),
+      ) as String);
+
+  @override
+  String get allCategoriesFilter => (super.noSuchMethod(
+        Invocation.getter(#allCategoriesFilter),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#allCategoriesFilter),
+        ),
+      ) as String);
+
+  @override
+  String get overallStatsTitle => (super.noSuchMethod(
+        Invocation.getter(#overallStatsTitle),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#overallStatsTitle),
+        ),
+      ) as String);
+
+  @override
+  String get categoryAccuracyChartTitle => (super.noSuchMethod(
+        Invocation.getter(#categoryAccuracyChartTitle),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#categoryAccuracyChartTitle),
+        ),
+      ) as String);
+
+  @override
+  String get noChartDataAvailable => (super.noSuchMethod(
+        Invocation.getter(#noChartDataAvailable),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#noChartDataAvailable),
+        ),
+      ) as String);
+
+  @override
+  String get noStatsFound => (super.noSuchMethod(
+        Invocation.getter(#noStatsFound),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#noStatsFound),
+        ),
+      ) as String);
+
+  @override
+  String get matchFound => (super.noSuchMethod(
+        Invocation.getter(#matchFound),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#matchFound),
+        ),
+      ) as String);
+
+  @override
+  String get noMatchTryAgain => (super.noSuchMethod(
+        Invocation.getter(#noMatchTryAgain),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#noMatchTryAgain),
+        ),
+      ) as String);
+
+  @override
+  String errorLoadingGamesDetails(Object? error) => (super.noSuchMethod(
+        Invocation.method(
+          #errorLoadingGamesDetails,
+          [error],
+        ),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.method(
+            #errorLoadingGamesDetails,
+            [error],
+          ),
+        ),
+      ) as String);
+
+  @override
+  String errorLoadingCategoryGamesDetails(
+    String? categoryName,
+    Object? error,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #errorLoadingCategoryGamesDetails,
+          [
+            categoryName,
+            error,
+          ],
+        ),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.method(
+            #errorLoadingCategoryGamesDetails,
+            [
+              categoryName,
+              error,
+            ],
+          ),
+        ),
+      ) as String);
+
+  @override
+  String errorLoadingProfileDetails(Object? error) => (super.noSuchMethod(
+        Invocation.method(
+          #errorLoadingProfileDetails,
+          [error],
+        ),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.method(
+            #errorLoadingProfileDetails,
+            [error],
+          ),
+        ),
+      ) as String);
+
+  @override
+  String errorCheckingAuthDetails(Object? error) => (super.noSuchMethod(
+        Invocation.method(
+          #errorCheckingAuthDetails,
+          [error],
+        ),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.method(
+            #errorCheckingAuthDetails,
+            [error],
+          ),
+        ),
+      ) as String);
+
+  @override
+  String noGamesInCategoryAvailable(String? categoryName) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #noGamesInCategoryAvailable,
+          [categoryName],
+        ),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.method(
+            #noGamesInCategoryAvailable,
+            [categoryName],
+          ),
+        ),
+      ) as String);
+
+  @override
+  String appFailedToInitialize(String? error) => (super.noSuchMethod(
+        Invocation.method(
+          #appFailedToInitialize,
+          [error],
+        ),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.method(
+            #appFailedToInitialize,
+            [error],
+          ),
+        ),
+      ) as String);
+
+  @override
+  String profileCreatedSuccess(String? firstName) => (super.noSuchMethod(
+        Invocation.method(
+          #profileCreatedSuccess,
+          [firstName],
+        ),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.method(
+            #profileCreatedSuccess,
+            [firstName],
+          ),
+        ),
+      ) as String);
+
+  @override
+  String loadingGamesFor(String? categoryName) => (super.noSuchMethod(
+        Invocation.method(
+          #loadingGamesFor,
+          [categoryName],
+        ),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.method(
+            #loadingGamesFor,
+            [categoryName],
+          ),
+        ),
+      ) as String);
+}
+
+/// A class which mocks [Ref].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockRef<State extends Object?> extends _i1.Mock
+    implements _i3.Ref<State> {
+  MockRef() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i3.ProviderContainer get container => (super.noSuchMethod(
+        Invocation.getter(#container),
+        returnValue: _FakeProviderContainer_2(
+          this,
+          Invocation.getter(#container),
+        ),
+      ) as _i3.ProviderContainer);
+
+  @override
+  T refresh<T>(_i3.Refreshable<T>? provider) => (super.noSuchMethod(
+        Invocation.method(
+          #refresh,
+          [provider],
+        ),
+        returnValue: _i10.dummyValue<T>(
+          this,
+          Invocation.method(
+            #refresh,
+            [provider],
+          ),
+        ),
+      ) as T);
+
+  @override
+  void invalidate(_i3.ProviderOrFamily? provider) => super.noSuchMethod(
+        Invocation.method(
+          #invalidate,
+          [provider],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void notifyListeners() => super.noSuchMethod(
+        Invocation.method(
+          #notifyListeners,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void listenSelf(
+    void Function(
+      State?,
+      State,
+    )? listener, {
+    void Function(
+      Object,
+      StackTrace,
+    )? onError,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #listenSelf,
+          [listener],
+          {#onError: onError},
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void invalidateSelf() => super.noSuchMethod(
+        Invocation.method(
+          #invalidateSelf,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void onAddListener(void Function()? cb) => super.noSuchMethod(
+        Invocation.method(
+          #onAddListener,
+          [cb],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void onRemoveListener(void Function()? cb) => super.noSuchMethod(
+        Invocation.method(
+          #onRemoveListener,
+          [cb],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void onResume(void Function()? cb) => super.noSuchMethod(
+        Invocation.method(
+          #onResume,
+          [cb],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void onCancel(void Function()? cb) => super.noSuchMethod(
+        Invocation.method(
+          #onCancel,
+          [cb],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void onDispose(void Function()? cb) => super.noSuchMethod(
+        Invocation.method(
+          #onDispose,
+          [cb],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  T read<T>(_i3.ProviderListenable<T>? provider) => (super.noSuchMethod(
+        Invocation.method(
+          #read,
+          [provider],
+        ),
+        returnValue: _i10.dummyValue<T>(
+          this,
+          Invocation.method(
+            #read,
+            [provider],
+          ),
+        ),
+      ) as T);
+
+  @override
+  bool exists(_i3.ProviderBase<Object?>? provider) => (super.noSuchMethod(
+        Invocation.method(
+          #exists,
+          [provider],
+        ),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  T watch<T>(_i3.ProviderListenable<T>? provider) => (super.noSuchMethod(
+        Invocation.method(
+          #watch,
+          [provider],
+        ),
+        returnValue: _i10.dummyValue<T>(
+          this,
+          Invocation.method(
+            #watch,
+            [provider],
+          ),
+        ),
+      ) as T);
+
+  @override
+  _i3.KeepAliveLink keepAlive() => (super.noSuchMethod(
+        Invocation.method(
+          #keepAlive,
+          [],
+        ),
+        returnValue: _FakeKeepAliveLink_3(
+          this,
+          Invocation.method(
+            #keepAlive,
+            [],
+          ),
+        ),
+      ) as _i3.KeepAliveLink);
+
+  @override
+  _i3.ProviderSubscription<T> listen<T>(
+    _i3.ProviderListenable<T>? provider,
+    void Function(
+      T?,
+      T,
+    )? listener, {
+    void Function(
+      Object,
+      StackTrace,
+    )? onError,
+    bool? fireImmediately,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #listen,
+          [
+            provider,
+            listener,
+          ],
+          {
+            #onError: onError,
+            #fireImmediately: fireImmediately,
+          },
+        ),
+        returnValue: _FakeProviderSubscription_4<T>(
+          this,
+          Invocation.method(
+            #listen,
+            [
+              provider,
+              listener,
+            ],
+            {
+              #onError: onError,
+              #fireImmediately: fireImmediately,
+            },
+          ),
+        ),
+      ) as _i3.ProviderSubscription<T>);
+}
+
+/// A class which mocks [SupabaseService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSupabaseService extends _i1.Mock implements _i16.SupabaseService {
+  MockSupabaseService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.SupabaseClient get client => (super.noSuchMethod(
+        Invocation.getter(#client),
+        returnValue: _FakeSupabaseClient_5(
+          this,
+          Invocation.getter(#client),
+        ),
+      ) as _i4.SupabaseClient);
+
+  @override
+  bool get isAuthenticated => (super.noSuchMethod(
+        Invocation.getter(#isAuthenticated),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  _i6.Future<void> initialize() => (super.noSuchMethod(
+        Invocation.method(
+          #initialize,
+          [],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+
+  @override
+  String getPublicUrl({
+    required String? bucketId,
+    required String? filePath,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getPublicUrl,
+          [],
+          {
+            #bucketId: bucketId,
+            #filePath: filePath,
+          },
+        ),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.method(
+            #getPublicUrl,
+            [],
+            {
+              #bucketId: bucketId,
+              #filePath: filePath,
+            },
+          ),
+        ),
+      ) as String);
+
+  @override
+  _i6.Future<_i4.AuthResponse> signUp({
+    required String? email,
+    required String? password,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #signUp,
+          [],
+          {
+            #email: email,
+            #password: password,
+          },
+        ),
+        returnValue: _i6.Future<_i4.AuthResponse>.value(_FakeAuthResponse_6(
+          this,
+          Invocation.method(
+            #signUp,
+            [],
+            {
+              #email: email,
+              #password: password,
+            },
+          ),
+        )),
+      ) as _i6.Future<_i4.AuthResponse>);
+
+  @override
+  _i6.Future<_i4.AuthResponse> signIn({
+    required String? email,
+    required String? password,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #signIn,
+          [],
+          {
+            #email: email,
+            #password: password,
+          },
+        ),
+        returnValue: _i6.Future<_i4.AuthResponse>.value(_FakeAuthResponse_6(
+          this,
+          Invocation.method(
+            #signIn,
+            [],
+            {
+              #email: email,
+              #password: password,
+            },
+          ),
+        )),
+      ) as _i6.Future<_i4.AuthResponse>);
+
+  @override
+  _i6.Future<void> signOut() => (super.noSuchMethod(
+        Invocation.method(
+          #signOut,
+          [],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+}
+
 /// A class which mocks [SettingsService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSettingsService extends _i1.Mock implements _i7.SettingsService {
+class MockSettingsService extends _i1.Mock implements _i17.SettingsService {
   MockSettingsService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<void> setLastActiveChildId(String? childId) => (super.noSuchMethod(
+  _i6.Future<void> setLastActiveChildId(String? childId) => (super.noSuchMethod(
         Invocation.method(
           #setLastActiveChildId,
           [childId],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i4.Future<String?> getLastActiveChildId() => (super.noSuchMethod(
+  _i6.Future<String?> getLastActiveChildId() => (super.noSuchMethod(
         Invocation.method(
           #getLastActiveChildId,
           [],
         ),
-        returnValue: _i4.Future<String?>.value(),
-      ) as _i4.Future<String?>);
+        returnValue: _i6.Future<String?>.value(),
+      ) as _i6.Future<String?>);
 
   @override
-  _i4.Future<void> setTtsEnabled(bool? enabled) => (super.noSuchMethod(
+  _i6.Future<void> setTtsEnabled(bool? enabled) => (super.noSuchMethod(
         Invocation.method(
           #setTtsEnabled,
           [enabled],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i4.Future<bool> isTtsEnabled({bool? defaultValue = true}) =>
+  _i6.Future<bool> isTtsEnabled({bool? defaultValue = true}) =>
       (super.noSuchMethod(
         Invocation.method(
           #isTtsEnabled,
           [],
           {#defaultValue: defaultValue},
         ),
-        returnValue: _i4.Future<bool>.value(false),
-      ) as _i4.Future<bool>);
+        returnValue: _i6.Future<bool>.value(false),
+      ) as _i6.Future<bool>);
 
   @override
-  _i4.Future<void> setTtsSpeechRate(double? rate) => (super.noSuchMethod(
+  _i6.Future<void> setTtsSpeechRate(double? rate) => (super.noSuchMethod(
         Invocation.method(
           #setTtsSpeechRate,
           [rate],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i4.Future<double> getTtsSpeechRate({double? defaultValue = 0.5}) =>
+  _i6.Future<double> getTtsSpeechRate({double? defaultValue = 0.5}) =>
       (super.noSuchMethod(
         Invocation.method(
           #getTtsSpeechRate,
           [],
           {#defaultValue: defaultValue},
         ),
-        returnValue: _i4.Future<double>.value(0.0),
-      ) as _i4.Future<double>);
+        returnValue: _i6.Future<double>.value(0.0),
+      ) as _i6.Future<double>);
 
   @override
-  _i4.Future<void> setSoundEffectsEnabled(bool? enabled) => (super.noSuchMethod(
+  _i6.Future<void> setSoundEffectsEnabled(bool? enabled) => (super.noSuchMethod(
         Invocation.method(
           #setSoundEffectsEnabled,
           [enabled],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i4.Future<bool> areSoundEffectsEnabled({bool? defaultValue = true}) =>
+  _i6.Future<bool> areSoundEffectsEnabled({bool? defaultValue = true}) =>
       (super.noSuchMethod(
         Invocation.method(
           #areSoundEffectsEnabled,
           [],
           {#defaultValue: defaultValue},
         ),
-        returnValue: _i4.Future<bool>.value(false),
-      ) as _i4.Future<bool>);
+        returnValue: _i6.Future<bool>.value(false),
+      ) as _i6.Future<bool>);
 
   @override
-  _i4.Future<void> setHapticsEnabled(bool? enabled) => (super.noSuchMethod(
+  _i6.Future<void> setHapticsEnabled(bool? enabled) => (super.noSuchMethod(
         Invocation.method(
           #setHapticsEnabled,
           [enabled],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i4.Future<bool> areHapticsEnabled({bool? defaultValue = true}) =>
+  _i6.Future<bool> areHapticsEnabled({bool? defaultValue = true}) =>
       (super.noSuchMethod(
         Invocation.method(
           #areHapticsEnabled,
           [],
           {#defaultValue: defaultValue},
         ),
-        returnValue: _i4.Future<bool>.value(false),
-      ) as _i4.Future<bool>);
+        returnValue: _i6.Future<bool>.value(false),
+      ) as _i6.Future<bool>);
 
   @override
-  _i4.Future<void> setAppLanguage(_i8.AppLanguage? language) =>
+  _i6.Future<void> setAppLanguage(_i18.AppLanguage? language) =>
       (super.noSuchMethod(
         Invocation.method(
           #setAppLanguage,
           [language],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i4.Future<_i8.AppLanguage> getAppLanguage(
-          {_i8.AppLanguage? defaultValue = _i8.AppLanguage.arabic}) =>
+  _i6.Future<_i18.AppLanguage> getAppLanguage(
+          {_i18.AppLanguage? defaultValue = _i18.AppLanguage.arabic}) =>
       (super.noSuchMethod(
         Invocation.method(
           #getAppLanguage,
           [],
           {#defaultValue: defaultValue},
         ),
-        returnValue: _i4.Future<_i8.AppLanguage>.value(_i8.AppLanguage.english),
-      ) as _i4.Future<_i8.AppLanguage>);
+        returnValue:
+            _i6.Future<_i18.AppLanguage>.value(_i18.AppLanguage.english),
+      ) as _i6.Future<_i18.AppLanguage>);
 
   @override
-  _i4.Future<void> clearAllAppSettings() => (super.noSuchMethod(
+  _i6.Future<void> clearAllAppSettings() => (super.noSuchMethod(
         Invocation.method(
           #clearAllAppSettings,
           [],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 }

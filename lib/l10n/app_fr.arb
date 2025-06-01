@@ -199,5 +199,7 @@
   "overallStatsTitle": "Performance globale",
   "categoryAccuracyChartTitle": "Précision par catégorie (Tout temps)",
   "noChartDataAvailable": "Pas assez de données pour afficher le graphique.",
-  "noStatsFound": "Aucune statistique trouvée pour les filtres sélectionnés."
+  "noStatsFound": "Aucune statistique trouvée pour les filtres sélectionnés.",
+  "matchFound": "Paire trouvée !",
+  "noMatchTryAgain": "Pas de paire. Réessayez !"
 }

@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 
-enum ScreenType { MULTIPLE_CHOICE, MEMORY_MATCH, UNKNOWN }
+enum ScreenType { MULTIPLE_CHOICE, MEMORY, UNKNOWN }
 
 /// Helper extension for safe parsing from string (DB value) to enum.
 extension ScreenTypeExtension on ScreenType {
@@ -31,7 +31,7 @@ class Screen {
 class Option {
   final String optionId;
   final String screenId;
-  final bool? isCorrect; // Flag for multiple choice correct answer
+  final bool isCorrect; // Flag for multiple choice correct answer
   final String? labelText;
   final String? picturePath;
   final String? audioPath;
@@ -43,7 +43,7 @@ class Option {
     this.labelText,
     this.picturePath,
     this.audioPath,
-    this.isCorrect,
+    this.isCorrect = false,
     this.pairId,
   });
 
@@ -54,7 +54,7 @@ class Option {
       labelText: json['label_text'] as String?,
       picturePath: json['picture_url'] as String?,
       audioPath: json['audio_url'] as String?,
-      isCorrect: json['is_correct'] as bool?,
+      isCorrect: json['is_correct'] as bool? ?? false,
       pairId: json['pair_id'] as String?,
     );
   }
@@ -66,7 +66,7 @@ class MemoryScreen extends Screen {
     required super.levelId,
     required super.screenNumber,
     super.instruction,
-  }) : super(type: ScreenType.MEMORY_MATCH);
+  }) : super(type: ScreenType.MEMORY);
 
   factory MemoryScreen.fromJson(Map<String, dynamic> json) {
     // Note: The 'options' are handled by the repository or service

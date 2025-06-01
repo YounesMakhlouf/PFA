@@ -439,4 +439,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noStatsFound => 'لم يتم العثور على إحصائيات للمرشحات المحددة.';
+
+  @override
+  String get matchFound => 'وجد تطابق!';
+
+  @override
+  String get noMatchTryAgain => 'لا يوجد تطابق. حاول مرة أخرى!';
 }
