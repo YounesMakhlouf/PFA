@@ -1,14 +1,14 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pfa/config/app_theme.dart';
+import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/models/screen.dart';
+import 'package:pfa/providers/global_providers.dart';
 import 'package:pfa/screens/error_screen.dart';
 import 'package:pfa/screens/game_screen.dart';
-import 'package:pfa/l10n/app_localizations.dart';
-import 'package:pfa/providers/global_providers.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/screens/generic_loading_screen.dart';
 import 'package:pfa/utils/color_utils.dart';
 import 'package:pfa/viewmodels/game_state.dart';
@@ -174,13 +174,18 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
                 alignment: Alignment.topCenter, // Emitter position
                 child: ConfettiWidget(
                   confettiController: _confettiController,
-                  blastDirectionality:
-                      BlastDirectionality.explosive, // Shoots in all directions
-                  shouldLoop: false, // Only shoot once
-                  numberOfParticles: 20, // Number of particles to emit
-                  gravity: 0.1, // How fast particles fall
-                  emissionFrequency: 0.05, // How often it emits
-                  maxBlastForce: 20, // Applied to particles at launch
+                  blastDirectionality: BlastDirectionality.explosive,
+                  // Shoots in all directions
+                  shouldLoop: false,
+                  // Only shoot once
+                  numberOfParticles: 20,
+                  // Number of particles to emit
+                  gravity: 0.1,
+                  // How fast particles fall
+                  emissionFrequency: 0.05,
+                  // How often it emits
+                  maxBlastForce: 20,
+                  // Applied to particles at launch
                   minBlastForce: 5,
                   colors: const [
                     Colors.green,
@@ -302,11 +307,11 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
               currentScreenNumber: gameState.currentScreenIndex + 1,
               isCorrect: gameState.isCorrect,
               onOptionSelected: (Option selectedOption) {
-                gameViewModel.checkAnswer(
-                    selectedOption: selectedOption,
-                    correctFeedbackText: l10n.correct,
-                    tryAgainFeedbackText: l10n.tryAgain);
+                gameViewModel.handleOptionSelected(selectedOption);
               },
+              selectedMemoryCards: gameState.selectedMemoryCards,
+              isMemoryPairAttempted: gameState.isMemoryPairAttempted,
+              matchedPairIds: gameState.matchedPairIds,
             ),
           ),
         );

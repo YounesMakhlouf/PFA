@@ -441,4 +441,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noStatsFound => 'No statistics found for the selected filters.';
+
+  @override
+  String get matchFound => 'Match Found!';
+
+  @override
+  String get noMatchTryAgain => 'No Match. Try Again!';
+
+  @override
+  String get matched => 'Matched';
 }

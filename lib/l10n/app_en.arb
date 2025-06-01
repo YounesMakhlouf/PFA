@@ -199,5 +199,8 @@
   "overallStatsTitle": "Overall Performance",
   "categoryAccuracyChartTitle": "Accuracy by Category (All Time)",
   "noChartDataAvailable": "Not enough data to display chart.",
-  "noStatsFound": "No statistics found for the selected filters."
+  "noStatsFound": "No statistics found for the selected filters.",
+  "matchFound": "Match Found!",
+  "noMatchTryAgain": "No Match. Try Again!",
+  "matched": "Matched"
 }

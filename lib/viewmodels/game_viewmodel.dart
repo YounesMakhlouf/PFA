@@ -1,17 +1,21 @@
 import 'dart:async';
-import 'package:flutter/services.dart';
+
 import 'package:camera/camera.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pfa/l10n/app_localizations.dart';
+import 'package:pfa/models/game_session.dart' as gs_model;
 import 'package:pfa/models/screen.dart';
 import 'package:pfa/providers/global_providers.dart';
 import 'package:pfa/repositories/game_repository.dart';
+import 'package:pfa/repositories/game_session_repository.dart';
 import 'package:pfa/services/audio_service.dart';
 import 'package:pfa/services/emotion_detection_service.dart';
 import 'package:pfa/services/logging_service.dart';
-import 'package:pfa/repositories/game_session_repository.dart';
-import 'package:pfa/models/game_session.dart' as gs_model;
 import 'package:pfa/services/tts_service.dart';
 import 'package:pfa/viewmodels/game_state.dart';
+
+Timer? _feedbackTimer;
 
 class GameViewModel extends StateNotifier<GameState> {
   final String _gameId;
@@ -24,6 +28,7 @@ class GameViewModel extends StateNotifier<GameState> {
   final TtsService _ttsService;
   final AudioService _audioService;
   final Ref _ref;
+  final AppLocalizations _l10n;
 
   // Cache
   final Map<String, ScreenWithOptionsMenu> _screenCache = {};
@@ -42,15 +47,24 @@ class GameViewModel extends StateNotifier<GameState> {
     this._ttsService,
     this._audioService,
     this._ref,
+    this._l10n,
   ) : super(GameState(status: GameStatus.initial)) {
     _logger.info(
         'GameViewModel initialized for game ID: $_gameId, child ID: $_childId');
-    _initializeGame();
+    initializeGame();
     _emotionService = EmotionDetectionService();
   }
 
-  Future<void> _initializeGame() async {
+  @override
+  void dispose() {
+    _feedbackTimer?.cancel();
+    disposeCamera();
+    super.dispose();
+  }
+
+  Future<void> initializeGame() async {
     _logger.debug('GameViewModel: Initializing game...');
+    _feedbackTimer?.cancel();
     state =
         state.copyWith(status: GameStatus.loadingGame, clearErrorMessage: true);
     try {
@@ -93,6 +107,7 @@ class GameViewModel extends StateNotifier<GameState> {
     }
 
     final levelToLoad = state.levels[levelIndex];
+    _feedbackTimer?.cancel();
     state = state.copyWith(
       status: GameStatus.loadingLevel,
       currentLevelIndex: levelIndex,
@@ -151,9 +166,14 @@ class GameViewModel extends StateNotifier<GameState> {
     state = state.copyWith(
         status: GameStatus.loadingScreen,
         currentScreenIndex: screenIndex,
-        clearCurrentScreenData: true);
+        clearCurrentScreenData: true,
+        selectedMemoryCards: [],
+        isMemoryPairAttempted: false,
+        matchedPairIds: {},
+        clearIsCorrect: true);
     final screenIdToLoad = screenIdsInLevel[screenIndex];
     _logger.debug('Loading screen ${screenIndex + 1} (ID: $screenIdToLoad)');
+    _feedbackTimer?.cancel();
 
     try {
       ScreenWithOptionsMenu? screenData;
@@ -175,7 +195,7 @@ class GameViewModel extends StateNotifier<GameState> {
       }
 
       if (screenData.screen.type != ScreenType.MULTIPLE_CHOICE &&
-          screenData.screen.type != ScreenType.MEMORY_MATCH) {
+          screenData.screen.type != ScreenType.MEMORY) {
         _logger.error('Unsupported screen type: ${screenData.screen.type}');
         state = state.copyWith(
             status: GameStatus.error, errorMessage: 'Unsupported screen type');
@@ -232,65 +252,68 @@ class GameViewModel extends StateNotifier<GameState> {
     }
   }
 
-  Future<void> recordAttempt(
-      Option selectedOption, bool? isCorrectAnswer) async {
-    if (isCorrectAnswer == null ||
-        _currentGameSession == null ||
-        state.currentScreenData == null) {
+  Future<void> _recordAttempt({
+    required String screenId,
+    List<String>? selectedOptionIds,
+    required bool isCorrectAnswer,
+    required int timeTakenMs,
+  }) async {
+    if (_currentGameSession == null || state.currentScreenData == null) {
       return;
     }
-    final startTime = DateTime.now();
-
-    await Future.delayed(const Duration(milliseconds: 200));
-    final timeTakenMs = DateTime.now().difference(startTime).inMilliseconds;
-
     try {
       await _sessionRepository.addAttemptToSession(
         sessionId: _currentGameSession!.sessionId,
-        screenId: state.currentScreenData!.screen.screenId,
-        selectedOptionIds: [selectedOption.optionId],
+        screenId: screenId,
+        selectedOptionIds: selectedOptionIds,
         isCorrect: isCorrectAnswer,
         timeTakenMs: timeTakenMs,
       );
-      _logger.debug("Recorded attempt");
+      _logger.debug("Recorded attempt for screen $screenId");
     } catch (e, st) {
       _logger.error("Failed to record attempt", e, st);
     }
   }
 
-  void checkAnswer(
-      {required Option selectedOption,
-      required String correctFeedbackText,
-      required String tryAgainFeedbackText}) {
+  void handleOptionSelected(Option selectedOption) {
     if (state.status != GameStatus.playing || state.currentScreenData == null) {
+      _logger.warning(
+          "handleOptionSelected called in non-playing state or without screen data.");
       return;
     }
+    _feedbackTimer?.cancel();
 
-    bool? isCorrectCurrently = false;
-    final bool hapticsAreEnabled = _ref.read(hapticsEnabledProvider);
     final screen = state.currentScreenData!.screen;
 
     if (screen is MultipleChoiceScreen) {
-      isCorrectCurrently = selectedOption.isCorrect;
+      _processMultipleChoiceAnswer(selectedOption);
     } else if (screen is MemoryScreen) {
-      _logger.warning("Memory game logic not fully implemented.");
+      _processMemoryCardSelection(selectedOption);
     } else {
-      _logger.error("Unsupported screen type in checkAnswer.");
-      state = state.copyWith(isCorrect: false, clearErrorMessage: true);
-      return;
+      _logger.error(
+          "Unsupported screen type for handleOptionSelected: ${screen.runtimeType}");
+      state = state.copyWith(
+          isCorrect: false, clearErrorMessage: true); // Generic incorrect
+      _ttsService.speak(_l10n.tryAgain); // Generic feedback
+      _audioService.playSound(SoundType.incorrect);
     }
-    if (isCorrectCurrently == null) {
-      Timer(const Duration(seconds: 1), () {
-        if (mounted) moveToNextScreen();
-      });
-      return;
-    }
+  }
+
+  void _processMultipleChoiceAnswer(Option selectedOption) {
+    bool? isCorrectCurrently = selectedOption.isCorrect;
+    final bool hapticsAreEnabled = _ref.read(hapticsEnabledProvider);
 
     state =
         state.copyWith(isCorrect: isCorrectCurrently, clearErrorMessage: true);
-    recordAttempt(selectedOption, isCorrectCurrently);
+    _recordAttempt(
+        screenId: state.currentScreenData!.screen.screenId,
+        isCorrectAnswer: isCorrectCurrently,
+        timeTakenMs: 1000 // TODO: Fix
+        );
+
     final feedbackText =
-        isCorrectCurrently == true ? correctFeedbackText : tryAgainFeedbackText;
+        isCorrectCurrently == true ? _l10n.correct : _l10n.tryAgain;
+
     _ttsService.speak(feedbackText);
     if (isCorrectCurrently == true) {
       _audioService.playSound(SoundType.correct);
@@ -311,7 +334,100 @@ class GameViewModel extends StateNotifier<GameState> {
     }
   }
 
+  void _processMemoryCardSelection(Option tappedCard) {
+    final hapticsAreEnabled = _ref.read(hapticsEnabledProvider);
+
+    if (state.isMemoryPairAttempted ||
+        state.selectedMemoryCards
+            .any((card) => card.optionId == tappedCard.optionId) ||
+        (tappedCard.pairId != null &&
+            state.matchedPairIds.contains(tappedCard.pairId!))) {
+      _logger.debug(
+          "Memory card selection ignored (attempting/already selected/matched).");
+      return;
+    }
+
+    final List<Option> newSelectedCards = List.from(state.selectedMemoryCards)
+      ..add(tappedCard);
+    state = state.copyWith(selectedMemoryCards: newSelectedCards);
+
+    _audioService.playSound(SoundType.uiClick);
+    if (hapticsAreEnabled) HapticFeedback.lightImpact();
+
+    if (newSelectedCards.length == 2) {
+      state = state.copyWith(isMemoryPairAttempted: true);
+
+      final Option card1 = newSelectedCards[0];
+      final Option card2 = newSelectedCards[1];
+      final bool isMatch =
+          (card1.pairId != null && card1.pairId == card2.pairId);
+
+      _logger.debug(
+          "Memory Pair Attempt: ${card1.optionId} (${card1.pairId}) & ${card2.optionId} (${card2.pairId}). Match: $isMatch");
+
+      _recordAttempt(
+          screenId: state.currentScreenData!.screen.screenId,
+          selectedOptionIds: [card1.optionId, card2.optionId],
+          isCorrectAnswer: isMatch,
+          timeTakenMs: 1000 // TODO: Fix
+          );
+
+      final feedbackText = isMatch ? _l10n.matchFound : _l10n.noMatchTryAgain;
+      _ttsService.speak(feedbackText);
+
+      if (isMatch) {
+        _audioService.playSound(SoundType.correct);
+        if (hapticsAreEnabled) HapticFeedback.mediumImpact();
+      } else {
+        _audioService.playSound(SoundType.incorrect);
+        if (hapticsAreEnabled) HapticFeedback.lightImpact();
+      }
+
+      _feedbackTimer = Timer(const Duration(seconds: 2), () {
+        if (!mounted) return;
+        if (isMatch) {
+          final Set<String> newMatchedPairs = Set.from(state.matchedPairIds)
+            ..add(card1.pairId!);
+          state = state.copyWith(
+            selectedMemoryCards: [],
+            isMemoryPairAttempted: false,
+            matchedPairIds: newMatchedPairs,
+            clearIsCorrect: true,
+          );
+          if (_areAllMemoryPairsMatched()) {
+            _logger.info("All memory pairs matched! Moving to next screen.");
+            _feedbackTimer = Timer(const Duration(milliseconds: 700), () {
+              if (mounted) moveToNextScreen();
+            });
+          }
+        } else {
+          state = state.copyWith(
+              selectedMemoryCards: [],
+              isMemoryPairAttempted: false,
+              clearIsCorrect: true);
+        }
+      });
+    }
+  }
+
+  bool _areAllMemoryPairsMatched() {
+    if (state.currentScreenData == null ||
+        state.currentScreenData!.screen is! MemoryScreen) {
+      return false;
+    }
+    final allOptions = state.currentScreenData!.options;
+    final Set<String> allUniquePairIds = allOptions
+        .where((opt) => opt.pairId != null && opt.pairId!.isNotEmpty)
+        .map((opt) => opt.pairId!)
+        .toSet();
+    _logger.debug(
+        "Checking all pairs: All unique pair IDs: $allUniquePairIds, Matched: ${state.matchedPairIds}");
+    return allUniquePairIds.isNotEmpty &&
+        state.matchedPairIds.containsAll(allUniquePairIds);
+  }
+
   Future<void> moveToNextScreen() async {
+    _feedbackTimer?.cancel();
     if (state.game == null || state.currentLevel == null) return;
     state =
         state.copyWith(clearIsCorrect: true, status: GameStatus.loadingScreen);
@@ -344,9 +460,10 @@ class GameViewModel extends StateNotifier<GameState> {
   }
 
   void restartGame() {
+    _feedbackTimer?.cancel();
     _logger.info("Restarting game.");
     _screenCache.clear();
-    _initializeGame();
+    initializeGame();
   }
 
   Future<void> endCurrentSession({required bool completed}) async {
@@ -417,8 +534,13 @@ class GameViewModel extends StateNotifier<GameState> {
     await _cameraController?.dispose();
     _cameraController = null;
     stopEmotionDetection();
-    _isDetecting = false;
-    state = state.copyWith(isCameraInitialized: false);
+    if (mounted) {
+      state = state.copyWith(
+          isCameraInitialized: false, clearDetectedEmotion: true);
+    } else {
+      _logger.warning(
+          "disposeCamera called but GameViewModel is not mounted. Skipping state update.");
+    }
   }
 
   CameraController? get cameraController => _cameraController;

@@ -451,4 +451,13 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get noStatsFound =>
       'Aucune statistique trouvée pour les filtres sélectionnés.';
+
+  @override
+  String get matchFound => 'Paire trouvée !';
+
+  @override
+  String get noMatchTryAgain => 'Pas de paire. Réessayez !';
+
+  @override
+  String get matched => 'Apparié';
 }

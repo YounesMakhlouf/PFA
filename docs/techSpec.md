@@ -173,7 +173,7 @@ SPEAKING_DIFFICULTIES
 
 ```sql
 MULTIPLE_CHOICE
-MEMORY_MATCH
+MEMORY
 PUZZLE
 STORY
 IDENTIFY_INTRUDER
@@ -194,34 +194,34 @@ MEMORY
 
 ### `User`
 
-| Column | Type | Description |
-| --- | --- | --- |
-| user_id | UUID (PK) | Unique identifier for user |
-| email | TEXT | Unique email address |
-| first_name | TEXT | First name of the user |
-| last_name | TEXT | Last name (optional) |
-| password | TEXT | Hashed password |
-| created_at | TIMESTAMP | Timestamp of creation |
+| Column     | Type      | Description                |
+|------------|-----------|----------------------------|
+| user_id    | UUID (PK) | Unique identifier for user |
+| email      | TEXT      | Unique email address       |
+| first_name | TEXT      | First name of the user     |
+| last_name  | TEXT      | Last name (optional)       |
+| password   | TEXT      | Hashed password            |
+| created_at | TIMESTAMP | Timestamp of creation      |
 
 ---
 
 ### `Child` (inherits from User)
 
-| Column | Type | Description |
-| --- | --- | --- |
-| user_id | UUID (PK, FK → User) | Identifier for child |
-| birthdate | DATE | Child’s birth date |
-| avatar_url | TEXT | Avatar image URL |
-| special_conditions | SpecialCondition[] | List of special conditions |
+| Column             | Type                 | Description                |
+|--------------------|----------------------|----------------------------|
+| user_id            | UUID (PK, FK → User) | Identifier for child       |
+| birthdate          | DATE                 | Child’s birth date         |
+| avatar_url         | TEXT                 | Avatar image URL           |
+| special_conditions | SpecialCondition[]   | List of special conditions |
 
 ---
 
 ### `Educator` (inherits from User)
 
-| Column | Type | Description |
-| --- | --- | --- |
-| user_id | UUID (PK, FK → User) | Identifier for educator |
-| specialty | TEXT | Educator’s specialty area |
+| Column    | Type                 | Description               |
+|-----------|----------------------|---------------------------|
+| user_id   | UUID (PK, FK → User) | Identifier for educator   |
+| specialty | TEXT                 | Educator’s specialty area |
 
 ---
 
@@ -229,57 +229,57 @@ MEMORY
 
 ### `Game`
 
-| Column | Type | Description |
-| --- | --- | --- |
-| game_id | UUID (PK) | Unique game identifier |
-| name | TEXT | Game title |
-| description | TEXT | Game description |
-| category | GameCategory | Educational category |
-| type | GameType | Game mechanics |
-| educator_id | UUID (FK → Educator) | Creator educator ID |
-| created_at | TIMESTAMP | Creation time |
-| updated_at | TIMESTAMP | Last update |
+| Column      | Type                 | Description            |
+|-------------|----------------------|------------------------|
+| game_id     | UUID (PK)            | Unique game identifier |
+| name        | TEXT                 | Game title             |
+| description | TEXT                 | Game description       |
+| category    | GameCategory         | Educational category   |
+| type        | GameType             | Game mechanics         |
+| educator_id | UUID (FK → Educator) | Creator educator ID    |
+| created_at  | TIMESTAMP            | Creation time          |
+| updated_at  | TIMESTAMP            | Last update            |
 
 ---
 
 ### `Level`
 
-| Column | Type | Description |
-| --- | --- | --- |
-| level_id | UUID (PK) | Unique level identifier |
-| game_id | UUID (FK → Game) | Associated game |
-| level_number | INT | Sequential level number per game |
-| created_at | TIMESTAMP | Creation timestamp |
-| updated_at | TIMESTAMP | Last update |
+| Column       | Type             | Description                      |
+|--------------|------------------|----------------------------------|
+| level_id     | UUID (PK)        | Unique level identifier          |
+| game_id      | UUID (FK → Game) | Associated game                  |
+| level_number | INT              | Sequential level number per game |
+| created_at   | TIMESTAMP        | Creation timestamp               |
+| updated_at   | TIMESTAMP        | Last update                      |
 
 ---
 
 ### `Screen`
 
-| Column | Type | Description |
-| --- | --- | --- |
-| screen_id | UUID (PK) | Unique screen ID |
-| level_id | UUID (FK → Level) | Associated level |
-| screen_number | INT | Order of screen in the level |
-| type | ScreenType | Type of screen (e.g. multiple choice) |
-| created_at | TIMESTAMP | Creation timestamp |
-| updated_at | TIMESTAMP | Last update |
+| Column        | Type              | Description                           |
+|---------------|-------------------|---------------------------------------|
+| screen_id     | UUID (PK)         | Unique screen ID                      |
+| level_id      | UUID (FK → Level) | Associated level                      |
+| screen_number | INT               | Order of screen in the level          |
+| type          | ScreenType        | Type of screen (e.g. multiple choice) |
+| created_at    | TIMESTAMP         | Creation timestamp                    |
+| updated_at    | TIMESTAMP         | Last update                           |
 
 ---
 
 ### `Option`
 
-| Column | Type | Description |
-| --- | --- | --- |
-| option_id | UUID (PK) | Unique option identifier |
-| screen_id | UUID (FK → Screen) | Belongs to screen |
-| label_text | TEXT | Text label for the option |
-| picture_url | TEXT | Image (optional) |
-| audio_url | TEXT | Audio cue (optional) |
-| is_correct | BOOLEAN | Whether this is the correct choice |
-| pair_id | UUID | Used for memory pair matching |
-| created_at | TIMESTAMP | Creation time |
-| updated_at | TIMESTAMP | Last update |
+| Column      | Type               | Description                        |
+|-------------|--------------------|------------------------------------|
+| option_id   | UUID (PK)          | Unique option identifier           |
+| screen_id   | UUID (FK → Screen) | Belongs to screen                  |
+| label_text  | TEXT               | Text label for the option          |
+| picture_url | TEXT               | Image (optional)                   |
+| audio_url   | TEXT               | Audio cue (optional)               |
+| is_correct  | BOOLEAN            | Whether this is the correct choice |
+| pair_id     | UUID               | Used for memory pair matching      |
+| created_at  | TIMESTAMP          | Creation time                      |
+| updated_at  | TIMESTAMP          | Last update                        |
 
 ---
 
@@ -287,32 +287,32 @@ MEMORY
 
 ### `GameSession`
 
-| Column | Type | Description |
-| --- | --- | --- |
-| session_id | UUID (PK) | Unique session ID |
-| child_id | UUID (FK → Child) | Child playing |
-| game_id | UUID (FK → Game) | Game being played |
-| level_id | UUID (FK → Level) | Level played |
-| start_time | TIMESTAMP | Session start |
-| end_time | TIMESTAMP (nullable) | Session end |
-| total_attempts | INT | Total tries |
-| correct_attempts | INT | Correct answers |
-| hints_used | INT | Number of hints |
-| completed | BOOLEAN | Whether session was completed |
+| Column           | Type                 | Description                   |
+|------------------|----------------------|-------------------------------|
+| session_id       | UUID (PK)            | Unique session ID             |
+| child_id         | UUID (FK → Child)    | Child playing                 |
+| game_id          | UUID (FK → Game)     | Game being played             |
+| level_id         | UUID (FK → Level)    | Level played                  |
+| start_time       | TIMESTAMP            | Session start                 |
+| end_time         | TIMESTAMP (nullable) | Session end                   |
+| total_attempts   | INT                  | Total tries                   |
+| correct_attempts | INT                  | Correct answers               |
+| hints_used       | INT                  | Number of hints               |
+| completed        | BOOLEAN              | Whether session was completed |
 
 ---
 
 ### `ScreenAttempt`
 
-| Column | Type | Description |
-| --- | --- | --- |
-| attempt_id | UUID (PK) | Unique ID for the attempt |
-| session_id | UUID (FK → GameSession) | Which session this belongs to |
-| screen_id | UUID (FK → Screen) | Screen attempted |
-| selected_option_ids | UUID[] | List of selected options |
-| timestamp | TIMESTAMP | When it happened |
-| is_correct | BOOLEAN | Whether it was a correct answer |
-| time_taken_ms | INT | Time taken in milliseconds |
+| Column              | Type                    | Description                     |
+|---------------------|-------------------------|---------------------------------|
+| attempt_id          | UUID (PK)               | Unique ID for the attempt       |
+| session_id          | UUID (FK → GameSession) | Which session this belongs to   |
+| screen_id           | UUID (FK → Screen)      | Screen attempted                |
+| selected_option_ids | UUID[]                  | List of selected options        |
+| timestamp           | TIMESTAMP               | When it happened                |
+| is_correct          | BOOLEAN                 | Whether it was a correct answer |
+| time_taken_ms       | INT                     | Time taken in milliseconds      |
 
 - **15.Supabase Storage Configuration**
 
@@ -369,12 +369,12 @@ MEMORY
 
     ---
 
-    | Event | Action |
-    | --- | --- |
-    | App Launch | Load profile, progress, levels list  |
-    | Level Complete | Update progress + remove old level, prefetch next |
+    | Event                 | Action                                                             |
+    |-----------------------|--------------------------------------------------------------------|
+    | App Launch            | Load profile, progress, levels list                                |
+    | Level Complete        | Update progress + remove old level, prefetch next                  |
     | User Switches Profile | Load relevant user data and clear cache of previous user if needed |
-    | Reconnect Online | Sync progress and refresh level metadata |
+    | Reconnect Online      | Sync progress and refresh level metadata                           |
 
 
 ---

@@ -199,5 +199,8 @@
   "overallStatsTitle": "الأداء العام",
   "categoryAccuracyChartTitle": "الدقة حسب الفئة (كل الأوقات)",
   "noChartDataAvailable": "لا توجد بيانات كافية لعرض الرسم البياني.",
-  "noStatsFound": "لم يتم العثور على إحصائيات للمرشحات المحددة."
+  "noStatsFound": "لم يتم العثور على إحصائيات للمرشحات المحددة.",
+  "matchFound": "وجد تطابق!",
+  "noMatchTryAgain": "لا يوجد تطابق. حاول مرة أخرى!",
+  "matched": "متطابق"
 }
