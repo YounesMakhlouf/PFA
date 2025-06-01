@@ -1719,6 +1719,15 @@ class MockAppLocalizations extends _i1.Mock implements _i15.AppLocalizations {
       ) as String);
 
   @override
+  String get matched => (super.noSuchMethod(
+        Invocation.getter(#matched),
+        returnValue: _i10.dummyValue<String>(
+          this,
+          Invocation.getter(#matched),
+        ),
+      ) as String);
+
+  @override
   String errorLoadingGamesDetails(Object? error) => (super.noSuchMethod(
         Invocation.method(
           #errorLoadingGamesDetails,

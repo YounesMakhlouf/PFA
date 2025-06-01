@@ -927,6 +927,12 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'لا يوجد تطابق. حاول مرة أخرى!'**
   String get noMatchTryAgain;
+
+  /// No description provided for @matched.
+  ///
+  /// In ar, this message translates to:
+  /// **'متطابق'**
+  String get matched;
 }
 
 class _AppLocalizationsDelegate

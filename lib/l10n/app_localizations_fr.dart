@@ -457,4 +457,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get noMatchTryAgain => 'Pas de paire. Réessayez !';
+
+  @override
+  String get matched => 'Apparié';
 }

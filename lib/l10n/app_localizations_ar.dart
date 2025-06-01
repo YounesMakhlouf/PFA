@@ -445,4 +445,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noMatchTryAgain => 'لا يوجد تطابق. حاول مرة أخرى!';
+
+  @override
+  String get matched => 'متطابق';
 }

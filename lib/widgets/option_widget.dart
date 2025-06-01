@@ -19,6 +19,7 @@ class OptionWidget extends ConsumerWidget {
   final bool isMatched; // Memory Game: Is part of a successfully matched pair
   final bool isStory;
   final double size;
+  static const Key semanticsKey = ValueKey('OptionWidget.Semantics');
 
   const OptionWidget({
     super.key,
@@ -122,11 +123,11 @@ class OptionWidget extends ConsumerWidget {
 
     // Use Semantics for accessibility
     return Semantics(
+      key: OptionWidget.semanticsKey,
       button: true,
       label: option.labelText ??
           (fullImageUrl != null ? l10n.imageOption : l10n.selectableOption),
-      value: isSelected ? l10n.selected : (isMatched ? "matched" : null),
-      // TODO: Add "matched" to l10n
+      value: isSelected ? l10n.selected : (isMatched ? l10n.matched : null),
       enabled: !isDisabled,
       explicitChildNodes: true,
       child: IgnorePointer(
@@ -137,8 +138,8 @@ class OptionWidget extends ConsumerWidget {
             width: size,
             height: size,
             child: Card(
-              elevation: !isDisabled ? theme.cardTheme.elevation : 0.5,
-              shape: theme.cardTheme.shape,
+              elevation: !isDisabled && !isMatched ? theme.cardTheme.elevation : (isMatched ? 1.0 : 0.5),
+              shape: cardShape,
               clipBehavior: theme.cardTheme.clipBehavior ?? Clip.antiAlias,
               color: cardBackgroundColor,
               margin: EdgeInsets.zero,
