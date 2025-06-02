@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i10;
 import 'package:pfa/l10n/app_localizations.dart' as _i15;
+import 'package:pfa/models/emotions_enum.dart';
 import 'package:pfa/models/enums.dart' as _i18;
 import 'package:pfa/models/game.dart' as _i7;
 import 'package:pfa/models/game_session.dart' as _i2;
