@@ -66,7 +66,6 @@ class GameState {
     int? currentScreenIndex,
     bool? isCorrect,
     bool clearIsCorrect = false,
-    bool clearDetectedEmotion = false,
     List<Option>? selectedMemoryCards,
     bool? isMemoryPairAttempted,
     Set<String>? matchedPairIds,
