@@ -65,7 +65,7 @@ class AppInitializer extends ConsumerWidget {
         ref
             .read(loggingServiceProvider)
             .error("Error checking onboarding status", err, stack);
-        return MyApp(showOnboarding: true);
+        return const MyApp(showOnboarding: true);
       },
     );
   }
@@ -86,7 +86,7 @@ class MyApp extends ConsumerWidget {
       locale: currentLocale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
     );
   }
 }

@@ -1,0 +1,206 @@
+{
+  "@@locale": "ar",
+  "appTitle": "تطبيق تعلم التوحد",
+  "learningGames": "ألعاب التعلم",
+  "logicalThinking": "التفكير المنطقي",
+  "education": "التعليم",
+  "relaxation": "الاسترخاء",
+  "emotions": "المشاعر",
+  "numbers": "الأرقام",
+  "colorsAndShapes": "ألوان وأشكال",
+  "animals": "الحيوانات",
+  "fruitsAndVegetables": "خضر و غلال",
+  "statsTitle": "الاحصائيات",
+  "globalStatsTitle": "الإحصائيات العامة",
+  "categoryStatsTitle": "الإحصائيات حسب الفئة",
+  "accuracy": "معدل الاجابات الصحيحة",
+  "averageTime": "متوسط الوقت",
+  "hintsUsed": "التلميحات المستخدمة",
+  "all": "الكل",
+  "periodThisWeek": "هذا الأسبوع",
+  "statsError": "لا توجد إحصائيات متوفرة، حاول مرة أخرى لاحقا",
+  "viewStats": "الاطلاع على الاحصائيات",
+  "chooseCorrectColor": "اختر اللون الصحيح",
+  "red": "أحمر",
+  "green": "أخضر",
+  "blue": "أزرق",
+  "yellow": "أصفر",
+  "purple": "بنفسجي",
+  "autism": "التوحد",
+  "adhd": "فرط الحركة ونقص الانتباه",
+  "dyslexia": "عسر القراءة",
+  "dyscalculia": "عسر الحساب",
+  "speakingDifficulties": "صعوبات في النطق",
+  "unknownCategory": "أخرى",
+  "unknownScreenType": "غير معروف نوع الشاشة",
+  "applicationError": "خطأ في التطبيق",
+  "errorLoadingGamesDetails": "خطأ في تحميل الألعاب: {error}",
+  "@errorLoadingGamesDetails": {
+    "description": "رسالة خطأ عند فشل تحميل تفاصيل الألعاب.",
+    "placeholders": {
+      "error": {
+        "type": "Object",
+        "example": "Network timeout"
+      }
+    }
+  },
+  "errorLoadingCategoryGamesDetails": "خطأ في تحميل الألعاب للفئة {categoryName}: {error}",
+  "@errorLoadingCategoryGamesDetails": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String",
+        "example": "الألوان"
+      },
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "errorLoadingProfileDetails": "خطأ في تحميل بيانات الملف الشخصي: {error}",
+  "@errorLoadingProfileDetails": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "errorCheckingAuthDetails": "خطأ في التحقق من تسجيل الدخول: {error}",
+  "@errorCheckingAuthDetails": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "noGameCategoriesAvailable": "لا توجد فئات ألعاب متاحة.",
+  "noGamesInCategoryAvailable": "لا توجد ألعاب متاحة في فئة {categoryName} حالياً.",
+  "@noGamesInCategoryAvailable": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "authenticating": "جاري المصادقة...",
+  "appFailedToInitialize": "فشل تهيئة التطبيق: {error}",
+  "@appFailedToInitialize": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "featureNotImplemented": "هذه الميزة لم تنفذ بعد.",
+  "errorCategoryMissing": "خطأ: الفئة مفقودة.",
+  "errorGameCategoryOrIdMissing": "خطأ: فئة اللعبة أو المعرف مفقود.",
+  "errorChildIdMissing": "خطأ: معرف الطفل مفقود",
+  "correct": "صحيح!",
+  "tryAgain": "حاول مرة أخرى!",
+  "level": "المستوى",
+  "screen": "الشاشة",
+  "memoryGameUnderDevelopment": "لعبة الذاكرة قيد التطوير",
+  "goBack": "رجوع",
+  "selectableOption": "خيار قابل للتحديد",
+  "selected": "تم التحديد",
+  "selectCorrectOption": "حدد الخيار الصحيح",
+  "signIn": "تسجيل الدخول",
+  "signUp": "إنشاء حساب",
+  "enterEmail": "أدخل بريدك الإلكتروني",
+  "validEmailError": "الرجاء إدخال عنوان بريد إلكتروني صالح",
+  "enterPassword": "أدخل كلمة المرور الخاصة بك",
+  "passwordLengthError": "الرجاء إدخال كلمة مرور تتكون من 6 أحرف على الأقل",
+  "forgotPassword": "هل نسيت كلمة المرور؟",
+  "dontHaveAccount": "ليس لديك حساب؟ أنشئ حسابًا",
+  "haveAccount": "هل لديك حساب بالفعل؟ تسجيل الدخول",
+  "sendPasswordReset": "إرسال بريد إعادة تعيين كلمة المرور",
+  "passwordResetSent": "تم إرسال بريد إعادة تعيين كلمة المرور",
+  "backToSignIn": "العودة لتسجيل الدخول",
+  "unexpectedError": "حدث خطأ غير متوقع",
+  "requiredFieldError": "هذا الحقل مطلوب",
+  "confirmPasswordError": "كلمات المرور غير متطابقة",
+  "confirmPassword": "تأكيد كلمة المرور",
+  "createChildProfileTitle": "إنشاء ملف تعريف الطفل",
+  "selectAvatarPrompt": "اختر صورة رمزية",
+  "firstNameLabel": "الاسم الأول",
+  "enterFirstNameHint": "أدخل الاسم الأول",
+  "errorFirstNameRequired": "الرجاء إدخال الاسم الأول",
+  "lastNameLabelOptional": "اسم العائلة (اختياري)",
+  "enterLastNameHintOptional": "أدخل اسم العائلة (اختياري)",
+  "birthdateLabelOptional": "تاريخ الميلاد (اختياري)",
+  "selectDateButton": "تحديد التاريخ",
+  "specialConditionsLabelOptional": "الحالات الخاصة (اختياري)",
+  "createProfileButton": "إنشاء الملف الشخصي",
+  "profileCreatedSuccess": "تم إنشاء الملف الشخصي لـ {firstName}!",
+  "@profileCreatedSuccess": {
+    "description": "رسالة نجاح بعد إنشاء ملف تعريف الطفل.",
+    "placeholders": {
+      "firstName": {
+        "type": "String",
+        "example": "يونس"
+      }
+    }
+  },
+  "errorCreatingProfile": "تعذر إنشاء الملف الشخصي. الرجاء المحاولة مرة أخرى.",
+  "logout": "تسجيل الخروج",
+  "errorScreenRestartInstruction": "يرجى إغلاق التطبيق وإعادة فتحه.",
+  "selectChildProfileTitle": "اختر الملف الشخصي",
+  "whoIsPlayingPrompt": "من يلعب؟",
+  "addChildProfileButton": "إضافة ملف تعريف طفل",
+  "manageProfilesTooltip": "إدارة الملفات الشخصية",
+  "switchChildProfileButton": "تبديل الملف الشخصي",
+  "onlyOneProfileExists": "يوجد ملف شخصي واحد فقط.",
+  "loading": "جار التحميل...",
+  "gameOver": "انتهت اللعبة!",
+  "congratulationsAllLevelsComplete": "تهانينا! لقد أكملت جميع المستويات!",
+  "playAgain": "العب مرة أخرى",
+  "backToGames": "العودة إلى الألعاب",
+  "exitGameTooltip": "الخروج من اللعبة",
+  "exitGameConfirmationTitle": "الخروج من اللعبة؟",
+  "exitGameConfirmationMessage": "هل أنت متأكد أنك تريد الخروج؟ قد يتم فقدان تقدمك الحالي في هذا المستوى.",
+  "cancelButton": "إلغاء",
+  "exitButton": "خروج",
+  "repeatInstructionTooltip": "إعادة التعليمات",
+  "onboardingDesc1": "هذا التطبيق صُمم خصيصًا للأطفال ذوي الاحتياجات الخاصة. لنلعب ونتعلم معًا بطريقة ممتعة وآمنة.",
+  "onboardingDesc2": "تابعوا تقدم أطفالكم، واكتشفوا الأنشطة التي تنمي مهاراتهم بطريقة ذكية ومبسطة.",
+  "onboardingSkipButton": "تخطى",
+  "onboardingGetStartedButton": "ابدأ الآن",
+  "loadingProfilesMessage": "جاري تحميل الملفات الشخصية...",
+  "noProfilesFoundMessage": "لم يتم العثور على ملفات شخصية...",
+  "settingsTitle": "الإعدادات",
+  "ttsEnabledSetting": "تمكين تحويل النص إلى كلام",
+  "soundEffectsEnabledSetting": "تمكين المؤثرات الصوتية",
+  "loadingSetting": "جاري تحميل الإعداد...",
+  "errorLoadingSetting": "خطأ في تحميل الإعداد",
+  "languageSetting": "اللغة",
+  "selectLanguageDialogTitle": "اختر اللغة",
+  "ttsSpeechRateSetting": "سرعة الكلام",
+  "ttsRateSlow": "بطيء",
+  "ttsRateNormal": "عادي",
+  "ttsRateFast": "سريع",
+  "hapticsEnabledSetting": "تمكين ردود الفعل اللمسية",
+  "settingsSectionAudio": "الصوت والتعليقات",
+  "settingsSectionGeneral": "عام",
+  "oopsSomethingWentWrong": "عفواً! حدث خطأ ما.",
+  "retryButton": "حاول مرة أخرى",
+  "closeAppButton": "إغلاق التطبيق",
+  "errorScreenContactSupport": "إذا استمرت المشكلة، يرجى الاتصال بالدعم أو المحاولة مرة أخرى لاحقًا.",
+  "imageOption": "خيار صورة",
+  "loadingUserData": "جاري تحميل بيانات المستخدم...",
+  "noGameCategoriesAvailableMessage": "لا توجد فئات ألعاب متاحة حالياً.",
+  "loadingGamesFor": "جاري تحميل الألعاب للفئة {categoryName}...",
+  "@loadingGamesFor": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "allCategoriesFilter": "جميع الفئات",
+  "overallStatsTitle": "الأداء العام",
+  "categoryAccuracyChartTitle": "الدقة حسب الفئة (كل الأوقات)",
+  "noChartDataAvailable": "لا توجد بيانات كافية لعرض الرسم البياني.",
+  "noStatsFound": "لم يتم العثور على إحصائيات للمرشحات المحددة.",
+  "matchFound": "وجد تطابق!",
+  "noMatchTryAgain": "لا يوجد تطابق. حاول مرة أخرى!",
+  "matched": "متطابق"
+}

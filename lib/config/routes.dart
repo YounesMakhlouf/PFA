@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/models/game.dart';
-import 'package:pfa/models/user.dart';
 import 'package:pfa/screens/auth_gate.dart';
 import 'package:pfa/screens/category_screen.dart';
 import 'package:pfa/screens/create_child_profile_screen.dart';
@@ -32,21 +32,14 @@ class AppRoutes {
       home: (context) => const HomeScreen(),
       createChildProfile: (context) => const CreateChildProfileScreen(),
       settings: (context) => const SettingsScreen(),
-      selectChildProfile: (context) {
-        final args =
-            ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-        final profiles = args?['profiles'] as List<Child>?;
-        if (profiles == null) {
-          return ErrorScreen(errorMessage: "Profiles missing");
-        }
-        return SelectChildProfileScreen(profiles: profiles);
-      },
+      selectChildProfile: (context) => const SelectChildProfileScreen(),
       categoryGames: (context) {
         final args =
             ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
         final category = args?['category'] as GameCategory?;
         if (category == null) {
-          return ErrorScreen(errorMessage: "Error: Category missing");
+          return ErrorScreen(
+              errorMessage: AppLocalizations.of(context)!.errorCategoryMissing);
         }
         return CategoryGamesScreen(category: category);
       },
@@ -57,7 +50,8 @@ class AppRoutes {
 
         if (gameId == null) {
           return ErrorScreen(
-            errorMessage: 'Error: Game category or ID missing',
+            errorMessage:
+                AppLocalizations.of(context)!.errorGameCategoryOrIdMissing,
           );
         }
         return MultipleChoiceGame(gameId: gameId);
@@ -68,7 +62,8 @@ class AppRoutes {
         final childUuid = args?['childUuid'] as String?;
 
         if (childUuid == null) {
-          return ErrorScreen(errorMessage: "Child identifier is missing");
+          return ErrorScreen(
+              errorMessage: AppLocalizations.of(context)!.errorChildIdMissing);
         }
 
         return StatsScreen(childUuid: childUuid);

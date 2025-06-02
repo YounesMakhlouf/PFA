@@ -165,7 +165,7 @@ class GameRepository {
           screenObject = MultipleChoiceScreen.fromJson(screenData);
           _logger.debug("Created MultipleChoiceScreen for $screenId");
           break;
-        case ScreenType.MEMORY_MATCH:
+        case ScreenType.MEMORY:
           screenObject = MemoryScreen.fromJson(screenData);
           _logger.debug("Created MemoryScreen for $screenId");
           break;

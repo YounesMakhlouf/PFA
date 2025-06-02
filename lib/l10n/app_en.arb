@@ -1,0 +1,206 @@
+{
+  "@@locale": "en",
+  "appTitle": "Autism Learning App",
+  "learningGames": "Learning Games",
+  "logicalThinking": "Logical Thinking",
+  "education": "Education",
+  "relaxation": "Relaxation",
+  "emotions": "Emotions",
+  "numbers": "Numbers",
+  "colorsAndShapes": "Colors and Shapes",
+  "animals": "Animals",
+  "fruitsAndVegetables": "Fruits and Vegetables",
+  "statsTitle": "Stats",
+  "globalStatsTitle": "Global Statistics",
+  "categoryStatsTitle": "Category Statistics",
+  "accuracy": "Accuracy",
+  "averageTime": "Avg time",
+  "hintsUsed": "Hints Used",
+  "all": "All",
+  "periodThisWeek": "This week",
+  "statsError": "No stats available, try again later",
+  "viewStats": "View Stats",
+  "chooseCorrectColor": "Choose the correct color",
+  "red": "Red",
+  "green": "Green",
+  "blue": "Blue",
+  "yellow": "Yellow",
+  "purple": "Purple",
+  "autism": "Autism",
+  "adhd": "ADHD",
+  "dyslexia": "Dyslexia",
+  "dyscalculia": "Dyscalculia",
+  "speakingDifficulties": "Speaking Difficulties",
+  "unknownCategory": "Other",
+  "unknownScreenType": "Unknown screen type",
+  "applicationError": "Application Error",
+  "errorLoadingGamesDetails": "Error loading games: {error}",
+  "@errorLoadingGamesDetails": {
+    "description": "Error message when game details fail to load.",
+    "placeholders": {
+      "error": {
+        "type": "Object",
+        "example": "Network timeout"
+      }
+    }
+  },
+  "errorLoadingCategoryGamesDetails": "Error loading games for {categoryName}: {error}",
+  "@errorLoadingCategoryGamesDetails": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String",
+        "example": "Colors"
+      },
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "errorLoadingProfileDetails": "Error loading profile data: {error}",
+  "@errorLoadingProfileDetails": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "errorCheckingAuthDetails": "Error checking authentication: {error}",
+  "@errorCheckingAuthDetails": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "noGameCategoriesAvailable": "No game categories available.",
+  "noGamesInCategoryAvailable": "No games available in the {categoryName} category yet.",
+  "@noGamesInCategoryAvailable": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "authenticating": "Authenticating...",
+  "appFailedToInitialize": "App failed to initialize: {error}",
+  "@appFailedToInitialize": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "featureNotImplemented": "This feature is not implemented yet.",
+  "errorCategoryMissing": "Error: Category is missing.",
+  "errorGameCategoryOrIdMissing": "Error: Game category or ID is missing.",
+  "errorChildIdMissing": "Error: Child identifier is missing",
+  "correct": "Correct!",
+  "tryAgain": "Try again!",
+  "level": "Level",
+  "screen": "Screen",
+  "memoryGameUnderDevelopment": "Memory game under development",
+  "goBack": "Go Back",
+  "selectableOption": "Selectable option",
+  "selected": "Selected",
+  "selectCorrectOption": "Select the correct option",
+  "signIn": "Sign In",
+  "signUp": "Sign Up",
+  "enterEmail": "Enter your email",
+  "validEmailError": "Please enter a valid email address",
+  "enterPassword": "Enter your password",
+  "passwordLengthError": "Please enter a password that is at least 6 characters long",
+  "forgotPassword": "Forgot your password?",
+  "dontHaveAccount": "Don't have an account? Sign up",
+  "haveAccount": "Already have an account? Sign in",
+  "sendPasswordReset": "Send password reset email",
+  "passwordResetSent": "Password reset email has been sent",
+  "backToSignIn": "Back to sign in",
+  "unexpectedError": "An unexpected error occurred",
+  "requiredFieldError": "This field is required",
+  "confirmPasswordError": "Passwords do not match",
+  "confirmPassword": "Confirm Password",
+  "createChildProfileTitle": "Create Child Profile",
+  "selectAvatarPrompt": "Choose an Avatar",
+  "firstNameLabel": "First Name",
+  "enterFirstNameHint": "Enter first name",
+  "errorFirstNameRequired": "Please enter a first name",
+  "lastNameLabelOptional": "Last Name (Optional)",
+  "enterLastNameHintOptional": "Enter last name (optional)",
+  "birthdateLabelOptional": "Birthdate (Optional)",
+  "selectDateButton": "Select Date",
+  "specialConditionsLabelOptional": "Special Conditions (Optional)",
+  "createProfileButton": "Create Profile",
+  "profileCreatedSuccess": "Profile created for {firstName}!",
+  "@profileCreatedSuccess": {
+    "description": "Success message after creating a child profile.",
+    "placeholders": {
+      "firstName": {
+        "type": "String",
+        "example": "Alex"
+      }
+    }
+  },
+  "errorCreatingProfile": "Could not create profile. Please try again.",
+  "logout": "Logout",
+  "errorScreenRestartInstruction": "Please close and reopen the application.",
+  "selectChildProfileTitle": "Select Profile",
+  "whoIsPlayingPrompt": "Who is playing?",
+  "addChildProfileButton": "Add Another Profile",
+  "manageProfilesTooltip": "Manage Profiles",
+  "switchChildProfileButton": "Switch Profile",
+  "onlyOneProfileExists": "Only one profile exists.",
+  "loading": "Loading...",
+  "gameOver": "Game Over!",
+  "congratulationsAllLevelsComplete": "Congratulations! You've completed all levels!",
+  "playAgain": "Play Again",
+  "backToGames": "Back to Games",
+  "exitGameTooltip": "Exit Game",
+  "exitGameConfirmationTitle": "Exit Game?",
+  "exitGameConfirmationMessage": "Are you sure you want to quit? Your current progress in this level might be lost.",
+  "cancelButton": "Cancel",
+  "exitButton": "Exit",
+  "repeatInstructionTooltip": "Repeat Instruction",
+  "onboardingDesc1": "This app is specially designed for children with special needs. Let's play and learn together in a fun and safe way.",
+  "onboardingDesc2": "Track your children's progress and discover activities that develop their skills in smart and simple ways.",
+  "onboardingSkipButton": "Skip",
+  "onboardingGetStartedButton": "Get Started",
+  "loadingProfilesMessage": "Loading profiles...",
+  "noProfilesFoundMessage": "No profiles found...",
+  "settingsTitle": "Settings",
+  "ttsEnabledSetting": "Enable Text-to-Speech",
+  "soundEffectsEnabledSetting": "Enable Sound Effects",
+  "loadingSetting": "Loading setting...",
+  "errorLoadingSetting": "Error loading setting",
+  "languageSetting": "Language",
+  "selectLanguageDialogTitle": "Select Language",
+  "ttsSpeechRateSetting": "Speech Rate",
+  "ttsRateSlow": "Slow",
+  "ttsRateNormal": "Normal",
+  "ttsRateFast": "Fast",
+  "hapticsEnabledSetting": "Enable Haptic Feedback",
+  "settingsSectionAudio": "Audio & Feedback",
+  "settingsSectionGeneral": "General",
+  "oopsSomethingWentWrong": "Oops! Something went wrong.",
+  "retryButton": "Try Again",
+  "closeAppButton": "Close App",
+  "errorScreenContactSupport": "If the problem persists, please contact support or try again later.",
+  "imageOption": "Image Option",
+  "loadingUserData": "Loading user data...",
+  "noGameCategoriesAvailableMessage": "No game categories available at the moment.",
+  "loadingGamesFor": "Loading games for {categoryName}...",
+  "@loadingGamesFor": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "allCategoriesFilter": "All Categories",
+  "overallStatsTitle": "Overall Performance",
+  "categoryAccuracyChartTitle": "Accuracy by Category (All Time)",
+  "noChartDataAvailable": "Not enough data to display chart.",
+  "noStatsFound": "No statistics found for the selected filters.",
+  "matchFound": "Match Found!",
+  "noMatchTryAgain": "No Match. Try Again!",
+  "matched": "Matched"
+}

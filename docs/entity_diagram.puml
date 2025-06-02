@@ -46,7 +46,7 @@ enum GameCategory {
 
 enum GameType {
   MULTIPLE_CHOICE
-  MEMORY_MATCH
+  MEMORY
   PUZZLE
   STORY
   IDENTIFY_INTRUDER
@@ -54,25 +54,33 @@ enum GameType {
 
 ' --- User Hierarchy ---
 
-abstract class User {
-  + userId: UUID
-  # email: String
-  # password: String
-  + createdAt: Timestamp
-}
-
-class Educator extends User {
+class Educator extends Account {
   + speciality: String
 }
 
-class Child extends User {
-  ' userId, email, password, createdAt inherited from User
-  + firstName: String
-  + lastName: String
-  + birthdate: Date
-  + avatarUrl: URL
-  + specialConditions: SpecialCondition[]
+class Account {
+  + accountId: UUID  ' This is auth.users.id
+  + email: String
+  ' password handled by Supabase Auth
+  + createdAt: Timestamp
 }
+note top of Account : Represents the Parent/Educator's login account.\nManaged by Supabase Auth.
+
+class Child {
+  + childId: UUID ' PK for child profile
+  + accountId: UUID ' FK to Account (auth.users.id)
+  + firstName: String
+  + lastName: String {nullable}
+  + birthdate: Date {nullable}
+  + avatarUrl: String {nullable} ' Path in storage or full URL
+  + specialConditions: SpecialCondition[] {nullable}
+  + createdAt: Timestamp
+  + updatedAt: Timestamp
+  --
+  + get fullName(): String
+  + get age(): Int {nullable}
+}
+
 
 ' --- Game Structure ---
 
@@ -90,6 +98,7 @@ class Game {
 class Level {
   + levelId: UUID
   + levelNumber: Int
+  + description: String {nullable}
   --
   + getScreens(): Screen[]
 }
@@ -97,9 +106,10 @@ class Level {
 abstract class Screen {
   + screenId: UUID
   + screenNumber: Int
+  + type: ScreenType
+  + instruction: String {nullable}
   --
   + {abstract} getOptions(): Option[]
-  + {abstract} checkAnswer(selectedOptions: Option[]): Boolean
 }
 
 class MultipleChoiceScreen extends Screen {
@@ -122,7 +132,9 @@ end note
 class Option {
   + optionId: UUID
   + labelText: String {nullable}
-  + pictureUrl: URL {nullable}
+  + picturePath: String {nullable} ' Path in Supabase Storage
+  + audioPath: String {nullable} ' Path in Supabase Storage
+  + isCorrect: Boolean ' For multiple choice
   + pairId: UUID {nullable} ' Identifier to link pairs in Memory games
 }
 note bottom of Option
@@ -137,7 +149,9 @@ class GameSession {
   + sessionId: UUID
   + startTime: Timestamp
   + endTime: Timestamp {nullable}
-  + overallResult: String {nullable}
+  + completed: Boolean
+  + totalAttempts: Int
+  + correctAttempts: Int
 }
 
 class ScreenAttempt {
@@ -150,6 +164,7 @@ class ScreenAttempt {
 
 
 ' --- Relationships ---
+Account "1" -- "0..*" Child : manages >
 Educator "1" -- "0..*" Game : creates
 
 ' Game Structure Relationships

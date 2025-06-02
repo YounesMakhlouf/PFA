@@ -20,7 +20,7 @@ class GenericLoadingScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     final String effectiveLottiePath =
@@ -68,9 +68,6 @@ class GenericLoadingScreen extends ConsumerWidget {
       appBar: showAppBar
           ? AppBar(
               title: Text(appBarTitle ?? l10n.loading),
-              backgroundColor: theme.appBarTheme.backgroundColor,
-              foregroundColor: theme.appBarTheme.foregroundColor,
-              elevation: theme.appBarTheme.elevation,
               automaticallyImplyLeading: false,
             )
           : null,

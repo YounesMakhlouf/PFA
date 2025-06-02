@@ -1,14 +1,14 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pfa/config/app_theme.dart';
+import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/models/screen.dart';
+import 'package:pfa/providers/global_providers.dart';
 import 'package:pfa/screens/error_screen.dart';
 import 'package:pfa/screens/game_screen.dart';
-import 'package:pfa/l10n/app_localizations.dart';
-import 'package:pfa/providers/global_providers.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/screens/generic_loading_screen.dart';
 import 'package:pfa/utils/color_utils.dart';
 import 'package:pfa/viewmodels/game_state.dart';
@@ -56,7 +56,7 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
     final gameViewModel =
         ref.read(gameViewModelProvider(widget.gameId).notifier);
     final logger = ref.read(loggingServiceProvider);
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final translationService = ref.read(translationServiceProvider);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -75,8 +75,8 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
       case GameStatus.loadingLevel:
       case GameStatus.loadingScreen:
         return GenericLoadingScreen(
-            message: translationService.getTranslatedText(
-                context, gameState.game!.name));
+            message: translationService
+                .getLocalizedTextFromAppLocale(gameState.game!.name));
 
       case GameStatus.error:
         return Scaffold(
@@ -108,7 +108,7 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
                   ElevatedButton.icon(
                       icon: const Icon(Icons.refresh),
                       onPressed: () => gameViewModel.restartGame(),
-                      label: Text(l10n.retry),
+                      label: Text(l10n.retryButton),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: colorScheme.errorContainer,
                           foregroundColor: colorScheme.onErrorContainer)),
@@ -148,8 +148,7 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
                       const SizedBox(height: 24),
                       Text(
                         l10n.congratulationsAllLevelsComplete,
-                        style: theme.textTheme.headlineSmall
-                            ?.copyWith(color: AppColors.textPrimary),
+                        style: theme.textTheme.headlineSmall,
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 32),
@@ -175,13 +174,18 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
                 alignment: Alignment.topCenter, // Emitter position
                 child: ConfettiWidget(
                   confettiController: _confettiController,
-                  blastDirectionality:
-                      BlastDirectionality.explosive, // Shoots in all directions
-                  shouldLoop: false, // Only shoot once
-                  numberOfParticles: 20, // Number of particles to emit
-                  gravity: 0.1, // How fast particles fall
-                  emissionFrequency: 0.05, // How often it emits
-                  maxBlastForce: 20, // Applied to particles at launch
+                  blastDirectionality: BlastDirectionality.explosive,
+                  // Shoots in all directions
+                  shouldLoop: false,
+                  // Only shoot once
+                  numberOfParticles: 20,
+                  // Number of particles to emit
+                  gravity: 0.1,
+                  // How fast particles fall
+                  emissionFrequency: 0.05,
+                  // How often it emits
+                  maxBlastForce: 20,
+                  // Applied to particles at launch
                   minBlastForce: 5,
                   colors: const [
                     Colors.green,
@@ -210,30 +214,27 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
 
         final gameThemeColor = gameState.game?.themeColorCode
             .parseToColor(fallbackColor: fallbackColor);
-        final appBarForegroundColor = theme.colorScheme.onPrimary;
 
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              translationService.getTranslatedText(
-                  context, gameState.game!.name),
+              translationService
+                  .getLocalizedTextFromAppLocale(gameState.game!.name),
             ),
             backgroundColor: gameThemeColor?.withAlpha((0.9 * 255).round()),
-            foregroundColor: appBarForegroundColor,
             elevation: theme.appBarTheme.elevation,
             actions: [
               if (gameState.currentScreenData?.screen.instruction != null &&
                   gameState.currentScreenData!.screen.instruction!.isNotEmpty)
                 IconButton(
-                  icon: Icon(Icons.volume_up_outlined,
-                      color: appBarForegroundColor),
+                  icon: const Icon(Icons.volume_up_outlined),
                   tooltip: l10n.repeatInstructionTooltip,
                   onPressed: () =>
                       gameViewModel.repeatCurrentScreenInstruction(),
                 ),
             ],
             leading: IconButton(
-              icon: Icon(Icons.close, color: appBarForegroundColor),
+              icon: const Icon(Icons.close),
               tooltip: l10n.exitGameTooltip,
               onPressed: () async {
                 final bool? shouldExit = await showDialog<bool>(
@@ -306,11 +307,11 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
               currentScreenNumber: gameState.currentScreenIndex + 1,
               isCorrect: gameState.isCorrect,
               onOptionSelected: (Option selectedOption) {
-                gameViewModel.checkAnswer(
-                    selectedOption: selectedOption,
-                    correctFeedbackText: l10n.correct,
-                    tryAgainFeedbackText: l10n.tryAgain);
+                gameViewModel.handleOptionSelected(selectedOption);
               },
+              selectedMemoryCards: gameState.selectedMemoryCards,
+              isMemoryPairAttempted: gameState.isMemoryPairAttempted,
+              matchedPairIds: gameState.matchedPairIds,
             ),
           ),
         );

@@ -1,0 +1,206 @@
+{
+  "@@locale": "fr",
+  "appTitle": "Application d'Apprentissage pour l'Autisme",
+  "learningGames": "Jeux d'Apprentissage",
+  "logicalThinking": "Pensée Logique",
+  "education": "Éducation",
+  "relaxation": "Relaxation",
+  "emotions": "Émotions",
+  "numbers": "Nombres",
+  "colorsAndShapes": "Couleurs et Formes",
+  "animals": "Animaux",
+  "fruitsAndVegetables": "Fruits et Légumes",
+  "statsTitle": "Statistiques",
+  "globalStatsTitle": "Statistiques globales",
+  "categoryStatsTitle": "Statistiques par catégorie",
+  "accuracy": "Précision",
+  "averageTime": "Temps Moyen",
+  "hintsUsed": "Indices utilisés",
+  "all": "Tout",
+  "periodThisWeek": "Cette Semaine",
+  "statsError": "Aucune statistique disponible, réessayez plus tard",
+  "viewStats": "Consulter les statistiques",
+  "chooseCorrectColor": "Choisissez la bonne couleur",
+  "red": "Rouge",
+  "green": "Vert",
+  "blue": "Bleu",
+  "yellow": "Jaune",
+  "purple": "Violet",
+  "autism": "Autisme",
+  "adhd": "TDAH",
+  "dyslexia": "Dyslexie",
+  "dyscalculia": "Dyscalculie",
+  "speakingDifficulties": "Difficultés d'Élocution",
+  "unknownCategory": "Autre",
+  "unknownScreenType": "Type d'écran inconnu",
+  "applicationError": "Erreur d'Application",
+  "errorLoadingGamesDetails": "Erreur lors du chargement des jeux : {error}",
+  "@errorLoadingGamesDetails": {
+    "description": "Message d'erreur lorsque le chargement des détails des jeux échoue.",
+    "placeholders": {
+      "error": {
+        "type": "Object",
+        "example": "Network timeout"
+      }
+    }
+  },
+  "errorLoadingCategoryGamesDetails": "Erreur lors du chargement des jeux pour {categoryName} : {error}",
+  "@errorLoadingCategoryGamesDetails": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String",
+        "example": "Couleurs"
+      },
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "errorLoadingProfileDetails": "Erreur lors du chargement des données du profil : {error}",
+  "@errorLoadingProfileDetails": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "errorCheckingAuthDetails": "Erreur lors de la vérification de l'authentification : {error}",
+  "@errorCheckingAuthDetails": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "noGameCategoriesAvailable": "Aucune catégorie de jeu disponible.",
+  "noGamesInCategoryAvailable": "Aucun jeu disponible dans la catégorie {categoryName} pour le moment.",
+  "@noGamesInCategoryAvailable": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "authenticating": "Authentification en cours...",
+  "appFailedToInitialize": "L'application n'a pas pu s'initialiser: {error}",
+  "@appFailedToInitialize": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "featureNotImplemented": "Cette fonctionnalité n'est pas encore implémentée.",
+  "errorCategoryMissing": "Erreur : Catégorie manquante.",
+  "errorGameCategoryOrIdMissing": "Erreur : Catégorie de jeu ou identifiant manquant.",
+  "errorChildIdMissing": "Erreur : Identifiant de l'enfant manquant",
+  "correct": "Correct !",
+  "tryAgain": "Essayez encore !",
+  "level": "Niveau",
+  "screen": "Écran",
+  "memoryGameUnderDevelopment": "Jeu de mémoire en cours de développement",
+  "goBack": "Retour",
+  "selectableOption": "Option sélectionnable",
+  "selected": "Sélectionné",
+  "selectCorrectOption": "Sélectionnez la bonne option",
+  "signIn": "Se connecter",
+  "signUp": "S'inscrire",
+  "enterEmail": "Entrez votre e-mail",
+  "validEmailError": "Veuillez entrer une adresse e-mail valide",
+  "enterPassword": "Entrez votre mot de passe",
+  "passwordLengthError": "Veuillez entrer un mot de passe d'au moins 6 caractères",
+  "forgotPassword": "Mot de passe oublié ?",
+  "dontHaveAccount": "Pas de compte ? S'inscrire",
+  "haveAccount": "Déjà un compte ? Se connecter",
+  "sendPasswordReset": "Envoyer l'e-mail de réinitialisation du mot de passe",
+  "passwordResetSent": "L'e-mail de réinitialisation du mot de passe a été envoyé",
+  "backToSignIn": "Retour à la connexion",
+  "unexpectedError": "Une erreur inattendue s'est produite",
+  "requiredFieldError": "Ce champ est requis",
+  "confirmPasswordError": "Les mots de passe ne correspondent pas",
+  "confirmPassword": "Confirmer le mot de passe",
+  "createChildProfileTitle": "Créer le profil de l'enfant",
+  "selectAvatarPrompt": "Choisissez un avatar",
+  "firstNameLabel": "Prénom",
+  "enterFirstNameHint": "Entrez le prénom",
+  "errorFirstNameRequired": "Veuillez entrer un prénom",
+  "lastNameLabelOptional": "Nom de famille (Facultatif)",
+  "enterLastNameHintOptional": "Entrez le nom de famille (facultatif)",
+  "birthdateLabelOptional": "Date de naissance (Facultatif)",
+  "selectDateButton": "Sélectionner une date",
+  "specialConditionsLabelOptional": "Conditions spécifiques (Facultatif)",
+  "createProfileButton": "Créer le profil",
+  "profileCreatedSuccess": "Profil créé pour {firstName} !",
+  "@profileCreatedSuccess": {
+    "description": "Message de succès après la création d'un profil enfant.",
+    "placeholders": {
+      "firstName": {
+        "type": "String",
+        "example": "Alex"
+      }
+    }
+  },
+  "errorCreatingProfile": "Impossible de créer le profil. Veuillez réessayer.",
+  "logout": "Déconnexion",
+  "errorScreenRestartInstruction": "Veuillez fermer et rouvrir l'application.",
+  "selectChildProfileTitle": "Sélectionner un profil",
+  "whoIsPlayingPrompt": "Qui joue ?",
+  "addChildProfileButton": "Ajouter un profil enfant",
+  "manageProfilesTooltip": "Gérer les profils",
+  "switchChildProfileButton": "Changer de profil",
+  "onlyOneProfileExists": "Un seul profil existe.",
+  "loading": "Chargement...",
+  "gameOver": "Partie terminée !",
+  "congratulationsAllLevelsComplete": "Félicitations ! Vous avez terminé tous les niveaux !",
+  "playAgain": "Rejouer",
+  "backToGames": "Retour aux jeux",
+  "exitGameTooltip": "Quitter le jeu",
+  "exitGameConfirmationTitle": "Quitter le jeu ?",
+  "exitGameConfirmationMessage": "Êtes-vous sûr de vouloir quitter ? Votre progression actuelle dans ce niveau pourrait être perdue.",
+  "cancelButton": "Annuler",
+  "exitButton": "Quitter",
+  "repeatInstructionTooltip": "Répéter l'instruction",
+  "onboardingDesc1": "Cette application est spécialement conçue pour les enfants ayant des besoins spécifiques. Jouons et apprenons ensemble de manière ludique et sûre.",
+  "onboardingDesc2": "Suivez les progrès de vos enfants et découvrez des activités qui développent leurs compétences de manière intelligente et simple.",
+  "onboardingSkipButton": "Passer",
+  "onboardingGetStartedButton": "Commencer",
+  "loadingProfilesMessage": "Chargement des profils...",
+  "noProfilesFoundMessage": "Aucun profil trouvé...",
+  "settingsTitle": "Paramètres",
+  "ttsEnabledSetting": "Activer la synthèse vocale",
+  "soundEffectsEnabledSetting": "Activer les effets sonores",
+  "loadingSetting": "Chargement du paramètre...",
+  "errorLoadingSetting": "Erreur de chargement du paramètre",
+  "languageSetting": "Langue",
+  "selectLanguageDialogTitle": "Choisir la langue",
+  "ttsSpeechRateSetting": "Vitesse de la parole",
+  "ttsRateSlow": "Lent",
+  "ttsRateNormal": "Normal",
+  "ttsRateFast": "Rapide",
+  "hapticsEnabledSetting": "Activer le retour haptique",
+  "settingsSectionAudio": "Audio et Retours",
+  "settingsSectionGeneral": "Général",
+  "oopsSomethingWentWrong": "Oups ! Quelque chose s'est mal passé.",
+  "retryButton": "Réessayer",
+  "closeAppButton": "Fermer l'application",
+  "errorScreenContactSupport": "Si le problème persiste, veuillez contacter le support ou réessayer plus tard.",
+  "imageOption": "Option Image",
+  "loadingUserData": "Chargement des données utilisateur...",
+  "noGameCategoriesAvailableMessage": "Aucune catégorie de jeu disponible pour le moment.",
+  "loadingGamesFor": "Chargement des jeux pour {categoryName}...",
+  "@loadingGamesFor": {
+    "placeholders": {
+      "categoryName": {
+        "type": "String"
+      }
+    }
+  },
+  "allCategoriesFilter": "Toutes les catégories",
+  "overallStatsTitle": "Performance globale",
+  "categoryAccuracyChartTitle": "Précision par catégorie (Tout temps)",
+  "noChartDataAvailable": "Pas assez de données pour afficher le graphique.",
+  "noStatsFound": "Aucune statistique trouvée pour les filtres sélectionnés.",
+  "matchFound": "Paire trouvée !",
+  "noMatchTryAgain": "Pas de paire. Réessayez !",
+  "matched": "Apparié"
+}

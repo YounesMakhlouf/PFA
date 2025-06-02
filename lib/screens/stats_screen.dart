@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/screens/error_screen.dart';
 import 'package:pfa/screens/generic_loading_screen.dart';
 
 import '../models/category_option.dart';
+import '../models/game.dart' as game;
 import '../models/stats_summary.dart';
 import '../providers/global_providers.dart';
 import '../services/child_stats_service.dart';
-import '../utils/category_localization_utils.dart';
 import '../widgets/accuracy_bar_chart.dart';
-import '../widgets/big_stat_box.dart';
+import '../widgets/stats_container.dart';
 import '../widgets/category_filter_dropdown.dart';
 import '../widgets/time_filter_dropdown.dart';
-import '../models/game.dart' as game;
 
 class StatsScreen extends ConsumerStatefulWidget {
   final String childUuid;
   const StatsScreen({super.key, required this.childUuid});
+
   @override
   ConsumerState<StatsScreen> createState() => _StatsScreenState();
 }
 
 class _StatsScreenState extends ConsumerState<StatsScreen> {
   late final ChildStatsService _statsService;
+
   // global
   StatsSummary? _stats;
   bool _loadingStats = true;
@@ -44,11 +44,6 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
     super.initState();
     _initializeServices();
     _loadInitialData();
-    //set to portrait
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
   }
 
   void _initializeServices() {
@@ -61,17 +56,30 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String screenTitle = AppLocalizations.of(context).statsTitle;
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+
     return Scaffold(
-      appBar: AppBar(title: Text(screenTitle)),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            _buildStatsSection(context),
-            const SizedBox(height: 24),
-            _buildCategoryChartSection()
-          ],
+      appBar: AppBar(
+        title: Text(l10n.statsTitle),
+      ),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      body: RefreshIndicator(
+        // Add pull-to-refresh
+        onRefresh: _loadInitialData,
+        color: theme.colorScheme.primary,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildStatsSummarySection(context, theme, l10n),
+              const SizedBox(height: 32),
+              _buildCategoryChartSection(context, theme, l10n),
+              const SizedBox(height: 16),
+            ],
+          ),
         ),
       ),
     );
@@ -92,12 +100,12 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
       );
       if (_stats == null && !_loadingStats) {
         setState(
-            () => _statsError = AppLocalizations.of(context).applicationError);
+            () => _statsError = AppLocalizations.of(context)!.applicationError);
       }
       setState(() => _stats = stats);
     } catch (e) {
       setState(
-          () => _statsError = AppLocalizations.of(context).applicationError);
+          () => _statsError = AppLocalizations.of(context)!.applicationError);
     } finally {
       setState(() => _loadingStats = false);
     }
@@ -126,24 +134,26 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
 
       setState(() => _categoryAccuracies = sortedResult);
     } catch (e) {
-      setState(() => _chartError = AppLocalizations.of(context).statsError);
+      setState(() => _chartError = AppLocalizations.of(context)!.statsError);
     } finally {
       setState(() => _loadingChart = false);
     }
   }
 
-  Widget _buildStatsSection(BuildContext context) {
+  Widget _buildStatsSummarySection(
+      BuildContext context, ThemeData theme, AppLocalizations l10n) {
     if (_statsError != null) {
       return ErrorScreen(errorMessage: _statsError!);
     }
 
     final categoryOptions = [
-      CategoryOption(value: 'ALL', label: AppLocalizations.of(context).all),
-      ...game.GameCategory.values.map((category) => CategoryOption(
-
-          value: category.name,
-        label: getLocalizedCategory(category.name, context),
-      )),
+      CategoryOption(value: 'ALL', label: l10n.all),
+      ...game.GameCategory.values
+          .where((c) => c != game.GameCategory.UNKNOWN)
+          .map((category) => CategoryOption(
+                value: category.name,
+                label: category.localizedName(context),
+              )),
     ];
 
     return Stack(
@@ -152,31 +162,44 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
           opacity: _loadingStats ? 0.5 : 1.0,
           child: AbsorbPointer(
             absorbing: _loadingStats,
-            child: StatsContainer(
-              title: AppLocalizations.of(context).categoryStatsTitle,
-              headerTrailing: Row(
-                children: [
-                  TimeFilterDropdown(
-                    value: _timeFilter,
-                    onChanged: _handleTimeFilterChange,
+            child: Card(
+              elevation: theme.cardTheme.elevation,
+              shape: theme.cardTheme.shape,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: StatsContainer(
+                  title: l10n.categoryStatsTitle,
+                  headerTrailing: Row(
+                    children: [
+                      SizedBox(
+                        width: 120,
+                        child: TimeFilterDropdown(
+                          value: _timeFilter,
+                          onChanged: _handleTimeFilterChange,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      SizedBox(
+                        width: 120,
+                        child: CategoryDropdown(
+                          value: _selectedCategory,
+                          categories: categoryOptions,
+                          onChanged: _handleCategoryChange,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 16),
-                  CategoryDropdown(
-                    value: _selectedCategory,
-                    categories: categoryOptions,
-                    onChanged: _handleCategoryChange,
-                  ),
-                ],
+                  accuracy: _stats?.accuracy != null
+                      ? '${_stats!.accuracy.toStringAsFixed(1)}%'
+                      : '--%',
+                  avgTime: _stats?.avgTime != null
+                      ? _formatMilliseconds(_stats!.avgTime.toInt())
+                      : '--:--',
+                  hintsUsed: _stats?.hintUsageRatio != null
+                      ? '${_stats!.hintUsageRatio.toStringAsFixed(1)}%'
+                      : '-.-',
+                ),
               ),
-              accuracy: _stats?.accuracy != null
-                  ? '${_stats!.accuracy.toStringAsFixed(1)}%'
-                  : '--%',
-              avgTime: _stats?.avgTime != null
-                  ? _formatMilliseconds(_stats!.avgTime.toInt())
-                  : '--:--',
-              hintsUsed: _stats?.hintUsageRatio != null
-                  ? '${_stats!.hintUsageRatio.toStringAsFixed(1)}%'
-                  : '-.-',
             ),
           ),
         ),
@@ -188,20 +211,18 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
     );
   }
 
-  Widget _buildCategoryChartSection() {
+  Widget _buildCategoryChartSection(
+      BuildContext context, ThemeData theme, AppLocalizations l10n) {
     if (_chartError != null) return ErrorScreen(errorMessage: _chartError!);
     if (_loadingChart) {
       return const GenericLoadingScreen();
     }
 
     if (_categoryAccuracies == null || _categoryAccuracies!.isEmpty) {
-      return Text(AppLocalizations.of(context).statsError);
+      return Text(l10n.statsError);
     }
 
-    return AccuracyBarChart(
-      categoryAccuracies: _categoryAccuracies!,
-      context: context,
-    );
+    return AccuracyBarChart(categoryAccuracies: _categoryAccuracies!);
   }
 
   String _formatMilliseconds(int ms) {

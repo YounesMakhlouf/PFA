@@ -67,16 +67,15 @@ class GameCardWidget extends StatelessWidget {
     return Opacity(
       opacity: isEnabled ? 1.0 : 0.5,
       child: Card(
-        elevation: isEnabled ? (theme.cardTheme.elevation ?? 2) : 0.5,
-        shape: theme.cardTheme.shape ??
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        clipBehavior: theme.cardTheme.clipBehavior ?? Clip.antiAlias,
+        elevation: isEnabled ? theme.cardTheme.elevation : 0.5,
+        shape: theme.cardTheme.shape,
+        clipBehavior: theme.cardTheme.clipBehavior,
         color: effectiveBackgroundColor,
-        margin: theme.cardTheme.margin ?? const EdgeInsets.all(4.0),
+        margin: theme.cardTheme.margin,
         child: InkWell(
           onTap: isEnabled ? onTap : null,
-          splashColor: theme.splashColor,
-          highlightColor: theme.highlightColor,
+          splashColor: effectiveForegroundColor.withValues(alpha: 0.1),
+          highlightColor: effectiveForegroundColor.withValues(alpha: 0.05),
           borderRadius: theme.cardTheme.shape is RoundedRectangleBorder
               ? (theme.cardTheme.shape as RoundedRectangleBorder).borderRadius
                   as BorderRadius
@@ -87,22 +86,20 @@ class GameCardWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Flexible(
-                  child: AspectRatio(
-                    aspectRatio: 1.0,
-                    child: Center(
-                      child: cardContent,
-                    ),
+                Expanded(
+                  flex: 3,
+                  child: Center(
+                    child: cardContent,
                   ),
                 ),
-                const SizedBox(height: 12),
-                FittedBox(
-                  fit: BoxFit.scaleDown,
+                const SizedBox(height: 10),
+                Flexible(
+                  flex: 2,
                   child: Text(
                     title,
                     style: theme.textTheme.titleMedium?.copyWith(
                       color: effectiveForegroundColor,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                     textAlign: TextAlign.center,
                     maxLines: 2,

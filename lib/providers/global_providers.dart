@@ -1,6 +1,9 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:pfa/constants/const.dart';
+import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/models/enums.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/models/user.dart';
@@ -8,19 +11,19 @@ import 'package:pfa/providers/active_child_notifier.dart';
 import 'package:pfa/providers/app_language_notifier.dart';
 import 'package:pfa/providers/haptics_enabled_notifier.dart';
 import 'package:pfa/providers/tts_speech_rate_notifier.dart';
+import 'package:pfa/repositories/child_repository.dart';
+import 'package:pfa/repositories/game_repository.dart';
+import 'package:pfa/repositories/game_session_repository.dart';
 import 'package:pfa/services/audio_service.dart';
+import 'package:pfa/services/logging_service.dart';
 import 'package:pfa/services/settings_service.dart';
-import 'package:pfa/services/tts_service.dart';
+import 'package:pfa/services/supabase_service.dart';
 import 'package:pfa/services/translation_service.dart';
+import 'package:pfa/services/tts_service.dart';
 import 'package:pfa/viewmodels/game_state.dart';
 import 'package:pfa/viewmodels/game_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:pfa/services/logging_service.dart';
-import 'package:pfa/services/supabase_service.dart';
-import 'package:pfa/repositories/child_repository.dart';
-import 'package:pfa/repositories/game_repository.dart';
-import 'package:pfa/repositories/game_session_repository.dart';
 
 import '../repositories/child_stats_repository.dart';
 import '../services/child_service.dart';
@@ -31,7 +34,7 @@ final loggingServiceProvider = Provider<LoggingService>((ref) {
 });
 
 final translationServiceProvider = Provider<TranslationService>((ref) {
-  return TranslationService();
+  return TranslationService(ref);
 });
 
 final supabaseServiceProvider = Provider<SupabaseService>((ref) {
@@ -42,13 +45,21 @@ final supabaseServiceProvider = Provider<SupabaseService>((ref) {
 final ttsServiceProvider = Provider<TtsService>((ref) {
   final logger = ref.watch(loggingServiceProvider);
   final settingsService = ref.watch(settingsServiceProvider);
-  return TtsService(logger, settingsService, ref);
+  final flutterTts = FlutterTts();
+  return TtsService(logger, settingsService, ref, flutterTts);
+});
+
+final audioPlayerProvider = Provider<AudioPlayer>((ref) {
+  final player = AudioPlayer();
+  ref.onDispose(() => player.dispose());
+  return player;
 });
 
 final audioServiceProvider = Provider<AudioService>((ref) {
   final logger = ref.watch(loggingServiceProvider);
   final settingsService = ref.watch(settingsServiceProvider);
-  final audioService = AudioService(logger, settingsService);
+  final audioPlayer = ref.watch(audioPlayerProvider);
+  final audioService = AudioService(logger, settingsService, audioPlayer);
   ref.onDispose(() => audioService.dispose());
   return audioService;
 });
@@ -152,23 +163,19 @@ final gameViewModelProvider = StateNotifierProvider.family<GameViewModel,
     final ttsService = ref.read(ttsServiceProvider);
     final audioService = ref.read(audioServiceProvider);
     final activeChild = ref.watch(activeChildProvider);
-
+    final Locale currentLocale =
+        WidgetsBinding.instance.platformDispatcher.locale;
+    final AppLocalizations l10n = lookupAppLocalizations(currentLocale);
+    final TranslationService translationService =
+        ref.read(translationServiceProvider);
     if (activeChild == null) {
       logger.error(
           "GameViewModelProvider: Attempted to create GameViewModel for game '$gameId' but no active child is set. This indicates a UI flow error.");
       throw StateError(
           "Cannot initialize GameViewModel: No active child selected. Please select a child profile first.");
     }
-    return GameViewModel(
-      gameId,
-      activeChild.childId,
-      gameRepo,
-      logger,
-      sessionRepo,
-      ttsService,
-      audioService,
-      ref,
-    );
+    return GameViewModel(gameId, activeChild.childId, gameRepo, logger,
+        sessionRepo, ttsService, audioService, ref, l10n, translationService);
   },
 );
 
@@ -203,9 +210,14 @@ final onboardingCompletedProvider = FutureProvider<bool>((ref) async {
   return prefs.getBool(onboardingCompletedKey) ?? false;
 });
 
+final sharedPreferencesAsyncProvider = Provider<SharedPreferencesAsync>((ref) {
+  return SharedPreferencesAsync();
+});
+
 final settingsServiceProvider = Provider<SettingsService>((ref) {
   final logger = ref.watch(loggingServiceProvider);
-  return SettingsService(logger);
+  final prefs = ref.watch(sharedPreferencesAsyncProvider);
+  return SettingsService(logger, prefs);
 });
 
 final ttsEnabledProvider = FutureProvider<bool>((ref) async {

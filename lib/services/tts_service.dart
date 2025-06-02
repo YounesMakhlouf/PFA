@@ -9,13 +9,13 @@ class TtsService {
   final LoggingService _logger;
   final SettingsService _settingsService;
   final Ref _ref;
-  final FlutterTts _flutterTts = FlutterTts();
+  final FlutterTts _flutterTts;
 
   bool _isInitialized = false;
   String _lastSetTtsEngineLanguage = AppLanguage.arabic.code;
   double _currentSpeechRate = 1.0;
 
-  TtsService(this._logger, this._settingsService, this._ref) {
+  TtsService(this._logger, this._settingsService, this._ref, this._flutterTts) {
     _initializeTts();
   }
 

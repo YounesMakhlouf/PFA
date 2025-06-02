@@ -24,3 +24,5 @@ const double smileNeutralMax = 0.7;
 // Head rotation thresholds (in degrees)
 const double headTiltZ = 20.0; // Head roll → Surprise
 const double headTurnY = 30.0; // Head yaw → Anger or frustration
+
+const String defaultLanguageCode = 'ar';

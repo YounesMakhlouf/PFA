@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pfa/config/app_theme.dart';
-import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/config/routes.dart';
+import 'package:pfa/l10n/app_localizations.dart';
 import 'package:pfa/models/game.dart';
 import 'package:pfa/providers/global_providers.dart';
 import 'package:pfa/screens/error_screen.dart';
@@ -32,6 +31,10 @@ class _HomePageState extends ConsumerState<HomeScreen> {
   Future<void> _handleLogout() async {
     final logger = ref.read(loggingServiceProvider);
     final supabaseService = ref.read(supabaseServiceProvider);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+
     logger.info('Logout button tapped');
     try {
       await supabaseService.signOut();
@@ -39,11 +42,10 @@ class _HomePageState extends ConsumerState<HomeScreen> {
     } catch (e, stackTrace) {
       logger.error('Error during sign out', e, stackTrace);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        scaffoldMessenger.showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context).applicationError),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
+              content: Text(l10n.applicationError),
+              backgroundColor: theme.colorScheme.error),
         );
       }
     }
@@ -51,7 +53,7 @@ class _HomePageState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final logger = ref.read(loggingServiceProvider);
 
@@ -62,33 +64,21 @@ class _HomePageState extends ConsumerState<HomeScreen> {
     if (activeChild == null) {
       logger.warning(
           "HomeScreen build: Active child is null. Showing loading. Check AuthGate logic.");
-      return const GenericLoadingScreen(message: "Initializing...");
+      return GenericLoadingScreen(message: l10n.loadingProfilesMessage);
     }
 
     return Scaffold(
         appBar: AppBar(
           title: Text(activeChild.firstName),
-          backgroundColor: AppColors.background,
-          foregroundColor: AppColors.textPrimary,
-          elevation: 0,
           actions: [
             PopupMenuButton<String>(
-              icon: const Icon(Icons.account_circle_outlined),
+              icon: Icon(Icons.more_vert_outlined,
+                  color: theme.appBarTheme.actionsIconTheme?.color),
               tooltip: l10n.manageProfilesTooltip,
               onSelected: (value) {
                 if (value == 'switch') {
-                  final profiles =
-                      ref.read(initialChildProfilesProvider).valueOrNull ?? [];
-                  if (profiles.length > 1) {
-                    logger.info("Navigating to SelectChildProfileScreen");
-                    Navigator.pushNamed(context, AppRoutes.selectChildProfile,
-                        arguments: {"profiles": profiles});
-                  } else {
-                    logger.info(
-                        "Switch profile selected, but only one profile exists.");
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(l10n.onlyOneProfileExists)));
-                  }
+                  logger.info("Navigating to SelectChildProfileScreen");
+                  Navigator.pushNamed(context, AppRoutes.selectChildProfile);
                 } else if (value == 'view_stats') {
                   logger.info(
                       "Navigating to StatsScreen for child: ${activeChild.childId}");
@@ -102,47 +92,46 @@ class _HomePageState extends ConsumerState<HomeScreen> {
                   Navigator.pushNamed(context, AppRoutes.settings);
                 }
               },
+              color: theme.popupMenuTheme.color ?? theme.colorScheme.surface,
+              shape: theme.popupMenuTheme.shape ??
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
               itemBuilder: (BuildContext context) {
                 return <PopupMenuEntry<String>>[
                   PopupMenuItem<String>(
                     value: 'switch',
-                    child: Row(
-                      children: [
-                        Icon(Icons.switch_account_outlined,
-                            color: theme.colorScheme.primary),
-                        const SizedBox(width: 8),
-                        Text(l10n.switchChildProfileButton),
-                      ],
+                    child: ListTile(
+                      leading: Icon(Icons.switch_account_outlined,
+                          color: theme.colorScheme.primary),
+                      title: Text(l10n.switchChildProfileButton,
+                          style: theme.textTheme.bodyMedium),
                     ),
                   ),
                   const PopupMenuDivider(),
                   PopupMenuItem<String>(
                     value: 'view_stats',
-                    child: Row(
-                      children: [
-                        Icon(Icons.bar_chart_outlined,
-                            color: theme.colorScheme.primary),
-                        const SizedBox(width: 8),
-                        Text(l10n.viewStats),
-                      ],
+                    child: ListTile(
+                      leading: Icon(Icons.bar_chart_outlined,
+                          color: theme.colorScheme.primary),
+                      title: Text(l10n.viewStats,
+                          style: theme.textTheme.bodyMedium),
                     ),
                   ),
                   PopupMenuItem<String>(
                     value: 'settings',
-                    child: Row(
-                      children: [
-                        Icon(Icons.settings_outlined,
-                            color: theme.colorScheme.primary),
-                        const SizedBox(width: 8),
-                        Text(l10n.settingsTitle),
-                      ],
+                    child: ListTile(
+                      leading: Icon(Icons.settings_outlined,
+                          color: theme.colorScheme.primary),
+                      title: Text(l10n.settingsTitle,
+                          style: theme.textTheme.bodyMedium),
                     ),
                   ),
                 ];
               },
             ),
             IconButton(
-              icon: const Icon(Icons.logout),
+              icon: Icon(Icons.logout,
+                  color: theme.appBarTheme.actionsIconTheme?.color),
               tooltip: l10n.logout,
               onPressed: _handleLogout,
             ),

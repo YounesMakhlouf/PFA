@@ -19,23 +19,23 @@ extension GameCategoryExtension on GameCategory {
   String localizedName(BuildContext context) {
     switch (this) {
       case GameCategory.LOGICAL_THINKING:
-        return AppLocalizations.of(context).logicalThinking;
+        return AppLocalizations.of(context)!.logicalThinking;
       case GameCategory.EDUCATION:
-        return AppLocalizations.of(context).education;
+        return AppLocalizations.of(context)!.education;
       case GameCategory.RELAXATION:
-        return AppLocalizations.of(context).relaxation;
+        return AppLocalizations.of(context)!.relaxation;
       case GameCategory.EMOTIONS:
-        return AppLocalizations.of(context).emotions;
+        return AppLocalizations.of(context)!.emotions;
       case GameCategory.NUMBERS:
-        return AppLocalizations.of(context).numbers;
+        return AppLocalizations.of(context)!.numbers;
       case GameCategory.COLORS_SHAPES:
-        return AppLocalizations.of(context).colorsAndShapes;
+        return AppLocalizations.of(context)!.colorsAndShapes;
       case GameCategory.ANIMALS:
-        return AppLocalizations.of(context).animals;
+        return AppLocalizations.of(context)!.animals;
       case GameCategory.FRUITS_VEGETABLES:
-        return AppLocalizations.of(context).fruitsAndVegetables;
+        return AppLocalizations.of(context)!.fruitsAndVegetables;
       case GameCategory.UNKNOWN:
-        return AppLocalizations.of(context).unknownCategory;
+        return AppLocalizations.of(context)!.unknownCategory;
     }
   }
 
@@ -93,7 +93,7 @@ extension GameCategoryExtension on GameCategory {
 
 enum GameType {
   MULTIPLE_CHOICE,
-  MEMORY_MATCH,
+  MEMORY,
   PUZZLE,
   STORY,
   IDENTIFY_INTRUDER,

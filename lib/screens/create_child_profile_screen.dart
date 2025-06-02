@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:pfa/l10n/app_localizations.dart';
-import 'package:pfa/config/app_theme.dart';
 import 'package:pfa/models/user.dart';
 import 'package:pfa/providers/global_providers.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pfa/widgets/avatar_display.dart';
 
 class CreateChildProfileScreen extends ConsumerStatefulWidget {
   const CreateChildProfileScreen({super.key});
@@ -52,6 +52,7 @@ class _CreateChildProfileScreenState
   }
 
   Future<void> _selectDate(BuildContext context) async {
+    final theme = Theme.of(context);
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _selectedBirthdate ?? DateTime.now(),
@@ -59,15 +60,15 @@ class _CreateChildProfileScreenState
       lastDate: DateTime.now(),
       builder: (context, child) {
         return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(
-                  primary: AppColors.primary,
-                  onPrimary: AppColors.textLight,
-                  onSurface: AppColors.textPrimary,
-                ),
+          data: theme.copyWith(
+            colorScheme: theme.colorScheme.copyWith(
+              primary: theme.colorScheme.primary,
+              onPrimary: theme.colorScheme.onPrimary,
+              onSurface: theme.colorScheme.onSurface,
+            ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                foregroundColor: AppColors.primary,
+                foregroundColor: theme.colorScheme.primary,
               ),
             ),
           ),
@@ -119,8 +120,8 @@ class _CreateChildProfileScreenState
         scaffoldMessenger.showSnackBar(
           SnackBar(
             content: Text(
-                AppLocalizations.of(context).profileCreatedSuccess(firstName)),
-            backgroundColor: AppColors.success,
+                AppLocalizations.of(context)!.profileCreatedSuccess(firstName)),
+            backgroundColor: Theme.of(context).colorScheme.tertiary,
           ),
         );
         logger.info("Popping CreateChildProfileScreen after success.");
@@ -135,8 +136,8 @@ class _CreateChildProfileScreenState
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                  '${AppLocalizations.of(context).errorCreatingProfile} ${e.toString().replaceFirst("Exception: ", "")}'),
-              backgroundColor: AppColors.error,
+                  '${AppLocalizations.of(context)!.errorCreatingProfile} ${e.toString().replaceFirst("Exception: ", "")}'),
+              backgroundColor: Theme.of(context).colorScheme.error,
             ),
           );
         }
@@ -152,18 +153,15 @@ class _CreateChildProfileScreenState
 
   @override
   Widget build(BuildContext context) {
-    final logger = ref.read(loggingServiceProvider);
-    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.createChildProfileTitle),
-        automaticallyImplyLeading: false, // No back button in this flow
-        backgroundColor: AppColors.background,
-        foregroundColor: AppColors.textPrimary,
-        elevation: 0,
+        automaticallyImplyLeading: Navigator.canPop(context),
       ),
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
@@ -175,37 +173,42 @@ class _CreateChildProfileScreenState
                 // --- Avatar Selection ---
                 Text(
                   l10n.selectAvatarPrompt,
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: theme.textTheme.titleLarge,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
                 Wrap(
                   alignment: WrapAlignment.center,
-                  spacing: 16,
-                  runSpacing: 16,
+                  spacing: 20,
+                  runSpacing: 20,
                   children: _defaultAvatarPaths.map((path) {
                     final isSelected = _selectedAvatarPath == path;
                     return GestureDetector(
                       onTap: () => setState(() => _selectedAvatarPath = path),
                       child: Container(
-                        padding: const EdgeInsets.all(4),
+                        padding: const EdgeInsets.all(3),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
                             color: isSelected
-                                ? AppColors.primary
+                                ? theme.colorScheme.primary
                                 : Colors.transparent,
                             width: 3.0,
                           ),
+                          boxShadow: isSelected
+                              ? [
+                                  BoxShadow(
+                                    color: theme.colorScheme.primary
+                                        .withValues(alpha: 0.3),
+                                    blurRadius: 5,
+                                    spreadRadius: 1,
+                                  )
+                                ]
+                              : [],
                         ),
-                        child: CircleAvatar(
-                          radius: 40,
-                          backgroundColor:
-                              Colors.grey[200], // Placeholder background
-                          backgroundImage: AssetImage(path),
-                          onBackgroundImageError: (_, __) {
-                            logger.error("Failed to load avatar asset: $path");
-                          },
+                        child: AvatarDisplay(
+                          avatarUrlOrPath: path,
+                          radius: 45,
                         ),
                       ),
                     );
@@ -220,10 +223,6 @@ class _CreateChildProfileScreenState
                   decoration: InputDecoration(
                     labelText: "${l10n.firstNameLabel} *",
                     hintText: l10n.enterFirstNameHint,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    filled: true,
-                    fillColor: AppColors.textLight,
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -243,43 +242,40 @@ class _CreateChildProfileScreenState
                   decoration: InputDecoration(
                     labelText: l10n.lastNameLabelOptional,
                     hintText: l10n.enterLastNameHintOptional,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    filled: true,
-                    fillColor: AppColors.textLight,
                   ),
                   textInputAction: TextInputAction.next,
                   textCapitalization: TextCapitalization.words,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 24),
 
                 // --- Birthdate ---
-                Text(
-                  l10n.birthdateLabelOptional,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color:
-                          AppColors.textPrimary.withAlpha((0.7 * 255).round())),
-                ),
-                const SizedBox(height: 8),
-                OutlinedButton.icon(
-                  icon: const Icon(Icons.calendar_today, size: 20),
-                  label: Text(
-                    _selectedBirthdate == null
-                        ? l10n.selectDateButton
-                        : DateFormat.yMMMd().format(_selectedBirthdate!),
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  onPressed: () => _selectDate(context),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    foregroundColor: AppColors.textPrimary,
-                    side: BorderSide(
-                        color:
-                            AppColors.primary.withAlpha((0.5 * 255).round())),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    backgroundColor: AppColors.textLight,
+                Material(
+                  color: theme.inputDecorationTheme.fillColor ??
+                      theme.colorScheme.surfaceContainerHighest
+                          .withValues(alpha: 0.5),
+                  borderRadius: BorderRadius.circular(10),
+                  child: InkWell(
+                    onTap: () => _selectDate(context),
+                    borderRadius: BorderRadius.circular(10),
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        labelText: l10n.birthdateLabelOptional,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            _selectedBirthdate == null
+                                ? l10n.selectDateButton
+                                : DateFormat.yMMMd(l10n.localeName)
+                                    .format(_selectedBirthdate!),
+                            style: theme.textTheme.bodyLarge,
+                          ),
+                          const Icon(Icons.calendar_today_outlined, size: 20),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -287,14 +283,12 @@ class _CreateChildProfileScreenState
                 // --- Special Conditions ---
                 Text(
                   l10n.specialConditionsLabelOptional,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color:
-                          AppColors.textPrimary.withAlpha((0.7 * 255).round())),
+                  style: theme.textTheme.titleMedium,
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 Wrap(
                   spacing: 8.0,
-                  runSpacing: 4.0,
+                  runSpacing: 8.0,
                   children: SpecialCondition.values.map((condition) {
                     final isSelected = _selectedConditions.contains(condition);
                     return FilterChip(
@@ -309,21 +303,6 @@ class _CreateChildProfileScreenState
                           }
                         });
                       },
-                      selectedColor:
-                          AppColors.primaryLight.withAlpha((0.8 * 255).round()),
-                      checkmarkColor: AppColors.primary,
-                      labelStyle: TextStyle(
-                        color: isSelected
-                            ? AppColors.primary
-                            : AppColors.textPrimary,
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.normal,
-                      ),
-                      backgroundColor: AppColors.background,
-                      shape: StadiumBorder(
-                          side: BorderSide(
-                              color: AppColors.primary
-                                  .withAlpha((0.3 * 255).round()))),
                     );
                   }).toList(),
                 ),
@@ -331,15 +310,19 @@ class _CreateChildProfileScreenState
 
                 // --- Submit Button ---
                 ElevatedButton(
-                  onPressed: _isLoading
-                      ? null
-                      : _submitForm, // Disable button when loading
+                  onPressed: _isLoading ? null : _submitForm,
+                  style: theme.elevatedButtonTheme.style?.copyWith(
+                    padding: WidgetStateProperty.all(const EdgeInsets.symmetric(
+                        vertical: 18)), // Ensure good height
+                  ),
+                  // Disable button when loading
                   child: _isLoading
-                      ? const SizedBox(
+                      ? SizedBox(
                           height: 20,
                           width: 20,
                           child: CircularProgressIndicator(
-                              strokeWidth: 2, color: AppColors.textLight),
+                              strokeWidth: 2,
+                              color: theme.colorScheme.onPrimary),
                         )
                       : Text(l10n.createProfileButton),
                 ),

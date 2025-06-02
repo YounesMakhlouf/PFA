@@ -25,7 +25,7 @@ class OnboardingScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     List<PageViewModel> getPages() {
@@ -38,7 +38,7 @@ class OnboardingScreen extends ConsumerWidget {
               child: Text(
                 l10n.onboardingDesc1,
                 textAlign: TextAlign.center,
-                style: theme.textTheme.titleMedium?.copyWith(height: 1.5),
+                style: theme.textTheme.titleMedium,
               ),
             ),
           ),

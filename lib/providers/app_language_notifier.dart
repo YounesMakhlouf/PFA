@@ -7,9 +7,17 @@ class AppLanguageNotifier extends StateNotifier<AppLanguage> {
   final SettingsService _settingsService;
   final LoggingService _logger;
 
-  AppLanguageNotifier(this._settingsService, this._logger)
-      : super(AppLanguage.english) {
-    _loadCurrentLanguage();
+  AppLanguageNotifier(
+    this._settingsService,
+    this._logger, {
+    AppLanguage? initialLanguage,
+  }) : super(initialLanguage ?? AppLanguage.english) {
+    if (initialLanguage == null) {
+      _loadCurrentLanguage();
+    } else {
+      _logger.info(
+          "AppLanguageNotifier: Initialized with forced language - ${state.code}");
+    }
   }
 
   Future<void> _loadCurrentLanguage() async {

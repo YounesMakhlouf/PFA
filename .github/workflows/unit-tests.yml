@@ -1,8 +1,10 @@
 name: Unit Tests
 
 on:
-  pull_request:
+  push:
     branches: [ main ]
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   test:
@@ -13,6 +15,8 @@ jobs:
       # 1. Checkout the code from the PR branch
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
       # 2. Set up Java (Required by Flutter SDK/Android build tools)
       - name: Set up Java
@@ -42,4 +46,9 @@ jobs:
 
       # 6. Run unit tests
       - name: Run unit tests
-        run: flutter test
+        run: flutter test --machine --coverage > tests.output
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
