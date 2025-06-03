@@ -312,37 +312,46 @@ class GameViewModel extends StateNotifier<GameState> {
   }
 
   void _processMultipleChoiceAnswer(Option selectedOption) {
-    bool? isCorrectCurrently = selectedOption.isCorrect;
     final bool hapticsAreEnabled = _ref.read(hapticsEnabledProvider);
-
-    state =
-        state.copyWith(isCorrect: isCorrectCurrently, clearErrorMessage: true);
-    _recordAttempt(
-        screenId: state.currentScreenData!.screen.screenId,
-        isCorrectAnswer: isCorrectCurrently,
-        timeTakenMs: 1000 // TODO: Fix
-        );
-
-    final feedbackText =
-        isCorrectCurrently == true ? _l10n.correct : _l10n.tryAgain;
-
-    _ttsService.speak(feedbackText);
-    if (isCorrectCurrently == true) {
-      _audioService.playSound(SoundType.correct);
-      if (hapticsAreEnabled) {
-        HapticFeedback.mediumImpact();
-      }
+    if (selectedOption.isStoryContinueButton) {
+      _logger.debug(
+          "Processing story continue button. Moving to next screen directly.");
+      _audioService.playSound(SoundType.uiClick);
+      if (hapticsAreEnabled) HapticFeedback.lightImpact();
+      state = state.copyWith(clearIsCorrect: true, clearErrorMessage: true);
+      moveToNextScreen();
     } else {
-      _audioService.playSound(SoundType.incorrect);
-      if (hapticsAreEnabled) {
-        HapticFeedback.lightImpact();
+      bool? isCorrectCurrently = selectedOption.isCorrect;
+
+      state = state.copyWith(
+          isCorrect: isCorrectCurrently, clearErrorMessage: true);
+      _recordAttempt(
+          screenId: state.currentScreenData!.screen.screenId,
+          isCorrectAnswer: isCorrectCurrently,
+          timeTakenMs: 1000 // TODO: Fix
+          );
+
+      final feedbackText =
+          isCorrectCurrently == true ? _l10n.correct : _l10n.tryAgain;
+
+      _ttsService.speak(feedbackText);
+      if (isCorrectCurrently == true) {
+        _audioService.playSound(SoundType.correct);
+        if (hapticsAreEnabled) {
+          HapticFeedback.mediumImpact();
+        }
+      } else {
+        _audioService.playSound(SoundType.incorrect);
+        if (hapticsAreEnabled) {
+          HapticFeedback.lightImpact();
+        }
       }
-    }
-    if (isCorrectCurrently == true) {
-      // Delay moving to the next screen
-      Timer(const Duration(seconds: 1), () {
-        if (mounted) moveToNextScreen();
-      });
+      if (isCorrectCurrently == true) {
+        // Delay moving to the next screen
+        Timer(const Duration(seconds: 1), () {
+          if (mounted) moveToNextScreen();
+        });
+      }
     }
   }
 
