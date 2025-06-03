@@ -138,7 +138,9 @@ class OptionWidget extends ConsumerWidget {
             width: size,
             height: size,
             child: Card(
-              elevation: !isDisabled && !isMatched ? theme.cardTheme.elevation : (isMatched ? 1.0 : 0.5),
+              elevation: !isDisabled && !isMatched
+                  ? theme.cardTheme.elevation
+                  : (isMatched ? 1.0 : 0.5),
               shape: cardShape,
               clipBehavior: theme.cardTheme.clipBehavior ?? Clip.antiAlias,
               color: cardBackgroundColor,

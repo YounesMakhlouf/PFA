@@ -12,7 +12,8 @@ class HapticsEnabledNotifier extends StateNotifier<bool> {
 
   Future<void> _loadInitialState() async {
     state = await _settingsService.areHapticsEnabled();
-    _logger.debug("HapticsEnabledNotifier: Initial haptics state loaded: $state");
+    _logger
+        .debug("HapticsEnabledNotifier: Initial haptics state loaded: $state");
   }
 
   Future<void> setHapticsEnabled(bool isEnabled) async {

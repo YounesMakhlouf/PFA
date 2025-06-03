@@ -28,11 +28,10 @@ class CategoryCardWidget extends StatelessWidget {
       opacity: isEnabled ? 1.0 : 0.5,
       child: Card(
         elevation: isEnabled ? (theme.cardTheme.elevation ?? 2) : 0.5,
-        shape: theme.cardTheme.shape ??
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        clipBehavior: theme.cardTheme.clipBehavior ?? Clip.antiAlias,
+        shape: theme.cardTheme.shape,
+        clipBehavior: theme.cardTheme.clipBehavior,
         color: effectiveBackgroundColor,
-        margin: theme.cardTheme.margin ?? const EdgeInsets.all(4.0),
+        margin: theme.cardTheme.margin,
         child: InkWell(
           onTap: isEnabled ? onTap : null,
           splashColor: theme.splashColor,

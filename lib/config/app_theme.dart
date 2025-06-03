@@ -19,6 +19,10 @@ class AppColors {
   // Semantic Colors
   static const Color error = Color(0xFFBE2522);
   static const Color onError = Colors.white;
+  static const Color errorContainerContent = Color(0xFF1F2937);
+  static const Color secondaryContainerOpaque = Color(0xFFFCEFE4);
+  static const Color tertiaryContainerOpaque = Color(0xFFF6E9E2);
+  static const Color errorContainerOpaque = Color(0xFFFDEBEA);
   static const Color success = Color(0xFF3DC87D);
   static const Color onSuccess = Colors.white;
   static const Color warning = Color(0xFFFFC107);
@@ -39,18 +43,19 @@ class AppTheme {
       onPrimaryContainer: AppColors.textPrimaryOnLight,
       secondary: AppColors.secondary,
       onSecondary: AppColors.textPrimaryOnLight,
-      secondaryContainer: AppColors.secondary.withValues(alpha: 0.2),
+      secondaryContainer: AppColors.secondaryContainerOpaque,
       onSecondaryContainer: AppColors.textPrimaryOnLight,
       tertiary: AppColors.tertiary,
       onTertiary: AppColors.textPrimaryOnDark,
-      tertiaryContainer: AppColors.tertiary.withValues(alpha: 0.2),
+      tertiaryContainer: AppColors.tertiaryContainerOpaque,
       onTertiaryContainer: AppColors.textPrimaryOnLight,
       error: AppColors.error,
       onError: AppColors.onError,
-      errorContainer: AppColors.error.withValues(alpha: 0.15),
-      onErrorContainer: AppColors.error,
+      errorContainer: AppColors.errorContainerOpaque,
+      onErrorContainer: AppColors.errorContainerContent,
       surface: AppColors.surface,
       onSurface: AppColors.textPrimaryOnLight,
+      surfaceTint: AppColors.primary,
       surfaceContainerHighest: AppColors.surfaceVariant,
       onSurfaceVariant: AppColors.textSecondaryOnLight,
       outline: AppColors.outline,
@@ -128,7 +133,7 @@ class AppTheme {
           labelLarge: TextStyle(
               fontFamily: defaultFontFamily,
               fontSize: 14,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
               letterSpacing: 0.1,
               color: colorScheme.primary),
           labelMedium: TextStyle(
@@ -170,7 +175,7 @@ class AppTheme {
           style: ElevatedButton.styleFrom(
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         textStyle: textTheme.labelLarge?.copyWith(color: colorScheme.onPrimary),
         elevation: 2,
@@ -179,7 +184,8 @@ class AppTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: colorScheme.primary,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           textStyle: textTheme.labelLarge,
         ),
@@ -188,7 +194,7 @@ class AppTheme {
           style: OutlinedButton.styleFrom(
         foregroundColor: colorScheme.primary,
         side: BorderSide(color: colorScheme.outline),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         textStyle: textTheme.labelLarge,
       )),
@@ -196,12 +202,10 @@ class AppTheme {
         color: colorScheme.surface,
         elevation: 1.0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 0),
+        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0),
         clipBehavior: Clip.antiAlias,
       ),
       inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
         hintStyle:
             textTheme.bodyLarge?.copyWith(color: colorScheme.onSurfaceVariant),
         labelStyle:
@@ -209,24 +213,24 @@ class AppTheme {
         floatingLabelStyle:
             textTheme.bodySmall?.copyWith(color: colorScheme.primary),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(4),
           borderSide: BorderSide(color: colorScheme.outline),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(4),
           borderSide:
               BorderSide(color: colorScheme.outline.withValues(alpha: 0.7)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(4),
           borderSide: BorderSide(color: colorScheme.primary, width: 2.0),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(4),
           borderSide: BorderSide(color: colorScheme.error, width: 1.5),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(4),
           borderSide: BorderSide(color: colorScheme.error, width: 2.0),
         ),
         contentPadding:
@@ -256,8 +260,9 @@ class AppTheme {
       ),
       dialogTheme: DialogThemeData(
         backgroundColor: colorScheme.surface,
-        elevation: 3.0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 6.0,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(28.0)),
         titleTextStyle:
             textTheme.titleLarge?.copyWith(color: colorScheme.onSurface),
         contentTextStyle:
@@ -274,6 +279,12 @@ class AppTheme {
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: colorScheme.secondary,
         foregroundColor: colorScheme.onSecondary,
+      ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: colorScheme.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+        elevation: 3.0,
+        textStyle: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface),
       ),
     );
   }

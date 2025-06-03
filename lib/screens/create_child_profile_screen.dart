@@ -52,29 +52,11 @@ class _CreateChildProfileScreenState
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    final theme = Theme.of(context);
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _selectedBirthdate ?? DateTime.now(),
       firstDate: DateTime(DateTime.now().year - 25),
       lastDate: DateTime.now(),
-      builder: (context, child) {
-        return Theme(
-          data: theme.copyWith(
-            colorScheme: theme.colorScheme.copyWith(
-              primary: theme.colorScheme.primary,
-              onPrimary: theme.colorScheme.onPrimary,
-              onSurface: theme.colorScheme.onSurface,
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: theme.colorScheme.primary,
-              ),
-            ),
-          ),
-          child: child!,
-        );
-      },
     );
     if (picked != null && picked != _selectedBirthdate) {
       setState(() {
@@ -251,13 +233,11 @@ class _CreateChildProfileScreenState
 
                 // --- Birthdate ---
                 Material(
-                  color: theme.inputDecorationTheme.fillColor ??
-                      theme.colorScheme.surfaceContainerHighest
-                          .withValues(alpha: 0.5),
-                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(4),
                   child: InkWell(
                     onTap: () => _selectDate(context),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(4),
                     child: InputDecorator(
                       decoration: InputDecoration(
                         labelText: l10n.birthdateLabelOptional,

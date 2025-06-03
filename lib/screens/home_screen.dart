@@ -92,10 +92,8 @@ class _HomePageState extends ConsumerState<HomeScreen> {
                   Navigator.pushNamed(context, AppRoutes.settings);
                 }
               },
-              color: theme.popupMenuTheme.color ?? theme.colorScheme.surface,
-              shape: theme.popupMenuTheme.shape ??
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
+              color: theme.popupMenuTheme.color,
+              shape: theme.popupMenuTheme.shape,
               itemBuilder: (BuildContext context) {
                 return <PopupMenuEntry<String>>[
                   PopupMenuItem<String>(

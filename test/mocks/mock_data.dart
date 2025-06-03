@@ -219,20 +219,52 @@ class _MockFullGameData {
 
   _MockFullGameData()
       : game = mockGame(id: 'full_game_id', name: 'Full Test Game'),
-        level1 = mockLevel(id: 'full_lvl1_id', gameId: 'full_game_id', number: 1),
-        level2 = mockLevel(id: 'full_lvl2_id', gameId: 'full_game_id', number: 2),
-        mcScreenL1S1 = mockMCScreen(id: 'mc_s1_l1_full', levelId: 'full_lvl1_id', number: 1, instruction: 'MC L1S1 Instruction'),
-        memScreenL2S1 = mockMemoryScreen(id: 'mem_s1_l2_full', levelId: 'full_lvl2_id', number: 1, instruction: 'Memory L2S1 Instruction'),
+        level1 =
+            mockLevel(id: 'full_lvl1_id', gameId: 'full_game_id', number: 1),
+        level2 =
+            mockLevel(id: 'full_lvl2_id', gameId: 'full_game_id', number: 2),
+        mcScreenL1S1 = mockMCScreen(
+            id: 'mc_s1_l1_full',
+            levelId: 'full_lvl1_id',
+            number: 1,
+            instruction: 'MC L1S1 Instruction'),
+        memScreenL2S1 = mockMemoryScreen(
+            id: 'mem_s1_l2_full',
+            levelId: 'full_lvl2_id',
+            number: 1,
+            instruction: 'Memory L2S1 Instruction'),
         level1ScreenIds = ['mc_s1_l1_full'],
         level2ScreenIds = ['mem_s1_l2_full'],
-  // --- Define specific options here ---
-        mcOptionCorrectL1S1 = mockOption(id: 'mc_opt_c_full', screenId: 'mc_s1_l1_full', isCorrect: true, labelText: 'Correct MC'),
-        mcOptionIncorrectL1S1 = mockOption(id: 'mc_opt_i_full', screenId: 'mc_s1_l1_full', labelText: 'Incorrect MC'),
-        memOptionA1L2S1 = mockOption(id: 'mem_opt_a1_full', screenId: 'mem_s1_l2_full', pairId: 'pairA_full', labelText: 'Mem Card A1'),
-        memOptionA2L2S1 = mockOption(id: 'mem_opt_a2_full', screenId: 'mem_s1_l2_full', pairId: 'pairA_full', labelText: 'Mem Card A2'),
-        memOptionB1L2S1 = mockOption(id: 'mem_opt_b1_full', screenId: 'mem_s1_l2_full', pairId: 'pairB_full', labelText: 'Mem Card B1'),
-        memOptionB2L2S1 = mockOption(id: 'mem_opt_b2_full', screenId: 'mem_s1_l2_full', pairId: 'pairB_full', labelText: 'Mem Card B2')
-  {
+        // --- Define specific options here ---
+        mcOptionCorrectL1S1 = mockOption(
+            id: 'mc_opt_c_full',
+            screenId: 'mc_s1_l1_full',
+            isCorrect: true,
+            labelText: 'Correct MC'),
+        mcOptionIncorrectL1S1 = mockOption(
+            id: 'mc_opt_i_full',
+            screenId: 'mc_s1_l1_full',
+            labelText: 'Incorrect MC'),
+        memOptionA1L2S1 = mockOption(
+            id: 'mem_opt_a1_full',
+            screenId: 'mem_s1_l2_full',
+            pairId: 'pairA_full',
+            labelText: 'Mem Card A1'),
+        memOptionA2L2S1 = mockOption(
+            id: 'mem_opt_a2_full',
+            screenId: 'mem_s1_l2_full',
+            pairId: 'pairA_full',
+            labelText: 'Mem Card A2'),
+        memOptionB1L2S1 = mockOption(
+            id: 'mem_opt_b1_full',
+            screenId: 'mem_s1_l2_full',
+            pairId: 'pairB_full',
+            labelText: 'Mem Card B1'),
+        memOptionB2L2S1 = mockOption(
+            id: 'mem_opt_b2_full',
+            screenId: 'mem_s1_l2_full',
+            pairId: 'pairB_full',
+            labelText: 'Mem Card B2') {
     // Populate ScreenWithOptionsMenu with the defined options
     mcScreenDataL1S1 = ScreenWithOptionsMenu(
       screen: mcScreenL1S1,
@@ -240,7 +272,12 @@ class _MockFullGameData {
     );
     memScreenDataL2S1 = ScreenWithOptionsMenu(
       screen: memScreenL2S1,
-      options: [memOptionA1L2S1, memOptionA2L2S1, memOptionB1L2S1, memOptionB2L2S1],
+      options: [
+        memOptionA1L2S1,
+        memOptionA2L2S1,
+        memOptionB1L2S1,
+        memOptionB2L2S1
+      ],
     );
   }
 }

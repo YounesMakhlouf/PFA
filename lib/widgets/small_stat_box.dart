@@ -32,10 +32,10 @@ class StatItem extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
-      constraints: const BoxConstraints(minHeight: 90),
+      constraints: const BoxConstraints(minHeight: 88.0),
       decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(10),
+        color: colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,7 +47,7 @@ class StatItem extends StatelessWidget {
               size: 28,
               color: effectiveIconColor,
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 8.0),
           ],
           Text(
             value,
