@@ -22,7 +22,7 @@ class GameRepository {
   static const String _screenSelect =
       'screen_id, level_id, screen_number, type, instruction';
   static const String _optionSelect =
-      'option_id, screen_id, label_text, picture_url, is_correct, pair_id';
+      'option_id, screen_id, label_text, picture_url, is_correct, pair_id, is_story_continue_button';
 
   GameRepository(
       {required SupabaseService supabaseService,

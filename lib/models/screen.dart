@@ -36,6 +36,7 @@ class Option {
   final String? picturePath;
   final String? audioPath;
   final String? pairId; // Used for Memory games to identify matching pairs
+  final bool isStoryContinueButton;
 
   Option({
     required this.optionId,
@@ -45,6 +46,7 @@ class Option {
     this.audioPath,
     this.isCorrect = false,
     this.pairId,
+    this.isStoryContinueButton = false,
   });
 
   factory Option.fromJson(Map<String, dynamic> json) {
@@ -56,6 +58,7 @@ class Option {
       audioPath: json['audio_url'] as String?,
       isCorrect: json['is_correct'] as bool? ?? false,
       pairId: json['pair_id'] as String?,
+      isStoryContinueButton: json['is_story_continue_button'] as bool? ?? false,
     );
   }
 }

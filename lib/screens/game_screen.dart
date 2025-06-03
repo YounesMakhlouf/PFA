@@ -61,11 +61,6 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
@@ -80,17 +75,21 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
           child: Text(
             translatedInstruction,
             style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimaryOnLight
-                    .withAlpha((0.85 * 255).round())),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.9)),
             textAlign: TextAlign.center,
           ).animate().fadeIn(duration: 300.ms),
         ),
-        Expanded(child: Center(child: _buildScreenContent(context))),
+        Expanded(
+            child: Center(
+          child: SingleChildScrollView(
+            child: _buildScreenContent(context),
+          ),
+        )),
         _buildFeedbackArea(context, widget.isCorrect, theme),
         _buildProgressIndicator(
             context, widget.currentLevel, widget.currentScreenNumber, theme),
@@ -113,51 +112,69 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
 
   Widget _buildMultipleChoiceUI(
       BuildContext context, MultipleChoiceScreen screen) {
-    final state = ref.watch(gameViewModelProvider(widget.game.gameId));
+    final gameState = ref.watch(gameViewModelProvider(widget.game.gameId));
 
-    final bool shouldShowCamera =
+    final bool isEmotionCameraScreen =
         widget.game.category == GameCategory.EMOTIONS &&
             widget.currentOptions.length == 1 &&
             widget.currentOptions[0].isCorrect == true;
 
-    return SizedBox(
-      child: shouldShowCamera
-          ? _buildCameraOptionRow(context, state)
-          : _buildOptionsArea(context, widget.currentOptions),
-    );
+    if (isEmotionCameraScreen) {
+      return _buildCameraOptionLayout(
+          context, gameState, widget.currentOptions.first);
+    } else {
+      // Regular multiple choice options display
+      return _buildStandardOptionsArea(context, widget.currentOptions);
+    }
   }
 
-  Widget _buildCameraOptionRow(BuildContext context, GameState state) {
-    final gameViewModel =
-        ref.watch(gameViewModelProvider(widget.game.gameId).notifier);
-    final cameraController = gameViewModel.cameraController;
+  Widget _buildCameraOptionLayout(
+      BuildContext context, GameState gameState, Option targetEmotionOption) {
+    final theme = Theme.of(context);
+    final gameViewModelNotifier =
+        ref.read(gameViewModelProvider(widget.game.gameId).notifier);
+    final cameraController = gameViewModelNotifier.cameraController;
 
-    final Option currentOption = widget.currentOptions.first;
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Expanded(
-          flex: 1,
-          child: Column(
-            children: [
-              _buildOptionsArea(context, [currentOption])
-            ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: 1,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildStandardOptionsArea(context, [targetEmotionOption])
+              ],
+            ),
           ),
-        ),
-        Expanded(
-          flex: 1,
-          child: AspectRatio(
-            aspectRatio: 4 / 3,
-            child: state.isCameraInitialized && cameraController != null
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: CameraPreview(cameraController),
-                  )
-                : const Center(child: CircularProgressIndicator()),
+          const SizedBox(width: 16),
+          Expanded(
+            flex: 2,
+            child: AspectRatio(
+              aspectRatio: 30 / 9,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  border:
+                      Border.all(color: theme.colorScheme.outline, width: 1),
+                  color: theme.colorScheme.surfaceContainerHighest
+                      .withValues(alpha: 0.5), // Placeholder bg
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: gameState.isCameraInitialized &&
+                        cameraController != null &&
+                        cameraController.value.isInitialized
+                    ? CameraPreview(cameraController)
+                    : Center(
+                        child: CircularProgressIndicator(
+                            color: theme.colorScheme.primary)),
+              ),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -222,7 +239,7 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
     );
   }
 
-  Widget _buildOptionsArea(BuildContext context, List<Option> options) {
+  Widget _buildStandardOptionsArea(BuildContext context, List<Option> options) {
     final bool isStory = options.length == 1;
 
     return ConstrainedBox(
@@ -256,28 +273,35 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 300),
       transitionBuilder: (Widget child, Animation<double> animation) {
-        return FadeTransition(opacity: animation, child: child);
+        return FadeTransition(
+          opacity: animation,
+          child: ScaleTransition(
+            scale: Tween<double>(begin: 0.9, end: 1.0).animate(animation),
+            child: child,
+          ),
+        );
       },
       child: isCorrect == null
-          ? SizedBox(key: feedbackKey, height: 60)
+          ? SizedBox(key: feedbackKey, height: 42)
           : _buildFeedbackContent(context, isCorrect, theme, feedbackKey),
     );
   }
 
   Widget _buildFeedbackContent(
       BuildContext context, bool? isCorrect, ThemeData theme, Key key) {
+    final l10n = AppLocalizations.of(context)!;
     final Color feedbackColor =
-        isCorrect == true ? AppColors.success : AppColors.error;
+        isCorrect == true ? AppColors.success : theme.colorScheme.error;
 
     final String feedbackText;
     final String feedbackEmoji;
     if (isCorrect == null) return const SizedBox.shrink();
 
     if (isCorrect) {
-      feedbackText = AppLocalizations.of(context)!.correct;
+      feedbackText = l10n.correct;
       feedbackEmoji = (positiveEmojisList..shuffle()).first;
     } else {
-      feedbackText = AppLocalizations.of(context)!.tryAgain;
+      feedbackText = l10n.tryAgain;
       feedbackEmoji = (neutralEmojisList..shuffle()).first;
     }
     final String fullFeedbackText = '$feedbackText $feedbackEmoji';
@@ -287,21 +311,21 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
 
     return Container(
       key: key,
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: feedbackColor.withAlpha((0.15 * 255).round()),
-        borderRadius: BorderRadius.circular(12),
+        color: feedbackColor.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: feedbackColor.withAlpha((0.5 * 255).round()),
-          width: 1.5,
+          color: feedbackColor.withValues(alpha: 0.5),
+          width: 1.0,
         ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(feedbackIconData, color: feedbackColor, size: 32)
+          Icon(feedbackIconData, color: feedbackColor, size: 28)
               .animate()
               .scale(
                 duration: 400.ms,
@@ -310,7 +334,7 @@ class _GameScreenWidgetState extends ConsumerState<GameScreenWidget> {
               )
               .then(delay: 200.ms)
               .shake(hz: 4, duration: 300.ms),
-          const SizedBox(width: 12),
+          const SizedBox(width: 8),
           Text(
             fullFeedbackText,
             style: theme.textTheme.titleLarge
