@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:pfa/constants/const.dart';
 import 'package:pfa/models/enums.dart';
 import 'package:pfa/providers/global_providers.dart';
 import 'package:pfa/services/logging_service.dart';
@@ -12,7 +13,7 @@ class TtsService {
   final FlutterTts _flutterTts;
 
   bool _isInitialized = false;
-  String _lastSetTtsEngineLanguage = AppLanguage.arabic.code;
+  String _lastSetTtsEngineLanguage = defaultLanguageCode;
   double _currentSpeechRate = 1.0;
 
   TtsService(this._logger, this._settingsService, this._ref, this._flutterTts) {
