@@ -161,9 +161,13 @@ class GameSessionRepository {
           'p_is_correct': isCorrect,
           'p_hints_used_increment': 0
         });
-        _logger.debug('Incremented session stats for attempt on session $sessionId');
+        _logger.debug(
+            'Incremented session stats for attempt on session $sessionId');
       } on PostgrestException catch (rpcError, rpcSt) {
-        _logger.error('Supabase RPC error incrementing session stats for $sessionId after adding attempt', rpcError, rpcSt);
+        _logger.error(
+            'Supabase RPC error incrementing session stats for $sessionId after adding attempt',
+            rpcError,
+            rpcSt);
       }
 
       return ScreenAttempt.fromJson(response);

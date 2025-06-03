@@ -235,23 +235,29 @@ void main() {
       expect(card.color, testColor);
     });
 
-    testWidgets('Semantics labels are set correctly', (WidgetTester tester) async {
+    testWidgets('Semantics labels are set correctly',
+        (WidgetTester tester) async {
       final textOption = mockOption(labelText: 'Semantic Text');
-      final imageOption = mockOption(picturePath: 'path/image.png', labelText: null);
+      final imageOption =
+          mockOption(picturePath: 'path/image.png', labelText: null);
 
-      when(mockSupabaseService.getPublicUrl(bucketId: anyNamed('bucketId'), filePath: anyNamed('filePath')))
+      when(mockSupabaseService.getPublicUrl(
+              bucketId: anyNamed('bucketId'), filePath: anyNamed('filePath')))
           .thenReturn('http://dummyurl.com/image.png');
 
       // Test with text
       await pumpOptionWidget(tester, option: textOption, onTap: () {});
       // Find the OptionWidget first, then find the Semantics widget that is a descendant of it.
       final optionWidgetFinder = find.byType(OptionWidget);
-      expect(optionWidgetFinder, findsOneWidget, reason: "OptionWidget itself should be found");
+      expect(optionWidgetFinder, findsOneWidget,
+          reason: "OptionWidget itself should be found");
 
       final semanticsFinder = find.byKey(OptionWidget.semanticsKey);
-      expect(semanticsFinder, findsOneWidget, reason: "Should find the OptionWidget's main Semantics node by key");
+      expect(semanticsFinder, findsOneWidget,
+          reason: "Should find the OptionWidget's main Semantics node by key");
 
-      expect(semanticsFinder, findsOneWidget, reason: "Should find one Semantics widget within OptionWidget");
+      expect(semanticsFinder, findsOneWidget,
+          reason: "Should find one Semantics widget within OptionWidget");
       var semantics = tester.widget<Semantics>(semanticsFinder);
       expect(semantics.properties.label, 'Semantic Text');
       expect(semantics.properties.value, null);
@@ -259,18 +265,23 @@ void main() {
       // Test with image (and no labelText)
       await pumpOptionWidget(tester, option: imageOption, onTap: () {});
       // Re-find because the widget tree was rebuilt
-      semantics = tester.widget<Semantics>(find.byKey(OptionWidget.semanticsKey));
+      semantics =
+          tester.widget<Semantics>(find.byKey(OptionWidget.semanticsKey));
       expect(semantics.properties.label, 'Image Option');
 
       // Test selected state
-      await pumpOptionWidget(tester, option: textOption, onTap: () {}, isSelected: true);
-      semantics = tester.widget<Semantics>(find.byKey(OptionWidget.semanticsKey));
+      await pumpOptionWidget(tester,
+          option: textOption, onTap: () {}, isSelected: true);
+      semantics =
+          tester.widget<Semantics>(find.byKey(OptionWidget.semanticsKey));
       expect(semantics.properties.value, 'Selected');
 
       // Test matched state
-      await pumpOptionWidget(tester, option: textOption, onTap: () {}, isMatched: true);
-      semantics = tester.widget<Semantics>(find.byKey(OptionWidget.semanticsKey));
+      await pumpOptionWidget(tester,
+          option: textOption, onTap: () {}, isMatched: true);
+      semantics =
+          tester.widget<Semantics>(find.byKey(OptionWidget.semanticsKey));
       expect(semantics.properties.value, 'Matched');
     });
-    });
+  });
 }

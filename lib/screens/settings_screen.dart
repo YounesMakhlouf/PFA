@@ -185,8 +185,7 @@ class SettingsScreen extends ConsumerWidget {
               },
             ),
           ),
-
-          const SizedBox(height: 30),
+          const SizedBox(height: 32.0),
         ],
       ),
     );

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pfa/config/app_theme.dart';
 import 'package:pfa/providers/global_providers.dart';
 import 'package:pfa/screens/auth_gate.dart';
 import 'package:pfa/screens/error_screen.dart';
 import 'package:pfa/screens/generic_loading_screen.dart';
 import 'package:pfa/screens/onboarding_screen.dart';
-import 'package:pfa/services/supabase_service.dart';
 import 'package:pfa/services/logging_service.dart';
+import 'package:pfa/services/supabase_service.dart';
+
 import 'config/routes.dart';
 import 'l10n/app_localizations.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Future<void> initializeAppServices() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -74,6 +75,7 @@ class AppInitializer extends ConsumerWidget {
 class MyApp extends ConsumerWidget {
   final bool showOnboarding;
   const MyApp({required this.showOnboarding, super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Locale currentLocale = ref.watch(localeProvider);

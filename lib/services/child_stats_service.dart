@@ -40,7 +40,8 @@ class ChildStatsService {
       case 'week':
         final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
         return {
-          'start': DateTime(startOfWeek.year, startOfWeek.month, startOfWeek.day),
+          'start':
+              DateTime(startOfWeek.year, startOfWeek.month, startOfWeek.day),
           'end': DateTime(now.year, now.month, now.day, 23, 59, 59),
         };
       case 'all':
@@ -53,5 +54,3 @@ class ChildStatsService {
     return '${category ?? "ALL"}|$timeFilter';
   }
 }
-
-
