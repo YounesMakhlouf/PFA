@@ -29,7 +29,7 @@ class AppLanguageNotifier extends StateNotifier<AppLanguage> {
     if (state != newLanguage) {
       await _settingsService.setAppLanguage(newLanguage);
       state = newLanguage;
-      _logger.info("AppLanguageNotifier: Language updated to - ${state.code}");
+      _logger.info("AppLanguageNotifier: Language updated to: ${state.code}");
     }
   }
 }

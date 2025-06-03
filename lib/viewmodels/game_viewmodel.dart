@@ -30,7 +30,6 @@ class GameViewModel extends StateNotifier<GameState> {
   final TtsService _ttsService;
   final AudioService _audioService;
   final Ref _ref;
-  final AppLocalizations _l10n;
 
   // Cache
   final Map<String, ScreenWithOptionsMenu> _screenCache = {};
@@ -49,13 +48,17 @@ class GameViewModel extends StateNotifier<GameState> {
       this._ttsService,
       this._audioService,
       this._ref,
-      this._l10n,
       this._translationService)
       : super(GameState(status: GameStatus.initial)) {
     _logger.info(
         'GameViewModel initialized for game ID: $_gameId, child ID: $_childId');
     initializeGame();
     _emotionService = EmotionDetectionService();
+  }
+
+  AppLocalizations get _l10n {
+    final currentLocale = _ref.read(localeProvider);
+    return lookupAppLocalizations(currentLocale);
   }
 
   @override
@@ -528,9 +531,11 @@ class GameViewModel extends StateNotifier<GameState> {
       _logger.info('Detected Emotion: $detectedEmotion');
       bool isCorrectEmotion = detectedEmotion.name ==
           state.currentScreenData?.options.first.labelText;
-      state = state.copyWith(clearDetectedEmotion: true ,detectedEmotion: detectedEmotion.name);
+      state = state.copyWith(
+          clearDetectedEmotion: true, detectedEmotion: detectedEmotion.name);
       if (isCorrectEmotion == true) {
-        state = state.copyWith(clearIsCorrect: true, isCorrect: isCorrectEmotion);
+        state =
+            state.copyWith(clearIsCorrect: true, isCorrect: isCorrectEmotion);
         Timer(const Duration(seconds: 1), () {
           if (mounted) moveToNextScreen();
         });
