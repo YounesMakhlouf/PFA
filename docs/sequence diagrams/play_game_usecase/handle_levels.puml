@@ -1,0 +1,17 @@
+actor Child
+boundary GameScreen
+control GameViewModel
+entity GameModel
+== Level Processing ==
+loop for each level
+    GameViewModel -> GameViewModel: loadLevel(level)
+    GameViewModel -> GameModel: createSession(child, game, level)
+    GameModel --> GameViewModel: gameSession
+    GameViewModel -> GameModel: getScreensForLevel(level)
+    GameModel --> GameViewModel: screenIds
+
+    ref over Child, GameScreen, GameViewModel, GameModel : Handle Screens
+    GameViewModel -> GameViewModel: handleLevelCompletion()
+    GameViewModel -> GameModel: endSession(completed: true)
+    GameViewModel -> GameModel: playSound(levelComplete)
+end

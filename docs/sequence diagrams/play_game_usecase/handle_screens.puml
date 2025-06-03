@@ -1,0 +1,28 @@
+@startuml
+actor Child
+boundary GameScreen
+control GameViewModel
+entity GameModel
+
+== Screen Handling ==
+
+loop for each screen
+    Child -> GameScreen: loadScreen(screen)
+    GameScreen -> GameViewModel: getScreen(screen)
+
+    alt screen in cache
+        GameViewModel -> GameModel: getScreenFromCache()
+        GameModel --> GameViewModel: cached screen
+    else
+        GameViewModel -> GameModel: getScreenFromDB()
+        GameModel --> GameViewModel: screen
+        GameViewModel -> GameModel: cacheScreen()
+    end
+
+    GameScreen -> Child: displayScreen()
+    GameViewModel -> GameModel: speak(screen.instruction)
+
+
+    ref over Child, GameScreen, GameModel: Handle Answers
+end
+@enduml

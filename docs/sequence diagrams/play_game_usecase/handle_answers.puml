@@ -1,23 +1,29 @@
 actor Child
 boundary GameScreen
 control GameViewModel
-database GameRepository
-database SessionRepository
-entity AudioService
-entity TtsService
- == Answer Handling ==
-        loop until correct answer
-            Child -> GameScreen: selectOption(option)
-            GameScreen -> GameViewModel: checkAnswer(option)
-            GameViewModel -> GameViewModel: validate answer
-            alt correct
-                GameViewModel -> SessionRepository: addAttemptToSession()
-                GameViewModel -> AudioService: playSound(correct)
-                GameViewModel -> TtsService: speak(correctFeedback)
-                GameViewModel -> GameViewModel: moveToNextScreen()
-            else
-                GameViewModel -> SessionRepository: addAttemptToSession()
-                GameViewModel -> AudioService: playSound(incorrect)
-                GameViewModel -> TtsService: speak(tryAgainFeedback)
-            end
-        end
+entity GameModel
+
+== Answer Handling ==
+loop until correct answer
+    Child -> GameScreen: selectOption(option)
+    GameScreen -> GameViewModel: checkAnswer(option)
+    GameViewModel -> GameModel: validateAnswer(screen, option)
+    GameModel --> GameViewModel : isCorrect
+
+    alt isCorrect = true
+        GameViewModel -> GameModel: addAttemptToSession()
+        GameViewModel -> GameModel: speakCorrectAnswerText()
+        GameViewModel -> GameModel: playCorrectAnswerSound()
+        GameViewModel --> GameScreen: correct_answer_text
+        GameScreen -> Child : display(correct_answer_text)
+        GameViewModel -> GameViewModel: moveToNextScreen()
+
+    else
+        GameViewModel -> GameModel: addAttemptToSession()
+        GameViewModel -> GameModel: speakWrongAnswerText()
+        GameViewModel -> GameModel: playWrongAnswerSound()
+        GameViewModel --> GameScreen: wrong_answer_text
+        GameScreen -> Child : display(wrong_answer_text)
+        GameViewModel -> GameViewModel: moveToNextScreen()
+    end
+end

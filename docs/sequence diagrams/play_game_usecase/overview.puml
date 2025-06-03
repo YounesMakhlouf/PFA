@@ -1,0 +1,23 @@
+@startuml
+actor Child
+boundary GameScreen
+control GameViewModel
+entity GameModel
+
+ref over Child, GameScreen : Navigate To Game Screen
+
+== Initialization ==
+Child -> GameScreen: startGame()
+GameScreen -> GameViewModel: initializeGame()
+GameViewModel -> GameModel: getGame()
+GameModel --> GameViewModel: game
+GameViewModel -> GameModel: getLevelsForGame(game)
+GameModel --> GameViewModel: levels
+
+ref over GameViewModel, GameModel : Handle Levels
+
+== Game Completion ==
+GameViewModel -> GameModel: playSound(gameComplete)
+GameViewModel --> GameScreen: status = completed
+GameScreen -> Child: showCompletion()
+@enduml

@@ -2,14 +2,14 @@ actor Child
 
 boundary HomeScreen
 boundary CategoryScreen
+control CategoryViewModel
 boundary GameScreen
-database  RiverpodProvider
 == Navigating To The Game Screen ==
 
 Child ->HomeScreen : selectCategory(): category
 HomeScreen ->CategoryScreen: navigateTo(category)
-CategoryScreen -> RiverpodProvider: watch(category)
-RiverpodProvider --> CategoryScreen: List<Game>
+CategoryScreen -> CategoryViewModel: getGames(ccategory)
+CategoryViewModel --> CategoryScreen: List<Game>
 CategoryScreen --> Child: Show game grid
 Child ->CategoryScreen : selectGame() : gameId
 CategoryScreen ->GameScreen : navigateTo(gameId)
