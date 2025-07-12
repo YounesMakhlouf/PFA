@@ -1,6 +1,6 @@
-import 'package:pfa/models/stats_summary.dart';
-import 'package:pfa/services/supabase_service.dart';
-import 'package:pfa/services/logging_service.dart';
+import 'package:arc_en_jeu/models/stats_summary.dart';
+import 'package:arc_en_jeu/services/supabase_service.dart';
+import 'package:arc_en_jeu/services/logging_service.dart';
 
 class ChildStatsRepository {
   final SupabaseService _supabaseService;

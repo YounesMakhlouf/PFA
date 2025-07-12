@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:pfa/constants/const.dart';
-import 'package:pfa/providers/global_providers.dart';
-import 'package:pfa/widgets/avatar_display.dart';
+import 'package:arc_en_jeu/constants/const.dart';
+import 'package:arc_en_jeu/providers/global_providers.dart';
+import 'package:arc_en_jeu/widgets/avatar_display.dart';
 
 import '../mocks/mock_services.mocks.dart';
 

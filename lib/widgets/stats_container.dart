@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pfa/config/app_theme.dart';
-import 'package:pfa/widgets/small_stat_box.dart';
+import 'package:arc_en_jeu/config/app_theme.dart';
+import 'package:arc_en_jeu/widgets/small_stat_box.dart';
 import '../l10n/app_localizations.dart';
 
 class StatsContainer extends StatelessWidget {

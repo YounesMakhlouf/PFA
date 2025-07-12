@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pfa/repositories/game_repository.dart';
-import 'package:pfa/viewmodels/game_state.dart';
+import 'package:arc_en_jeu/repositories/game_repository.dart';
+import 'package:arc_en_jeu/viewmodels/game_state.dart';
 
 import '../mocks/mock_data.dart';
 

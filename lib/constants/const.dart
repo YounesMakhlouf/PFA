@@ -1,4 +1,4 @@
-import 'package:pfa/models/enums.dart';
+import 'package:arc_en_jeu/models/enums.dart';
 
 class StorageBuckets {
   static const String gameAssets = 'game-assets';

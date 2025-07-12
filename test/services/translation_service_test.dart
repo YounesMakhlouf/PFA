@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:pfa/constants/const.dart';
-import 'package:pfa/providers/global_providers.dart';
-import 'package:pfa/services/translation_service.dart';
+import 'package:arc_en_jeu/constants/const.dart';
+import 'package:arc_en_jeu/providers/global_providers.dart';
+import 'package:arc_en_jeu/services/translation_service.dart';
 
 import '../mocks/mock_services.mocks.dart';
 

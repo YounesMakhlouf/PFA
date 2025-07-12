@@ -2,12 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pfa/config/app_theme.dart';
-import 'package:pfa/constants/const.dart';
-import 'package:pfa/l10n/app_localizations.dart';
-import 'package:pfa/models/screen.dart';
-import 'package:pfa/providers/global_providers.dart';
-import 'package:pfa/utils/supabase_utils.dart';
+import 'package:arc_en_jeu/config/app_theme.dart';
+import 'package:arc_en_jeu/constants/const.dart';
+import 'package:arc_en_jeu/l10n/app_localizations.dart';
+import 'package:arc_en_jeu/models/screen.dart';
+import 'package:arc_en_jeu/providers/global_providers.dart';
+import 'package:arc_en_jeu/utils/supabase_utils.dart';
 
 class OptionWidget extends ConsumerWidget {
   final Option option;

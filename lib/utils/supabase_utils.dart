@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pfa/providers/global_providers.dart';
+import 'package:arc_en_jeu/providers/global_providers.dart';
 
 /// Helper function to safely get a public URL from a Supabase storage path.
 ///

@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
-import 'package:pfa/config/app_theme.dart';
-import 'package:pfa/l10n/app_localizations.dart';
-import 'package:pfa/models/screen.dart';
-import 'package:pfa/providers/global_providers.dart';
-import 'package:pfa/screens/error_screen.dart';
-import 'package:pfa/screens/game_screen.dart';
-import 'package:pfa/screens/generic_loading_screen.dart';
-import 'package:pfa/utils/color_utils.dart';
-import 'package:pfa/viewmodels/game_state.dart';
+import 'package:arc_en_jeu/config/app_theme.dart';
+import 'package:arc_en_jeu/l10n/app_localizations.dart';
+import 'package:arc_en_jeu/models/screen.dart';
+import 'package:arc_en_jeu/providers/global_providers.dart';
+import 'package:arc_en_jeu/screens/error_screen.dart';
+import 'package:arc_en_jeu/screens/game_screen.dart';
+import 'package:arc_en_jeu/screens/generic_loading_screen.dart';
+import 'package:arc_en_jeu/utils/color_utils.dart';
+import 'package:arc_en_jeu/viewmodels/game_state.dart';
 
 class MultipleChoiceGame extends ConsumerStatefulWidget {
   final String gameId;

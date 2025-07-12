@@ -1,9 +1,9 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pfa/models/screen.dart';
-import 'package:pfa/viewmodels/game_state.dart';
-import 'package:pfa/providers/global_providers.dart';
+import 'package:arc_en_jeu/models/screen.dart';
+import 'package:arc_en_jeu/viewmodels/game_state.dart';
+import 'package:arc_en_jeu/providers/global_providers.dart';
 
 class EmotionDetectionWidget extends ConsumerWidget {
   final String gameId;

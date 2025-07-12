@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pfa/models/category_option.dart';
+import 'package:arc_en_jeu/models/category_option.dart';
 
 class CategoryDropdown extends StatelessWidget {
   final String value;

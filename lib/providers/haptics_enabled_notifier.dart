@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pfa/services/logging_service.dart';
-import 'package:pfa/services/settings_service.dart';
+import 'package:arc_en_jeu/services/logging_service.dart';
+import 'package:arc_en_jeu/services/settings_service.dart';
 
 class HapticsEnabledNotifier extends StateNotifier<bool> {
   final SettingsService _settingsService;

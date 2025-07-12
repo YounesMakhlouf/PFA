@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pfa/models/user.dart';
+import 'package:arc_en_jeu/models/user.dart';
 import 'package:uuid/uuid.dart';
 
 void main() {

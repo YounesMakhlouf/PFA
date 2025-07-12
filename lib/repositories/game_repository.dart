@@ -1,8 +1,8 @@
-import 'package:pfa/models/game.dart';
-import 'package:pfa/models/level.dart';
-import 'package:pfa/models/screen.dart';
-import 'package:pfa/services/supabase_service.dart';
-import 'package:pfa/services/logging_service.dart';
+import 'package:arc_en_jeu/models/game.dart';
+import 'package:arc_en_jeu/models/level.dart';
+import 'package:arc_en_jeu/models/screen.dart';
+import 'package:arc_en_jeu/services/supabase_service.dart';
+import 'package:arc_en_jeu/services/logging_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ScreenWithOptionsMenu {

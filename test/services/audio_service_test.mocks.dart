@@ -9,9 +9,9 @@ import 'dart:typed_data' as _i8;
 import 'package:audioplayers/audioplayers.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i5;
-import 'package:pfa/models/enums.dart' as _i7;
-import 'package:pfa/services/logging_service.dart' as _i4;
-import 'package:pfa/services/settings_service.dart' as _i6;
+import 'package:arc_en_jeu/models/enums.dart' as _i7;
+import 'package:arc_en_jeu/services/logging_service.dart' as _i4;
+import 'package:arc_en_jeu/services/settings_service.dart' as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values

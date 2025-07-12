@@ -1,10 +1,10 @@
 // test/mocks/mock_data.dart
-import 'package:pfa/models/game.dart';
-import 'package:pfa/models/game_session.dart' as gs_model;
-import 'package:pfa/models/level.dart';
-import 'package:pfa/models/screen.dart';
-import 'package:pfa/models/user.dart';
-import 'package:pfa/repositories/game_repository.dart';
+import 'package:arc_en_jeu/models/game.dart';
+import 'package:arc_en_jeu/models/game_session.dart' as gs_model;
+import 'package:arc_en_jeu/models/level.dart';
+import 'package:arc_en_jeu/models/screen.dart';
+import 'package:arc_en_jeu/models/user.dart';
+import 'package:arc_en_jeu/repositories/game_repository.dart';
 
 // --- Child Mocks (Example) ---
 final mockChild1 = Child(

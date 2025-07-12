@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:pfa/models/stats_summary.dart';
-import 'package:pfa/repositories/child_stats_repository.dart';
-import 'package:pfa/services/child_stats_service.dart';
+import 'package:arc_en_jeu/models/stats_summary.dart';
+import 'package:arc_en_jeu/repositories/child_stats_repository.dart';
+import 'package:arc_en_jeu/services/child_stats_service.dart';
 
 import 'child_stats_service_test.mocks.dart';
 

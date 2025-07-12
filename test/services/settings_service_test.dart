@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:pfa/constants/const.dart';
-import 'package:pfa/models/enums.dart';
-import 'package:pfa/services/logging_service.dart';
-import 'package:pfa/services/settings_service.dart';
+import 'package:arc_en_jeu/constants/const.dart';
+import 'package:arc_en_jeu/models/enums.dart';
+import 'package:arc_en_jeu/services/logging_service.dart';
+import 'package:arc_en_jeu/services/settings_service.dart';
 import 'settings_service_test.mocks.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

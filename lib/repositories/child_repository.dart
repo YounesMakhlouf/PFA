@@ -1,7 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:pfa/models/user.dart';
-import 'package:pfa/services/supabase_service.dart';
-import 'package:pfa/services/logging_service.dart';
+import 'package:arc_en_jeu/models/user.dart';
+import 'package:arc_en_jeu/services/supabase_service.dart';
+import 'package:arc_en_jeu/services/logging_service.dart';
 
 class ChildRepository {
   final SupabaseService _supabaseService;

@@ -1,4 +1,4 @@
-name: pfa
+name: arc_en_jeu
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -41,12 +41,12 @@ dependencies:
   uuid: ^4.5.1
 
   # Supabase dependencies
-  supabase_flutter: ^2.9.0
+  supabase_flutter: ^2.9.1
   supabase_auth_ui: ^0.5.5
 
   flutter_dotenv: ^5.2.1
   flutter_tts: ^4.2.3
-  audioplayers: ^6.4.0
+  audioplayers: ^6.5.0
   logging: ^1.3.0
   collection: ^1.19.1
   flutter_riverpod: ^2.6.1
@@ -62,9 +62,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^2.4.11
-  mockito: ^5.4.4
-
+  build_runner: ^2.5.4
+  mockito: ^5.4.6
+  flutter_launcher_icons: ^0.14.4
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -72,6 +72,10 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
 
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/app_icon.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

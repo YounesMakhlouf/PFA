@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:pfa/l10n/app_localizations.dart';
+import 'package:arc_en_jeu/l10n/app_localizations.dart';
 
 enum GameCategory {
   LOGICAL_THINKING,

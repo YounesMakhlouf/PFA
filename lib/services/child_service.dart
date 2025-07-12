@@ -1,4 +1,4 @@
-import 'package:pfa/repositories/child_repository.dart';
+import 'package:arc_en_jeu/repositories/child_repository.dart';
 
 class ChildService {
   final ChildRepository _childRepository;

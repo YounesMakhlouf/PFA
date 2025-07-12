@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:uuid/uuid.dart';
-import 'package:pfa/models/game_session.dart';
+import 'package:arc_en_jeu/models/game_session.dart';
 
 void main() {
   const uuid = Uuid();

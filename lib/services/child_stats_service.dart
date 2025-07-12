@@ -1,5 +1,5 @@
-import 'package:pfa/models/stats_summary.dart';
-import 'package:pfa/repositories/child_stats_repository.dart';
+import 'package:arc_en_jeu/models/stats_summary.dart';
+import 'package:arc_en_jeu/repositories/child_stats_repository.dart';
 
 class ChildStatsService {
   final ChildStatsRepository _statsRepository;

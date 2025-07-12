@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
-import 'package:pfa/l10n/app_localizations.dart';
-import 'package:pfa/providers/global_providers.dart';
+import 'package:arc_en_jeu/l10n/app_localizations.dart';
+import 'package:arc_en_jeu/providers/global_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class WelcomeScreen extends ConsumerWidget {
