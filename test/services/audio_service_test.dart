@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:pfa/services/audio_service.dart';
-import 'package:pfa/services/logging_service.dart';
-import 'package:pfa/services/settings_service.dart';
+import 'package:arc_en_jeu/services/audio_service.dart';
+import 'package:arc_en_jeu/services/logging_service.dart';
+import 'package:arc_en_jeu/services/settings_service.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 @GenerateMocks([LoggingService, SettingsService, AudioPlayer])

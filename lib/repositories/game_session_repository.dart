@@ -1,7 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:pfa/models/game_session.dart';
-import 'package:pfa/services/logging_service.dart';
-import 'package:pfa/services/supabase_service.dart';
+import 'package:arc_en_jeu/models/game_session.dart';
+import 'package:arc_en_jeu/services/logging_service.dart';
+import 'package:arc_en_jeu/services/supabase_service.dart';
 
 class GameSessionRepository {
   final SupabaseService _supabaseService;

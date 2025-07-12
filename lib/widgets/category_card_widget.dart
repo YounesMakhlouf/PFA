@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pfa/models/game.dart';
-import 'package:pfa/utils/color_utils.dart';
+import 'package:arc_en_jeu/models/game.dart';
+import 'package:arc_en_jeu/utils/color_utils.dart';
 
 class CategoryCardWidget extends StatelessWidget {
   final GameCategory category;

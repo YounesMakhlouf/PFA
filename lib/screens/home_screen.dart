@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pfa/config/routes.dart';
-import 'package:pfa/l10n/app_localizations.dart';
-import 'package:pfa/models/game.dart';
-import 'package:pfa/providers/global_providers.dart';
-import 'package:pfa/screens/error_screen.dart';
-import 'package:pfa/screens/generic_loading_screen.dart';
-import 'package:pfa/widgets/category_card_widget.dart';
+import 'package:arc_en_jeu/config/routes.dart';
+import 'package:arc_en_jeu/l10n/app_localizations.dart';
+import 'package:arc_en_jeu/models/game.dart';
+import 'package:arc_en_jeu/providers/global_providers.dart';
+import 'package:arc_en_jeu/screens/error_screen.dart';
+import 'package:arc_en_jeu/screens/generic_loading_screen.dart';
+import 'package:arc_en_jeu/widgets/category_card_widget.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});

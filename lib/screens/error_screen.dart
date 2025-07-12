@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pfa/l10n/app_localizations.dart';
+import 'package:arc_en_jeu/l10n/app_localizations.dart';
 
 class ErrorScreen extends StatelessWidget {
   final String errorMessage;

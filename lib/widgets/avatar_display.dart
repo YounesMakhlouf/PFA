@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pfa/constants/const.dart';
-import 'package:pfa/providers/global_providers.dart';
-import 'package:pfa/utils/supabase_utils.dart';
+import 'package:arc_en_jeu/constants/const.dart';
+import 'package:arc_en_jeu/providers/global_providers.dart';
+import 'package:arc_en_jeu/utils/supabase_utils.dart';
 
 class AvatarDisplay extends ConsumerWidget {
   final String? avatarUrlOrPath;

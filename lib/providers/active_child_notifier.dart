@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pfa/models/user.dart';
-import 'package:pfa/providers/global_providers.dart';
+import 'package:arc_en_jeu/models/user.dart';
+import 'package:arc_en_jeu/providers/global_providers.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ActiveChildNotifier extends StateNotifier<Child?> {

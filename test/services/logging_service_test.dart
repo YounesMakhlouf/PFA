@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:async';
 import 'package:logging/logging.dart';
-import 'package:pfa/services/logging_service.dart';
+import 'package:arc_en_jeu/services/logging_service.dart';
 
 void main() {
   group('LoggingService', () {

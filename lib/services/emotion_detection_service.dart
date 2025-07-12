@@ -1,6 +1,6 @@
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
-import 'package:pfa/models/emotions_enum.dart';
-import 'package:pfa/constants/const.dart';
+import 'package:arc_en_jeu/models/emotions_enum.dart';
+import 'package:arc_en_jeu/constants/const.dart';
 
 class EmotionDetectionService {
   late final FaceDetector _faceDetector;

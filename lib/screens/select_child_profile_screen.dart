@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pfa/config/routes.dart';
-import 'package:pfa/l10n/app_localizations.dart';
-import 'package:pfa/models/user.dart';
-import 'package:pfa/providers/global_providers.dart';
-import 'package:pfa/screens/error_screen.dart';
-import 'package:pfa/screens/generic_loading_screen.dart';
-import 'package:pfa/widgets/avatar_display.dart';
+import 'package:arc_en_jeu/config/routes.dart';
+import 'package:arc_en_jeu/l10n/app_localizations.dart';
+import 'package:arc_en_jeu/models/user.dart';
+import 'package:arc_en_jeu/providers/global_providers.dart';
+import 'package:arc_en_jeu/screens/error_screen.dart';
+import 'package:arc_en_jeu/screens/generic_loading_screen.dart';
+import 'package:arc_en_jeu/widgets/avatar_display.dart';
 
 class SelectChildProfileScreen extends ConsumerStatefulWidget {
   const SelectChildProfileScreen({super.key});

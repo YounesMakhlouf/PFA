@@ -2,15 +2,15 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pfa/config/app_theme.dart';
-import 'package:pfa/constants/const.dart';
-import 'package:pfa/l10n/app_localizations.dart';
-import 'package:pfa/models/game.dart';
-import 'package:pfa/models/screen.dart';
-import 'package:pfa/providers/global_providers.dart';
-import 'package:pfa/screens/error_screen.dart';
-import 'package:pfa/viewmodels/game_state.dart';
-import 'package:pfa/widgets/option_widget.dart';
+import 'package:arc_en_jeu/config/app_theme.dart';
+import 'package:arc_en_jeu/constants/const.dart';
+import 'package:arc_en_jeu/l10n/app_localizations.dart';
+import 'package:arc_en_jeu/models/game.dart';
+import 'package:arc_en_jeu/models/screen.dart';
+import 'package:arc_en_jeu/providers/global_providers.dart';
+import 'package:arc_en_jeu/screens/error_screen.dart';
+import 'package:arc_en_jeu/viewmodels/game_state.dart';
+import 'package:arc_en_jeu/widgets/option_widget.dart';
 
 class GameScreenWidget extends ConsumerStatefulWidget {
   final Game game;

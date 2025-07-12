@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:pfa/constants/const.dart';
-import 'package:pfa/models/enums.dart';
-import 'package:pfa/providers/global_providers.dart';
-import 'package:pfa/services/logging_service.dart';
-import 'package:pfa/services/settings_service.dart';
+import 'package:arc_en_jeu/constants/const.dart';
+import 'package:arc_en_jeu/models/enums.dart';
+import 'package:arc_en_jeu/providers/global_providers.dart';
+import 'package:arc_en_jeu/services/logging_service.dart';
+import 'package:arc_en_jeu/services/settings_service.dart';
 
 class TtsService {
   final LoggingService _logger;

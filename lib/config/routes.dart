@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:pfa/l10n/app_localizations.dart';
-import 'package:pfa/models/game.dart';
-import 'package:pfa/screens/auth_gate.dart';
-import 'package:pfa/screens/category_screen.dart';
-import 'package:pfa/screens/create_child_profile_screen.dart';
-import 'package:pfa/screens/error_screen.dart';
-import 'package:pfa/screens/home_screen.dart';
-import 'package:pfa/screens/select_child_profile_screen.dart';
-import 'package:pfa/screens/settings_screen.dart';
-import 'package:pfa/screens/welcome_screen.dart';
-import 'package:pfa/games/multiple_choice_game.dart';
+import 'package:arc_en_jeu/l10n/app_localizations.dart';
+import 'package:arc_en_jeu/models/game.dart';
+import 'package:arc_en_jeu/screens/auth_gate.dart';
+import 'package:arc_en_jeu/screens/category_screen.dart';
+import 'package:arc_en_jeu/screens/create_child_profile_screen.dart';
+import 'package:arc_en_jeu/screens/error_screen.dart';
+import 'package:arc_en_jeu/screens/home_screen.dart';
+import 'package:arc_en_jeu/screens/select_child_profile_screen.dart';
+import 'package:arc_en_jeu/screens/settings_screen.dart';
+import 'package:arc_en_jeu/screens/welcome_screen.dart';
+import 'package:arc_en_jeu/games/multiple_choice_game.dart';
 
 import '../screens/stats_screen.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pfa/models/game.dart';
-import 'package:pfa/models/level.dart';
+import 'package:arc_en_jeu/models/game.dart';
+import 'package:arc_en_jeu/models/level.dart';
 
 void main() {
   // --- Game Tests ---

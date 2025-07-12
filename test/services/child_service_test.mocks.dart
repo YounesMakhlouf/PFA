@@ -7,8 +7,8 @@ import 'dart:async' as _i3;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i5;
-import 'package:pfa/models/user.dart' as _i4;
-import 'package:pfa/repositories/child_repository.dart' as _i2;
+import 'package:arc_en_jeu/models/user.dart' as _i4;
+import 'package:arc_en_jeu/repositories/child_repository.dart' as _i2;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values

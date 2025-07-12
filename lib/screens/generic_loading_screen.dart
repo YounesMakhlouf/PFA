@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
-import 'package:pfa/l10n/app_localizations.dart';
-import 'package:pfa/providers/global_providers.dart';
+import 'package:arc_en_jeu/l10n/app_localizations.dart';
+import 'package:arc_en_jeu/providers/global_providers.dart';
 
 class GenericLoadingScreen extends ConsumerWidget {
   final String? message;

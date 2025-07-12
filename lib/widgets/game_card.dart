@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:pfa/utils/color_utils.dart';
+import 'package:arc_en_jeu/utils/color_utils.dart';
 
 class GameCardWidget extends StatelessWidget {
   final String title;

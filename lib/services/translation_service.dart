@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pfa/providers/global_providers.dart';
+import 'package:arc_en_jeu/providers/global_providers.dart';
 
 import '../constants/const.dart';
 

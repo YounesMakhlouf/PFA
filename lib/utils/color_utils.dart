@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pfa/config/app_theme.dart';
+import 'package:arc_en_jeu/config/app_theme.dart';
 
 extension HexColorParsing on String? {
   Color parseToColor({required Color fallbackColor}) {

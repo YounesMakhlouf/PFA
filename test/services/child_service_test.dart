@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:pfa/repositories/child_repository.dart';
-import 'package:pfa/services/child_service.dart';
+import 'package:arc_en_jeu/repositories/child_repository.dart';
+import 'package:arc_en_jeu/services/child_service.dart';
 
 import 'child_service_test.mocks.dart';
 

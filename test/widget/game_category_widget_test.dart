@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pfa/l10n/app_localizations.dart';
-import 'package:pfa/models/game.dart';
-import 'package:pfa/widgets/category_card_widget.dart';
-import 'package:pfa/config/app_theme.dart';
+import 'package:arc_en_jeu/l10n/app_localizations.dart';
+import 'package:arc_en_jeu/models/game.dart';
+import 'package:arc_en_jeu/widgets/category_card_widget.dart';
+import 'package:arc_en_jeu/config/app_theme.dart';
 
 Widget createTestableWidget({required Widget child}) {
   return ProviderScope(

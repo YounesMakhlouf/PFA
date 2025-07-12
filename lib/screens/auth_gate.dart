@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pfa/l10n/app_localizations.dart';
-import 'package:pfa/providers/global_providers.dart';
-import 'package:pfa/screens/create_child_profile_screen.dart';
-import 'package:pfa/screens/error_screen.dart';
-import 'package:pfa/screens/generic_loading_screen.dart';
-import 'package:pfa/screens/home_screen.dart';
-import 'package:pfa/screens/welcome_screen.dart';
+import 'package:arc_en_jeu/l10n/app_localizations.dart';
+import 'package:arc_en_jeu/providers/global_providers.dart';
+import 'package:arc_en_jeu/screens/create_child_profile_screen.dart';
+import 'package:arc_en_jeu/screens/error_screen.dart';
+import 'package:arc_en_jeu/screens/generic_loading_screen.dart';
+import 'package:arc_en_jeu/screens/home_screen.dart';
+import 'package:arc_en_jeu/screens/welcome_screen.dart';
 
 class AuthGate extends ConsumerWidget {
   const AuthGate({super.key});

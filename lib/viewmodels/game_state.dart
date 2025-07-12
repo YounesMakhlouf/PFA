@@ -1,7 +1,7 @@
-import 'package:pfa/models/game.dart';
-import 'package:pfa/models/level.dart';
-import 'package:pfa/models/screen.dart';
-import 'package:pfa/repositories/game_repository.dart';
+import 'package:arc_en_jeu/models/game.dart';
+import 'package:arc_en_jeu/models/level.dart';
+import 'package:arc_en_jeu/models/screen.dart';
+import 'package:arc_en_jeu/repositories/game_repository.dart';
 
 enum GameStatus {
   initial,

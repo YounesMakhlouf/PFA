@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pfa/models/screen.dart';
+import 'package:arc_en_jeu/models/screen.dart';
 
 void main() {
   group('Option Model', () {
