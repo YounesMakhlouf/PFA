@@ -316,6 +316,5 @@ class _MultipleChoiceGameState extends ConsumerState<MultipleChoiceGame> {
           ),
         );
     }
-    throw StateError('Unhandled game status: ${gameState.status}');
   }
 }

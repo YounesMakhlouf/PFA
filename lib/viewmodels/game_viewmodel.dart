@@ -19,7 +19,7 @@ import 'package:arc_en_jeu/viewmodels/game_state.dart';
 Timer? _feedbackTimer;
 
 class GameViewModel extends Notifier<GameState> {
-  late String _gameId;
+  final String _gameId;
   late String _childId;
   late GameRepository _gameRepository;
   late LoggingService _logger;
@@ -38,9 +38,10 @@ class GameViewModel extends Notifier<GameState> {
   late EmotionDetectionService _emotionService;
   CameraController? _cameraController;
 
+  GameViewModel(this._gameId);
+
   @override
-  GameState build(String gameId) {
-    _gameId = gameId;
+  GameState build() {
     final activeChild = ref.watch(activeChildProvider);
     if (activeChild == null) {
       throw StateError('Cannot initialize GameViewModel without an active child.');
