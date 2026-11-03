@@ -3,21 +3,20 @@ import 'package:arc_en_jeu/models/user.dart';
 import 'package:arc_en_jeu/providers/global_providers.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class ActiveChildNotifier extends StateNotifier<Child?> {
-  final Ref _ref;
-
-  ActiveChildNotifier(this._ref) : super(null) {
-    final logger = _ref.read(loggingServiceProvider);
+class ActiveChildNotifier extends Notifier<Child?> {
+  @override
+  Child? build() {
+    final logger = ref.read(loggingServiceProvider);
     _loadInitialActiveChild();
 
-    _ref.listen<AsyncValue<List<Child>>>(initialChildProfilesProvider,
+    ref.listen<AsyncValue<List<Child>>>(initialChildProfilesProvider,
         (previous, next) {
       logger.debug(
           "ActiveChildNotifier: Listener initialChildProfilesProvider fired: ${next.toString()}");
       _updateActiveChild(next);
     });
 
-    _ref.listen<AsyncValue<AuthState>>(supabaseAuthStateProvider,
+    ref.listen<AsyncValue<AuthState>>(supabaseAuthStateProvider,
         (previous, next) {
       logger.debug(
           "ActiveChildNotifier: Listener supabaseAuthStateProvider fired: ${next.toString()}");
@@ -36,24 +35,27 @@ class ActiveChildNotifier extends StateNotifier<Child?> {
         state = null;
       }
     });
+    return null;
   }
 
   Future<void> _loadInitialActiveChild() async {
-    final logger = _ref.read(loggingServiceProvider);
-    final settingsService = _ref.read(settingsServiceProvider);
-    final childRepository = _ref.read(childRepositoryProvider);
+    final logger = ref.read(loggingServiceProvider);
+    final settingsService = ref.read(settingsServiceProvider);
+    final childRepository = ref.read(childRepositoryProvider);
 
     final lastActiveId = await settingsService.getLastActiveChildId();
+    if (!ref.mounted) return;
     if (lastActiveId != null) {
       logger.info(
           "ActiveChildNotifier: Found last active child ID: $lastActiveId. Verifying...");
       try {
         // Verify this child still exists and belongs to the current user
         final profile = await childRepository.getChildProfileById(lastActiveId);
+        if (!ref.mounted) return;
         if (profile != null) {
           // Check if current user (from auth state) matches profile's account_id
           final currentAuthUser =
-              _ref.read(supabaseAuthStateProvider).valueOrNull?.session?.user;
+              ref.read(supabaseAuthStateProvider).value?.session?.user;
           if (currentAuthUser != null &&
               profile.accountId == currentAuthUser.id) {
             logger.info(
@@ -83,9 +85,9 @@ class ActiveChildNotifier extends StateNotifier<Child?> {
   }
 
   void _updateActiveChild(AsyncValue<List<Child>> asyncProfiles) {
-    final logger = _ref.read(loggingServiceProvider);
+    final logger = ref.read(loggingServiceProvider);
     final currentSession =
-        _ref.read(supabaseAuthStateProvider).valueOrNull?.session;
+        ref.read(supabaseAuthStateProvider).value?.session;
     if (currentSession == null) {
       logger.debug("_updateActiveChild: Skipping update, no active session.");
       return;
@@ -119,9 +121,9 @@ class ActiveChildNotifier extends StateNotifier<Child?> {
   }
 
   void set(Child? child) {
-    final settingsService = _ref.read(settingsServiceProvider);
+    final settingsService = ref.read(settingsServiceProvider);
     if (state?.childId != child?.childId) {
-      _ref.read(loggingServiceProvider).info(
+      ref.read(loggingServiceProvider).info(
           "ActiveChildNotifier: Manually setting active child to ${child?.childId ?? 'null'}");
       state = child;
       settingsService.setLastActiveChildId(child?.childId);

@@ -62,10 +62,7 @@ void main() {
           loggingServiceProvider.overrideWithValue(mockLoggingService),
           settingsServiceProvider.overrideWithValue(mockSettingsService),
           hapticsEnabledProvider.overrideWith(
-            (ref) => HapticsEnabledNotifier(
-              ref.read(settingsServiceProvider),
-              ref.read(loggingServiceProvider),
-            ),
+            HapticsEnabledNotifier.new,
           ),
         ],
         child: MaterialApp(

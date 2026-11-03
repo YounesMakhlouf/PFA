@@ -3,17 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:arc_en_jeu/constants/const.dart';
-import 'package:arc_en_jeu/providers/global_providers.dart';
 import 'package:arc_en_jeu/services/translation_service.dart';
-
-import '../mocks/mock_services.mocks.dart';
 
 void main() {
   setUpAll(() {
     provideDummy<Locale>(const Locale('ar', 'SA'));
   });
-  late MockRef mockRef;
   late TranslationService translationService;
+  late String languageCode;
 
   // Test data
   final validJsonData = {
@@ -24,8 +21,8 @@ void main() {
   final String validJsonString = jsonEncode(validJsonData);
 
   setUp(() {
-    mockRef = MockRef();
-    translationService = TranslationService(mockRef);
+    languageCode = 'ar';
+    translationService = TranslationService(() => languageCode);
   });
 
   group('TranslationService - getLocalizedText', () {
@@ -97,11 +94,10 @@ void main() {
     test(
         'should use language code from localeProvider and return correct translation (ar)',
         () {
-      when(mockRef.read(localeProvider)).thenReturn(const Locale('ar'));
+      languageCode = 'ar';
       final result =
           translationService.getLocalizedTextFromAppLocale(validJsonString);
       expect(result, "مرحبا عربي");
-      verify(mockRef.read(localeProvider)).called(1);
     });
 
     test(
@@ -112,8 +108,7 @@ void main() {
         "ar": "مرحبا عربي الافتراضي",
         "fr": "Bonjour Français"
       });
-      when(mockRef.read(localeProvider))
-          .thenReturn(const Locale('es')); // Spanish not in JSON
+      languageCode = 'es'; // Spanish not in JSON
       final result = translationService
           .getLocalizedTextFromAppLocale(jsonWithDefaultArabic);
       expect(result, "مرحبا عربي الافتراضي"); // Falls back to 'ar'
@@ -124,8 +119,7 @@ void main() {
         () {
       final jsonWithOnlyEnglishAndFrench =
           jsonEncode({"en": "Hello English", "fr": "Bonjour Français"});
-      when(mockRef.read(localeProvider))
-          .thenReturn(const Locale('de')); // German not in JSON
+      languageCode = 'de'; // German not in JSON
       final result = translationService
           .getLocalizedTextFromAppLocale(jsonWithOnlyEnglishAndFrench);
       // Expect either "Hello English" or "Bonjour Français" depending on map iteration order
@@ -138,7 +132,7 @@ void main() {
         'should use language code from localeProvider and return correct translation',
         () {
       // Arrange: Mock the localeProvider to return a specific Locale
-      when(mockRef.read(localeProvider)).thenReturn(const Locale('fr'));
+      languageCode = 'fr';
 
       // Act
       final result =
@@ -146,15 +140,13 @@ void main() {
 
       // Assert
       expect(result, "Bonjour Français");
-      verify(mockRef.read(localeProvider))
-          .called(1); // Verify provider was read
     });
 
     test(
         'should use fallback logic if localeProvider language is missing in JSON',
         () {
       // Arrange: localeProvider returns 'es', but 'es' is not in validJsonString
-      when(mockRef.read(localeProvider)).thenReturn(const Locale('es'));
+      languageCode = 'es';
 
       // Act
       final result =
@@ -169,7 +161,7 @@ void main() {
         () {
       final jsonStringWithOnlyGerman = jsonEncode({"de": "Hallo Deutsch"});
       // Arrange: localeProvider returns 'es'
-      when(mockRef.read(localeProvider)).thenReturn(const Locale('es'));
+      languageCode = 'es';
 
       // Act
       final result = translationService

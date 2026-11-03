@@ -20,7 +20,7 @@ import 'package:arc_en_jeu/services/tts_service.dart';
   AudioService,
   EmotionDetectionService,
   AppLocalizations,
-  Ref,
+
   SupabaseService,
   SettingsService
 ])

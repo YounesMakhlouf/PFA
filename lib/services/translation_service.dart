@@ -1,13 +1,10 @@
 import 'dart:convert';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:arc_en_jeu/providers/global_providers.dart';
-
 import '../constants/const.dart';
 
 class TranslationService {
-  final Ref _ref;
-  TranslationService(this._ref);
+  final String Function() _languageCode;
+  TranslationService(this._languageCode);
 
   String getLocalizedText(String jsonString, String currentLanguageCode) {
     try {
@@ -22,7 +19,6 @@ class TranslationService {
   }
 
   String getLocalizedTextFromAppLocale(String jsonString) {
-    final currentLanguageCode = _ref.read(localeProvider).languageCode;
-    return getLocalizedText(jsonString, currentLanguageCode);
+    return getLocalizedText(jsonString, _languageCode());
   }
 }
