@@ -5,7 +5,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:arc_en_jeu/models/user.dart';
 import 'package:arc_en_jeu/providers/active_child_notifier.dart';
 import 'package:arc_en_jeu/providers/global_providers.dart';
-import 'package:arc_en_jeu/providers/haptics_enabled_notifier.dart';
 import 'package:arc_en_jeu/repositories/child_repository.dart';
 import 'package:arc_en_jeu/repositories/game_session_repository.dart';
 import 'package:arc_en_jeu/services/translation_service.dart';
