@@ -40,8 +40,8 @@ void main() async {
     runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      localizationsDelegates: [
-        const AppAuthLocalizationsDelegate(),
+      localizationsDelegates: const [
+        AppAuthLocalizationsDelegate(),
         ...AppLocalizations.localizationsDelegates,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
@@ -90,8 +90,8 @@ class MyApp extends ConsumerWidget {
       routes: AppRoutes.routes,
       home: showOnboarding ? const OnboardingScreen() : const AuthGate(),
       locale: currentLocale,
-      localizationsDelegates: [
-        const AppAuthLocalizationsDelegate(),
+      localizationsDelegates: const [
+        AppAuthLocalizationsDelegate(),
         ...AppLocalizations.localizationsDelegates,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
