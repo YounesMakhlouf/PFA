@@ -30,7 +30,7 @@ class SupabaseService {
 
       await Supabase.initialize(
         url: supabaseUrl,
-        anonKey: supabaseAnonKey,
+        publishableKey: supabaseAnonKey,
       );
 
       _logger.info('Supabase global instance initialized successfully.');
@@ -147,3 +147,4 @@ class SupabaseService {
     return Exception(message);
   }
 }
+
