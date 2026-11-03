@@ -1,49 +1,79 @@
+import 'package:arc_en_jeu/l10n/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
-/// Translations for the auth form in the same three languages as the app.
 class AppAuthLocalizations extends SupabaseAuthUILocalizations {
   AppAuthLocalizations(super.locale);
 
-  bool get _isFrench => localeName == 'fr';
-  bool get _isArabic => localeName == 'ar';
-
-  String _text(String en, String fr, String ar) =>
-      _isFrench ? fr : (_isArabic ? ar : en);
+  AppLocalizations get _app => lookupAppLocalizations(Locale(localeName));
 
   @override
-  String get enterEmail => _text('Email address', 'Adresse e-mail', 'البريد الإلكتروني');
+  String get enterEmail => _app.enterEmail;
   @override
-  String get validEmailError => _text('Enter a valid email address', 'Saisissez une adresse e-mail valide', 'أدخل بريدًا إلكترونيًا صالحًا');
+  String get validEmailError => _app.validEmailError;
   @override
-  String get enterPassword => _text('Password', 'Mot de passe', 'كلمة المرور');
+  String get enterPassword => _app.enterPassword;
   @override
-  String get passwordLengthError => _text('Password must be at least 6 characters', 'Le mot de passe doit contenir au moins 6 caractères', 'يجب أن تتكون كلمة المرور من 6 أحرف على الأقل');
+  String get passwordLengthError => _app.passwordLengthError;
   @override
-  String get signIn => _text('Sign in', 'Se connecter', 'تسجيل الدخول');
+  String get signIn => _app.signIn;
   @override
-  String get signUp => _text('Create account', 'Créer un compte', 'إنشاء حساب');
+  String get signUp => _app.signUp;
   @override
-  String get forgotPassword => _text('Forgot password?', 'Mot de passe oublié ?', 'هل نسيت كلمة المرور؟');
+  String get forgotPassword => _app.forgotPassword;
   @override
-  String get dontHaveAccount => _text('New here?', 'Pas encore de compte ?', 'ليس لديك حساب؟');
+  String get dontHaveAccount => _app.dontHaveAccount;
   @override
-  String get haveAccount => _text('Already registered?', 'Vous avez déjà un compte ?', 'لديك حساب بالفعل؟');
+  String get haveAccount => _app.haveAccount;
   @override
-  String get sendPasswordReset => _text('Send reset link', 'Envoyer le lien de réinitialisation', 'إرسال رابط إعادة التعيين');
+  String get sendPasswordReset => _app.sendPasswordReset;
   @override
-  String get passwordResetSent => _text('Password reset email sent', 'E-mail de réinitialisation envoyé', 'تم إرسال رسالة إعادة تعيين كلمة المرور');
+  String get passwordResetSent => _app.passwordResetSent;
   @override
-  String get backToSignIn => _text('Back to sign in', 'Retour à la connexion', 'العودة إلى تسجيل الدخول');
+  String get backToSignIn => _app.backToSignIn;
   @override
-  String get unexpectedError => _text('Something went wrong', 'Une erreur est survenue', 'حدث خطأ ما');
+  String get unexpectedError => _app.unexpectedError;
   @override
-  String get requiredFieldError => _text('This field is required', 'Ce champ est obligatoire', 'هذا الحقل مطلوب');
+  String get requiredFieldError => _app.requiredFieldError;
   @override
-  String get confirmPasswordError => _text('Passwords do not match', 'Les mots de passe ne correspondent pas', 'كلمتا المرور غير متطابقتين');
+  String get confirmPasswordError => _app.confirmPasswordError;
   @override
-  String get confirmPassword => _text('Confirm password', 'Confirmer le mot de passe', 'تأكيد كلمة المرور');
+  String get confirmPassword => _app.confirmPassword;
+
+  // These package strings aren't currently used by the email/password form.
+  @override
+  String get changePassword => 'Change password';
+  @override
+  String get checkYourEmail => 'Check your email';
+  @override
+  String get continueWithMagicLink => 'Continue with a magic link';
+  @override
+  String get enterCodeSent => 'Enter the code sent to you';
+  @override
+  String get enterNewPassword => 'Enter a new password';
+  @override
+  String get enterOneTimeCode => 'Enter the one-time code';
+  @override
+  String get enterOtpCode => 'Enter the verification code';
+  @override
+  String get enterPhoneNumber => 'Enter your phone number';
+  @override
+  String get otpCodeError => 'Enter a valid verification code';
+  @override
+  String get otpDisabledError => 'One-time password sign-in is unavailable';
+  @override
+  String get passwordChangedSuccess => 'Password changed successfully';
+  @override
+  String get successSignInMessage => 'Signed in successfully';
+  @override
+  String get updatePassword => 'Update password';
+  @override
+  String get validPhoneNumberError => 'Enter a valid phone number';
+  @override
+  String get verifyPhone => 'Verify phone number';
+  @override
+  String continueWithProvider(String provider) => 'Continue with $provider';
 }
 
 class AppAuthLocalizationsDelegate
