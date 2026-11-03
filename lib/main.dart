@@ -11,6 +11,7 @@ import 'package:arc_en_jeu/services/supabase_service.dart';
 
 import 'config/routes.dart';
 import 'l10n/app_localizations.dart';
+import 'l10n/auth_ui_localizations.dart';
 
 Future<void> initializeAppServices() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,7 +40,10 @@ void main() async {
     runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: [
+        const AppAuthLocalizationsDelegate(),
+        ...AppLocalizations.localizationsDelegates,
+      ],
       supportedLocales: AppLocalizations.supportedLocales,
       home: ErrorScreen(
           errorMessage: "App failed to initialize: ${error.toString()}"),
@@ -86,7 +90,10 @@ class MyApp extends ConsumerWidget {
       routes: AppRoutes.routes,
       home: showOnboarding ? const OnboardingScreen() : const AuthGate(),
       locale: currentLocale,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: [
+        const AppAuthLocalizationsDelegate(),
+        ...AppLocalizations.localizationsDelegates,
+      ],
       supportedLocales: AppLocalizations.supportedLocales,
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
     );

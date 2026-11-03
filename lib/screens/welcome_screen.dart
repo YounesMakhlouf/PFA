@@ -17,24 +17,6 @@ class WelcomeScreen extends ConsumerWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SupaEmailAuth(
-          localization: SupaEmailAuthLocalization(
-            enterEmail: l10n.enterEmail,
-            validEmailError: l10n.validEmailError,
-            enterPassword: l10n.enterPassword,
-            passwordLengthError: l10n.passwordLengthError,
-            signIn: l10n.signIn,
-            signUp: l10n.signUp,
-            forgotPassword: l10n.forgotPassword,
-            dontHaveAccount: l10n.dontHaveAccount,
-            haveAccount: l10n.haveAccount,
-            sendPasswordReset: l10n.sendPasswordReset,
-            passwordResetSent: l10n.passwordResetSent,
-            backToSignIn: l10n.backToSignIn,
-            unexpectedError: l10n.unexpectedError,
-            requiredFieldError: l10n.requiredFieldError,
-            confirmPasswordError: l10n.confirmPasswordError,
-            confirmPassword: l10n.confirmPassword,
-          ),
           onSignInComplete: (response) {
             logger.info(
                 'SupaEmailAuth: Sign In Complete. User: ${response.user?.id}. AuthGate will handle navigation.');
