@@ -18,54 +18,55 @@ import 'package:arc_en_jeu/viewmodels/game_state.dart';
 
 Timer? _feedbackTimer;
 
-class GameViewModel extends StateNotifier<GameState> {
+class GameViewModel extends Notifier<GameState> {
   final String _gameId;
-  final String _childId;
-  final GameRepository _gameRepository;
-  final LoggingService _logger;
-  final GameSessionRepository _sessionRepository;
-  final TranslationService _translationService;
+  late String _childId;
+  late GameRepository _gameRepository;
+  late LoggingService _logger;
+  late GameSessionRepository _sessionRepository;
+  late TranslationService _translationService;
 
   bool _isDetecting = false;
-  final TtsService _ttsService;
-  final AudioService _audioService;
-  final Ref _ref;
+  late TtsService _ttsService;
+  late AudioService _audioService;
 
   // Cache
   final Map<String, ScreenWithOptionsMenu> _screenCache = {};
   gs_model.GameSession? _currentGameSession;
 
   // Emotion detection
-  late final EmotionDetectionService _emotionService;
+  late EmotionDetectionService _emotionService;
   CameraController? _cameraController;
 
-  GameViewModel(
-      this._gameId,
-      this._childId,
-      this._gameRepository,
-      this._logger,
-      this._sessionRepository,
-      this._ttsService,
-      this._audioService,
-      this._ref,
-      this._translationService)
-      : super(GameState(status: GameStatus.initial)) {
+  GameViewModel(this._gameId);
+
+  @override
+  GameState build() {
+    final activeChild = ref.watch(activeChildProvider);
+    if (activeChild == null) {
+      throw StateError('Cannot initialize GameViewModel without an active child.');
+    }
+    _childId = activeChild.childId;
+    _gameRepository = ref.read(gameRepositoryProvider);
+    _logger = ref.read(loggingServiceProvider);
+    _sessionRepository = ref.read(gameSessionRepositoryProvider);
+    _ttsService = ref.read(ttsServiceProvider);
+    _audioService = ref.read(audioServiceProvider);
+    _translationService = ref.read(translationServiceProvider);
+    _emotionService = EmotionDetectionService();
+    ref.onDispose(() {
+      _feedbackTimer?.cancel();
+      disposeCamera();
+    });
     _logger.info(
         'GameViewModel initialized for game ID: $_gameId, child ID: $_childId');
-    initializeGame();
-    _emotionService = EmotionDetectionService();
+    Future.microtask(initializeGame);
+    return GameState(status: GameStatus.initial);
   }
 
   AppLocalizations get _l10n {
-    final currentLocale = _ref.read(localeProvider);
+    final currentLocale = ref.read(localeProvider);
     return lookupAppLocalizations(currentLocale);
-  }
-
-  @override
-  void dispose() {
-    _feedbackTimer?.cancel();
-    disposeCamera();
-    super.dispose();
   }
 
   Future<void> initializeGame() async {
@@ -312,7 +313,7 @@ class GameViewModel extends StateNotifier<GameState> {
   }
 
   void _processMultipleChoiceAnswer(Option selectedOption) {
-    final bool hapticsAreEnabled = _ref.read(hapticsEnabledProvider);
+    final bool hapticsAreEnabled = ref.read(hapticsEnabledProvider);
     if (selectedOption.isStoryContinueButton) {
       _logger.debug(
           "Processing story continue button. Moving to next screen directly.");
@@ -349,14 +350,14 @@ class GameViewModel extends StateNotifier<GameState> {
       if (isCorrectCurrently == true) {
         // Delay moving to the next screen
         Timer(const Duration(seconds: 1), () {
-          if (mounted) moveToNextScreen();
+          if (ref.mounted) moveToNextScreen();
         });
       }
     }
   }
 
   void _processMemoryCardSelection(Option tappedCard) {
-    final hapticsAreEnabled = _ref.read(hapticsEnabledProvider);
+    final hapticsAreEnabled = ref.read(hapticsEnabledProvider);
 
     if (state.isMemoryPairAttempted ||
         state.selectedMemoryCards
@@ -405,7 +406,7 @@ class GameViewModel extends StateNotifier<GameState> {
       }
 
       _feedbackTimer = Timer(const Duration(seconds: 2), () {
-        if (!mounted) return;
+        if (!ref.mounted) return;
         if (isMatch) {
           final Set<String> newMatchedPairs = Set.from(state.matchedPairIds)
             ..add(card1.pairId!);
@@ -418,7 +419,7 @@ class GameViewModel extends StateNotifier<GameState> {
           if (_areAllMemoryPairsMatched()) {
             _logger.info("All memory pairs matched! Moving to next screen.");
             _feedbackTimer = Timer(const Duration(milliseconds: 700), () {
-              if (mounted) moveToNextScreen();
+              if (ref.mounted) moveToNextScreen();
             });
           }
         } else {
@@ -546,7 +547,7 @@ class GameViewModel extends StateNotifier<GameState> {
         state =
             state.copyWith(clearIsCorrect: true, isCorrect: isCorrectEmotion);
         Timer(const Duration(seconds: 1), () {
-          if (mounted) moveToNextScreen();
+          if (ref.mounted) moveToNextScreen();
         });
       }
       _logger.info('Is Correct Emotion: $isCorrectEmotion');
@@ -557,7 +558,7 @@ class GameViewModel extends StateNotifier<GameState> {
     await _cameraController?.dispose();
     _cameraController = null;
     stopEmotionDetection();
-    if (mounted) {
+    if (ref.mounted) {
       state = state.copyWith(
           isCameraInitialized: false, clearDetectedEmotion: true);
     } else {
@@ -568,3 +569,4 @@ class GameViewModel extends StateNotifier<GameState> {
 
   CameraController? get cameraController => _cameraController;
 }
+

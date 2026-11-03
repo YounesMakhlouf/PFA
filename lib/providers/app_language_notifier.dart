@@ -1,35 +1,30 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:arc_en_jeu/models/enums.dart';
-import 'package:arc_en_jeu/services/logging_service.dart';
-import 'package:arc_en_jeu/services/settings_service.dart';
+import 'package:arc_en_jeu/providers/global_providers.dart';
 
-class AppLanguageNotifier extends StateNotifier<AppLanguage> {
-  final SettingsService _settingsService;
-  final LoggingService _logger;
-
-  AppLanguageNotifier(
-    this._settingsService,
-    this._logger, {
-    AppLanguage? initialLanguage,
-  }) : super(initialLanguage ?? AppLanguage.english) {
-    if (initialLanguage == null) {
-      _loadCurrentLanguage();
-    } else {
-      _logger.info(
-          "AppLanguageNotifier: Initialized with forced language - ${state.code}");
-    }
+class AppLanguageNotifier extends Notifier<AppLanguage> {
+  @override
+  AppLanguage build() {
+    _loadCurrentLanguage();
+    return AppLanguage.english;
   }
 
   Future<void> _loadCurrentLanguage() async {
-    state = await _settingsService.getAppLanguage();
-    _logger.info("AppLanguageNotifier: Loaded language - ${state.code}");
+    final settingsService = ref.read(settingsServiceProvider);
+    final logger = ref.read(loggingServiceProvider);
+    final language = await settingsService.getAppLanguage();
+    if (!ref.mounted) return;
+    state = language;
+    logger.info("AppLanguageNotifier: Loaded language - ${language.code}");
   }
 
   Future<void> updateLanguage(AppLanguage newLanguage) async {
-    if (state != newLanguage) {
-      await _settingsService.setAppLanguage(newLanguage);
-      state = newLanguage;
-      _logger.info("AppLanguageNotifier: Language updated to: ${state.code}");
-    }
+    if (state == newLanguage) return;
+    final settingsService = ref.read(settingsServiceProvider);
+    await settingsService.setAppLanguage(newLanguage);
+    if (!ref.mounted) return;
+    state = newLanguage;
+    ref.read(loggingServiceProvider).info(
+        "AppLanguageNotifier: Language updated to: ${newLanguage.code}");
   }
 }

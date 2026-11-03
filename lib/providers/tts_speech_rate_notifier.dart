@@ -1,29 +1,28 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:arc_en_jeu/services/logging_service.dart';
-import 'package:arc_en_jeu/services/settings_service.dart';
-import 'package:arc_en_jeu/services/tts_service.dart';
+import 'package:arc_en_jeu/providers/global_providers.dart';
 
-class TtsSpeechRateNotifier extends StateNotifier<double> {
-  final SettingsService _settingsService;
-  final TtsService _ttsService;
-  final LoggingService _logger;
-
-  TtsSpeechRateNotifier(this._settingsService, this._ttsService, this._logger)
-      : super(1.0) {
+class TtsSpeechRateNotifier extends Notifier<double> {
+  @override
+  double build() {
     _loadInitialRate();
+    return 1.0;
   }
 
   Future<void> _loadInitialRate() async {
-    state = await _settingsService.getTtsSpeechRate();
-    _logger.debug("TtsSpeechRateNotifier: Initial rate loaded: $state");
+    final rate = await ref.read(settingsServiceProvider).getTtsSpeechRate();
+    if (!ref.mounted) return;
+    state = rate;
+    ref.read(loggingServiceProvider)
+        .debug("TtsSpeechRateNotifier: Initial rate loaded: $rate");
   }
 
   Future<void> updateSpeechRate(double newRate) async {
-    final clampedRate = newRate.clamp(0.0, 1.0);
-    if (state != clampedRate) {
-      await _ttsService.changeSpeechRate(clampedRate);
-      state = clampedRate;
-      _logger.info("TtsSpeechRateNotifier: Speech rate updated to $state");
-    }
+    final clampedRate = newRate.clamp(0.0, 1.0).toDouble();
+    if (state == clampedRate) return;
+    await ref.read(ttsServiceProvider).changeSpeechRate(clampedRate);
+    if (!ref.mounted) return;
+    state = clampedRate;
+    ref.read(loggingServiceProvider)
+        .info("TtsSpeechRateNotifier: Speech rate updated to $clampedRate");
   }
 }

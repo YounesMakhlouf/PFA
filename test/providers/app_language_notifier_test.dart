@@ -12,12 +12,8 @@ void main() {
   late MockLoggingService mockLoggingService;
   late ProviderContainer container;
 
-  AppLanguageNotifier createNotifier({AppLanguage? initialLanguage}) {
-    return AppLanguageNotifier(
-      mockSettingsService,
-      mockLoggingService,
-      initialLanguage: initialLanguage,
-    );
+  AppLanguageNotifier createNotifier() {
+    return container.read(appLanguageProvider.notifier);
   }
 
   setUp(() {
@@ -77,17 +73,11 @@ void main() {
           .called(1);
     });
 
-    test(
-        'initializes with forced initialLanguage English parameter (overrides Arabic default)',
-        () {
-      final notifier = createNotifier(initialLanguage: AppLanguage.english);
+    test('starts with English while the saved language loads', () {
+      final notifier = createNotifier();
 
       expect(notifier.state, AppLanguage.english);
-      verify(mockLoggingService.info(
-              "AppLanguageNotifier: Initialized with forced language - en"))
-          .called(1);
-      verifyNever(mockSettingsService.getAppLanguage(
-          defaultValue: AppLanguage.arabic)); // <<< ARABIC DEFAULT
+      verify(mockSettingsService.getAppLanguage()).called(1);
     });
 
     test('updateLanguage sets new language and saves to SettingsService',

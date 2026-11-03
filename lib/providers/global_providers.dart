@@ -33,7 +33,7 @@ final loggingServiceProvider = Provider<LoggingService>((ref) {
 });
 
 final translationServiceProvider = Provider<TranslationService>((ref) {
-  return TranslationService(ref);
+  return TranslationService(() => ref.read(localeProvider).languageCode);
 });
 
 final supabaseServiceProvider = Provider<SupabaseService>((ref) {
@@ -75,7 +75,7 @@ final supabaseAuthStateProvider = StreamProvider<AuthState>((ref) {
 
 final currentUserIdProvider = Provider<String?>((ref) {
   final authState = ref.watch(supabaseAuthStateProvider);
-  return authState.valueOrNull?.session?.user.id;
+  return authState.value?.session?.user.id;
 });
 
 /// child providers
@@ -114,10 +114,9 @@ final initialChildProfilesProvider = FutureProvider<List<Child>>((ref) async {
   }
 });
 
-final activeChildProvider =
-    StateNotifierProvider<ActiveChildNotifier, Child?>((ref) {
-  return ActiveChildNotifier(ref);
-});
+final activeChildProvider = NotifierProvider<ActiveChildNotifier, Child?>(
+  ActiveChildNotifier.new,
+);
 
 final childServiceProvider = Provider<ChildService>((ref) {
   final childRepository = ref.watch(childRepositoryProvider);
@@ -153,27 +152,8 @@ final gameRepositoryProvider = Provider<GameRepository>((ref) {
   final logger = ref.watch(loggingServiceProvider);
   return GameRepository(supabaseService: supabaseService, logger: logger);
 });
-final gameViewModelProvider = StateNotifierProvider.family<GameViewModel,
-    GameState, String /* gameId */ >(
-  (ref, gameId) {
-    final gameRepo = ref.read(gameRepositoryProvider);
-    final sessionRepo = ref.read(gameSessionRepositoryProvider);
-    final logger = ref.read(loggingServiceProvider);
-    final ttsService = ref.read(ttsServiceProvider);
-    final audioService = ref.read(audioServiceProvider);
-    final activeChild = ref.watch(activeChildProvider);
-    final TranslationService translationService =
-        ref.read(translationServiceProvider);
-    if (activeChild == null) {
-      logger.error(
-          "GameViewModelProvider: Attempted to create GameViewModel for game '$gameId' but no active child is set. This indicates a UI flow error.");
-      throw StateError(
-          "Cannot initialize GameViewModel: No active child selected. Please select a child profile first.");
-    }
-    return GameViewModel(gameId, activeChild.childId, gameRepo, logger,
-        sessionRepo, ttsService, audioService, ref, translationService);
-  },
-);
+final gameViewModelProvider = NotifierProvider.family<GameViewModel,
+    GameState, String /* gameId */>(GameViewModel.new);
 
 final gamesByCategoryProvider =
     FutureProvider.family<List<Game>, GameCategory>((ref, category) async {
@@ -221,32 +201,20 @@ final ttsEnabledProvider = FutureProvider<bool>((ref) async {
 });
 
 final ttsSpeechRateProvider =
-    StateNotifierProvider<TtsSpeechRateNotifier, double>((ref) {
-  final settingsService = ref.watch(settingsServiceProvider);
-  final ttsService = ref.watch(ttsServiceProvider);
-  final logger = ref.watch(loggingServiceProvider);
-  return TtsSpeechRateNotifier(settingsService, ttsService, logger);
-});
+    NotifierProvider<TtsSpeechRateNotifier, double>(TtsSpeechRateNotifier.new);
 
 final soundEffectsEnabledProvider = FutureProvider<bool>((ref) async {
   return await ref.watch(settingsServiceProvider).areSoundEffectsEnabled();
 });
 
 final appLanguageProvider =
-    StateNotifierProvider<AppLanguageNotifier, AppLanguage>((ref) {
-  final settingsService = ref.watch(settingsServiceProvider);
-  final logger = ref.watch(loggingServiceProvider);
-  return AppLanguageNotifier(settingsService, logger);
-});
+    NotifierProvider<AppLanguageNotifier, AppLanguage>(AppLanguageNotifier.new);
 
 final localeProvider = Provider<Locale>((ref) {
   final appLanguage = ref.watch(appLanguageProvider);
   return Locale(appLanguage.code);
 });
 
-final hapticsEnabledProvider =
-    StateNotifierProvider<HapticsEnabledNotifier, bool>((ref) {
-  final settingsService = ref.watch(settingsServiceProvider);
-  final logger = ref.watch(loggingServiceProvider);
-  return HapticsEnabledNotifier(settingsService, logger);
-});
+final hapticsEnabledProvider = NotifierProvider<HapticsEnabledNotifier, bool>(
+  HapticsEnabledNotifier.new,
+);
