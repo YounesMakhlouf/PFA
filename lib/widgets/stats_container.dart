@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:arc_en_jeu/config/app_theme.dart';
 import 'package:arc_en_jeu/widgets/small_stat_box.dart';
 import '../l10n/app_localizations.dart';

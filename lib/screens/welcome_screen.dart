@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import 'package:arc_en_jeu/l10n/app_localizations.dart';
 import 'package:arc_en_jeu/providers/global_providers.dart';

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:arc_en_jeu/l10n/app_localizations.dart';
 import 'package:arc_en_jeu/models/game.dart';
 import 'package:arc_en_jeu/screens/auth_gate.dart';

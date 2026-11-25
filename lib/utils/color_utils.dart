@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:arc_en_jeu/config/app_theme.dart';
 
 extension HexColorParsing on String? {
