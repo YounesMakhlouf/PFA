@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:arc_en_jeu/config/app_theme.dart';
 import 'package:arc_en_jeu/providers/global_providers.dart';
@@ -42,7 +43,8 @@ void main() async {
       theme: AppTheme.lightTheme,
       localizationsDelegates: const [
         AppAuthLocalizationsDelegate(),
-        ...AppLocalizations.localizationsDelegates,
+        AppLocalizations.delegate,
+        ...GlobalMaterialLocalizations.delegates,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       home: ErrorScreen(
@@ -92,7 +94,8 @@ class MyApp extends ConsumerWidget {
       locale: currentLocale,
       localizationsDelegates: const [
         AppAuthLocalizationsDelegate(),
-        ...AppLocalizations.localizationsDelegates,
+        AppLocalizations.delegate,
+        ...GlobalMaterialLocalizations.delegates,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
